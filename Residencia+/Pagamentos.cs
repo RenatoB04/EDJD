@@ -1,23 +1,27 @@
-public class Pagamento
+using System;
+using System.Collections.Generic;
+
+public class Pagamentos
 {
     public string Descricao { get; set; }
     public decimal ValorPago { get; set; }
-    public DateTime DataPagamento { get; set; }
+    public DateTime Data { get; set; }
     public int UnidadeCondominio { get; set; }
 
-    public Pagamento(string descricao, decimal valorPago, DateTime dataPagamento, int unidadeCondominio)
+    private static List<Pagamentos> ListaPagamento = new List<Pagamentos>();
+
+    public Pagamentos(string descricao, decimal valorPago, DateTime data, int unidadeCondominio)
     {
         Descricao = descricao;
         ValorPago = valorPago;
-        DataPagamento = dataPagamento;
+        Data = data;
         UnidadeCondominio = unidadeCondominio;
+
+        ListaPagamento.Add(this);
     }
 
-    public static void Adicionar(Pagamento pagamento)
+    public static List<Pagamentos> ObterTodos()
     {
-        // Adiciona o pagamento a uma lista
-        Pagamento.ListaPagamentos.Add(pagamento);
+        return ListaPagamento;
     }
-
-    private static List<Pagamento> ListaPagamentos = new List<Pagamento>();
 }

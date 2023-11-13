@@ -1,4 +1,7 @@
-public class Documento
+using System;
+using System.Collections.Generic;
+
+public class Documentos
 {
     public string Nome { get; set; }
     public string Tipo { get; set; }
@@ -9,7 +12,9 @@ public class Documento
     public int NumeroIdentificacao { get; set; }
     public int UnidadeCondominio { get; set; }
 
-    public Documento(string nome, string tipo, DateTime dataCriacao, string caminho, long tamanho, string tipoArquivo, int numeroIdentificacao, int unidadeCondominio)
+    private static List<Documentos> ListaDocumentos = new List<Documentos>();
+
+    public Documentos(string nome, string tipo, DateTime dataCriacao, string caminho, long tamanho, string tipoArquivo, int numeroIdentificacao, int unidadeCondominio)
     {
         Nome = nome;
         Tipo = tipo;
@@ -19,13 +24,12 @@ public class Documento
         TipoArquivo = tipoArquivo;
         NumeroIdentificacao = numeroIdentificacao;
         UnidadeCondominio = unidadeCondominio;
+
+        ListaDocumentos.Add(this);
     }
 
-    public static void Adicionar(Documento documento)
+    public static List<Documentos> ObterTodos()
     {
-        // Adiciona o documento a uma lista
-        Documento.ListaDocumentos.Add(documento);
+        return ListaDocumentos;
     }
-
-    private static List<Documento> ListaDocumentos = new List<Documento>();
 }
