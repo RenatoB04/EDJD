@@ -24,4 +24,10 @@ public class Receitas
     {
         return ListaReceitas;
     }
+    public static void InicializarDados()
+    {
+        Receitas receita1 = new Receitas("Taxa de Limpeza", 120.0m, new DateTime(2023, 11, 1), 1);
+        Receitas receita2 = new Receitas("Caução 2ºA", 500.0m, new DateTime(2023, 11, 15), 2);
+        Receitas receita3 = new Receitas("Rendas Outubro", 8000.0m, new DateTime(2023, 11, 1), 1);
+    }
 }

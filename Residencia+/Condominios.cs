@@ -20,4 +20,9 @@ public class Condominios
     {
         return ListaCondominios;
     }
+    public static void InicializarDados()
+    {
+        Condominios condo1 = new Condominios("Condomínio 1", "Rua das Flores 127");
+        Condominios condo2 = new Condominios("Condomínio 2", "Avenida do Sol 453");
+    }
 }

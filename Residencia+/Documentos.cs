@@ -6,22 +6,16 @@ public class Documentos
     public string Nome { get; set; }
     public string Tipo { get; set; }
     public DateTime DataCriacao { get; set; }
-    public string Caminho { get; set; }
-    public long Tamanho { get; set; }
-    public string TipoArquivo { get; set; }
     public int NumeroIdentificacao { get; set; }
     public int UnidadeCondominio { get; set; }
 
     private static List<Documentos> ListaDocumentos = new List<Documentos>();
 
-    public Documentos(string nome, string tipo, DateTime dataCriacao, string caminho, long tamanho, string tipoArquivo, int numeroIdentificacao, int unidadeCondominio)
+    public Documentos(string nome, string tipo, DateTime dataCriacao, int numeroIdentificacao, int unidadeCondominio)
     {
         Nome = nome;
         Tipo = tipo;
         DataCriacao = dataCriacao;
-        Caminho = caminho;
-        Tamanho = tamanho;
-        TipoArquivo = tipoArquivo;
         NumeroIdentificacao = numeroIdentificacao;
         UnidadeCondominio = unidadeCondominio;
 
@@ -31,5 +25,12 @@ public class Documentos
     public static List<Documentos> ObterTodos()
     {
         return ListaDocumentos;
+    }
+
+    public static void InicializarDados()
+    {
+        Documentos documento1 = new Documentos("Alvará", "PDF", new DateTime(2023, 11, 1), 0, 1);
+        Documentos documento2 = new Documentos("Regulamento Interno", "Word", new DateTime(2023, 11, 5), 0, 2);
+        Documentos documento3 = new Documentos("Registo de Limpeza", "Excel", new DateTime(2023, 11, 10), 0, 1);
     }
 }

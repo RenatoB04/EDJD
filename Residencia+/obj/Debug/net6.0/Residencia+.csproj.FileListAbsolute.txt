@@ -12,3 +12,4 @@ C:\Users\Lenovo\Documents\GitHub\ResidenciaPlus\Residencia+\obj\Debug\net6.0\ref
 C:\Users\Lenovo\Documents\GitHub\ResidenciaPlus\Residencia+\obj\Debug\net6.0\Residencia+.pdb
 C:\Users\Lenovo\Documents\GitHub\ResidenciaPlus\Residencia+\obj\Debug\net6.0\Residencia+.genruntimeconfig.cache
 C:\Users\Lenovo\Documents\GitHub\ResidenciaPlus\Residencia+\obj\Debug\net6.0\ref\Residencia+.dll
+C:\Users\Lenovo\Documents\GitHub\ResidenciaPlus\Residencia+\obj\Debug\net6.0\Residencia+.sourcelink.json
