@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define STARTING_COINS 100
+
 // Buildings
 const char BASE_GONDOR[] = "GGGG";
 const char BASE_MORDOR[] = "MMMM";
@@ -22,7 +24,6 @@ const char CAVALRY_WARGS = 'W';
 const char ARTILLERY_SIEGE_TOWERS[] = "ST";
 
 // Economy
-#define STARTING_COINS 100
 const int MOVEMENT_COST_INFANTRY = 2;
 const int MOVEMENT_COST_CAVALRY = 1;
 const int MOVEMENT_COST_ARTILLERY = 3;
@@ -59,58 +60,61 @@ void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
 }
 
-void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer) {
-    int option = 0;
-
-    do {
-        printf("\n=== Middle-Earth Game Grid ===\n");
-        printf("   A B C D E F G H I J K L M N O P Q R J T U V W X Y Z\n");
-        printf("  %c", 218);
-        for (int i = 0; i < 25; i++)
-        {
-            printf("%c%c", 196, 194);
-        }
-        printf("%c%c\n", 196, 191);
-        for (int ii = 0; ii < 10; ii++)
-        {
-            printf("%d ", ii);
-            for (int i = 0; i < 27; i++)
-            {
-                printf("%c ", 179);
-            }
-            printf("\n  %c", 195);
-            for (int i = 0; i < 25; i++)
-            {
-                printf("%c%c", 196, 197);
-            }
-            printf("%c%c\n", 196, 180);
-        }
-        for (int ii = 10; ii < 17; ii++)
-        {
-            printf("%d", ii);
-            for (int i = 0; i < 27; i++)
-            {
-                printf("%c ", 179);
-            }
-            printf("\n  %c", 195);
-            for (int i = 0; i < 25; i++)
-            {
-                printf("%c%c", 196, 197);
-            }
-            printf("%c%c\n", 196, 180);
-        }
-        printf("17");
+void displayGrid() {
+    printf("\n=== Middle-Earth Game Grid ===\n");
+    printf("   A B C D E F G H I J K L M N O P Q R J T U V W X Y Z\n");
+    printf("  %c", 218);
+    for (int i = 0; i < 25; i++)
+    {
+        printf("%c%c", 196, 194);
+    }
+    printf("%c%c\n", 196, 191);
+    for (int ii = 0; ii < 10; ii++)
+    {
+        printf("%d ", ii);
         for (int i = 0; i < 27; i++)
         {
             printf("%c ", 179);
         }
-        printf("\n  %c", 192);
+        printf("\n  %c", 195);
         for (int i = 0; i < 25; i++)
         {
-            printf("%c%c", 196, 193);
+            printf("%c%c", 196, 197);
         }
-        printf("%c%c", 196, 217);
+        printf("%c%c\n", 196, 180);
+    }
+    for (int ii = 10; ii < 17; ii++)
+    {
+        printf("%d", ii);
+        for (int i = 0; i < 27; i++)
+        {
+            printf("%c ", 179);
+        }
+        printf("\n  %c", 195);
+        for (int i = 0; i < 25; i++)
+        {
+            printf("%c%c", 196, 197);
+        }
+        printf("%c%c\n", 196, 180);
+    }
+    printf("17");
+    for (int i = 0; i < 27; i++)
+    {
+        printf("%c ", 179);
+    }
+    printf("\n  %c", 192);
+    for (int i = 0; i < 25; i++)
+    {
+        printf("%c%c", 196, 193);
+    }
+    printf("%c%c", 196, 217);
+}
 
+void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer) {
+    int option = 0;
+
+    do {
+        displayGrid();
         printf("\nOptions (Player %d):\n", *currentPlayer);
         printf("1. Place Buildings\n2. Place Unit\n3. Move Unit\n4. Attack with Unit\n5. Current Amount of Coins\n6. End Turn\n");
 
