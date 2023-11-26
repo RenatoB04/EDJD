@@ -60,7 +60,7 @@ void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
 }
 
-void displayGrid() {
+void displayGrid() { //TO BE CHANGED
     printf("\n=== Middle-Earth Game Grid ===\n");
     printf("   A B C D E F G H I J K L M N O P Q R J T U V W X Y Z\n");
     printf("  %c", 218);
@@ -123,16 +123,16 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer) {
         scanf_s("%d", &option);
 
         switch (option) {
-        case 1:
+        case 1:  //UNDER DEVELOPMENT
             printf("Placing buildings...\n");
             break;
-        case 2:
+        case 2:  //UNDER DEVELOPMENT
             printf("Placing a unit...\n");
             break;
-        case 3:
+        case 3:  //UNDER DEVELOPMENT
             printf("Moving a unit...\n");
             break;
-        case 4:
+        case 4:  //UNDER DEVELOPMENT
             printf("Attacking with a unit...\n");
             break;
         case 5:
@@ -155,30 +155,48 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer) {
 }
 
 void startNewGame() {
-    char playerChoice[20];
-    printf("\n=== New Game Setup ===\nChoose your side:\n1. Gondor/Rivendell\n2. Mordor\nEnter your choice: ");
-    if (scanf_s("%19s", playerChoice, (unsigned int)sizeof(playerChoice)) == 1) {
-        if (playerChoice[0] == '2' || (playerChoice[0] == 'M' && playerChoice[1] == 'o' && playerChoice[2] == 'r' && playerChoice[3] == 'd' && playerChoice[4] == 'o' && playerChoice[5] == 'r')) {
-            printf("You have chosen to play as Mordor.\n");
+    int gameMode;
+    printf("\n=== New Game Setup ===\nChoose the game mode:\n1. Single Player\n2. Two Players\nEnter your choice: ");
+
+    if (scanf_s("%d", &gameMode) == 1) {
+        if (gameMode == 2) {
+            char playerChoice[20];
+            printf("\nChoose your side:\n1. Gondor/Rivendell\n2. Mordor\nEnter your choice: ");
+            if (scanf_s("%19s", playerChoice, (unsigned int)sizeof(playerChoice)) == 1) {
+                if (playerChoice[0] == '2' || (playerChoice[0] == 'M' && playerChoice[1] == 'o' && playerChoice[2] == 'r' && playerChoice[3] == 'd' && playerChoice[4] == 'o' && playerChoice[5] == 'r')) {
+                    printf("You have chosen to play as Mordor.\n");
+                }
+                else {
+                    printf("You have chosen to play as Gondor/Rivendell.\n");
+                }
+
+                displayGameGrid(&player1Coins, &player2Coins, &turn);
+                printf("Starting the new game...\n");
+            }
+            else {
+                printf("Error reading player choice.\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if (gameMode == 1) {
+            printf("Single-player mode is currently under development.\n");
         }
         else {
-            printf("You have chosen to play as Gondor/Rivendell.\n");
+            printf("Invalid game mode.\n");
+            exit(EXIT_FAILURE);
         }
-
-        displayGameGrid(&player1Coins, &player2Coins, &turn);;
-        printf("Starting the new game...\n");
     }
     else {
-        printf("Error reading player choice.\n");
+        printf("Error reading game mode.\n");
         exit(EXIT_FAILURE);
     }
 }
 
-void loadGame() {
+void loadGame() {  //UNDER DEVELOPMENT
     printf("\nLoading Game (Under Development)...\n");
 }
 
-void settings() {
+void settings() {  //UNDER DEVELOPMENT
     printf("\nSettings (Under Development)...\n");
 }
 
