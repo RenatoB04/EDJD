@@ -61,6 +61,9 @@ int getCurrentPlayer() {
     return (turn % 2 == 1) ? 1 : 2;
 }
 
+int player1BasePlaced = 0;
+int player2BasePlaced = 0;
+
 void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
 }
@@ -106,16 +109,44 @@ bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int co
     }
 
     int length = strlen(building);
+    int buildingHealth = 0;  // Start the hp points
+
+    // Assign the correct hp points based on the building type
+    if (strncmp(building, BASE_GONDOR, 4) == 0 || strncmp(building, BASE_MORDOR, 4) == 0) {
+        buildingHealth = HEALTH_BASE;
+
+        // Check if the player has already placed a base
+        if ((getCurrentPlayer() == 1 && player1BasePlaced) || (getCurrentPlayer() == 2 && player2BasePlaced)) {
+            printf("You can only place one base per game.\n");
+            return false;
+        }
+
+        // Mark the base as placed for the current player
+        if (getCurrentPlayer() == 1) {
+            player1BasePlaced = 1;
+        }
+        else {
+            player2BasePlaced = 1;
+        }
+    }
+    else if (strncmp(building, MINE_SHIRE, 2) == 0 || strncmp(building, MINE_EREBOR, 2) == 0) {
+        buildingHealth = HEALTH_MINE;
+    }
+    else {
+        buildingHealth = HEALTH_BARRACKS_STABLES_ARMOURY;
+    }
 
     if (isCellEmpty(grid, row, col, length)) {
         for (int i = 0; i < length; i++) {
             grid[row][col + i] = building[i];
+            // Assign the hp points to the building
+            buildingHealth = buildingHealth;
         }
-        return true;  // Building placed successfully
+        return true;  // Placed successfully
     }
     else {
         printf("Invalid placement. The selected cell is not empty or out of bounds.\n");
-        return false;  // Building placement failed
+        return false;  // Failed to place
     }
 }
 
