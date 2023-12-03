@@ -19,11 +19,11 @@ const char ARMOURY_DARK_FORGE[] = "DF";
 
 // Units
 const char INFANTRY_GONDORIAN_GUARDS = 'G';
-const char CAVALRY_SWAN_KNIGHTS[] = "SK";
+const char CAVALRY_SWAN_KNIGHTS[] = "K"; //Updated
 const char ARTILLERY_TREBUCHETS = 'T';
-const char INFANTRY_ORC_WARRIORS[] = "OW";
+const char INFANTRY_ORC_WARRIORS[] = "O"; //Updated
 const char CAVALRY_WARGS = 'W';
-const char ARTILLERY_SIEGE_TOWERS[] = "ST";
+const char ARTILLERY_SIEGE_TOWERS[] = "S";
 
 // Economy
 const int MOVEMENT_COST_INFANTRY = 2;
@@ -100,6 +100,139 @@ bool isCellEmpty(char grid[ROWS][COLS], int row, int col, int length) {
     }
 
     return true;
+}
+
+void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
+    const char* unit = NULL;
+    int row = 0, col = 0, unitCost = 0;
+
+    printf("Player %d unit options:\n", currentPlayer);
+    printf("1. Infantry\n2. Cavalry\n3. Artillery\n");
+    printf("Choose a unit type (1-3): ");
+    int choice;
+    scanf_s("%d", &choice);
+
+    switch (choice) {
+    case 1:
+        unit = (currentPlayer == 1) ? &INFANTRY_GONDORIAN_GUARDS : &INFANTRY_ORC_WARRIORS;
+        unitCost = UNIT_COST_INFANTRY;
+        break;
+    case 2:
+        unit = (currentPlayer == 1) ? &CAVALRY_SWAN_KNIGHTS : &CAVALRY_WARGS;
+        unitCost = UNIT_COST_CAVALRY;
+        break;
+    case 3:
+        unit = (currentPlayer == 1) ? &ARTILLERY_TREBUCHETS : &ARTILLERY_SIEGE_TOWERS;
+        unitCost = UNIT_COST_ARTILLERY;
+        break;
+    default:
+        printf("Invalid choice.\n");
+        return;
+    }
+
+    printf("Enter the row and column (e.g., 3 A) where you want to place the unit: ");
+    scanf_s("%d", &row);
+    char colLetter;
+    scanf_s(" %c", &colLetter);
+    col = colLetter - 'A'; // Convert letter to column index
+
+    size_t length = 1;  // Units occupy only one cell
+
+    if (isCellEmpty(grid, row, col, length)) {
+        if (currentPlayer == 1 && *player1Coins >= unitCost) {
+            // Deduct the unit cost from player 1's coins
+            *player1Coins -= unitCost;
+        }
+        else if (currentPlayer == 2 && *player2Coins >= unitCost) {
+            // Deduct the unit cost from player 2's coins
+            *player2Coins -= unitCost;
+        }
+        else {
+            printf("Not enough coins to build %s.\n", unit);
+            return;
+        }
+
+        // Place the unit after checking for coins
+        grid[row-1][col] = *unit;
+        printf("Unit placed successfully!\n");
+    }
+    else {
+        printf("Invalid placement. The selected cell is not empty or out of bounds.\n");
+    }
+}
+
+void playerMoveUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
+    int startRow, startCol, endRow, endCol;
+
+    printf("Enter the current row and column (e.g., 3 A) of the unit you want to move: ");
+    scanf_s("%d", &startRow);
+    char startColLetter;
+    scanf_s(" %c", &startColLetter);
+    startCol = startColLetter - 'A'; // Convert letter to column index
+
+    printf("Enter the target row and column (e.g., 4 B) where you want to move the unit: ");
+    scanf_s("%d", &endRow);
+    char endColLetter;
+    scanf_s(" %c", &endColLetter);
+    endCol = endColLetter - 'A'; // Convert letter to column index
+
+    size_t length = 1;  // Units occupy only one cell
+
+    // Check if the target cell is empty and within bounds
+    if (isCellEmpty(grid, endRow - 1, endCol, length)) {
+        int movementCost = 0;
+
+        // Determine the movement cost based on the type of unit
+        char unitType = grid[startRow - 1][startCol];
+        switch (unitType) {
+        case 'G':
+            movementCost = MOVEMENT_COST_INFANTRY;
+            break;
+        case 'K':
+            movementCost = MOVEMENT_COST_CAVALRY;
+            break;
+        case 'T':
+            movementCost = MOVEMENT_COST_ARTILLERY;
+            break;
+        case 'O':
+            movementCost = MOVEMENT_COST_INFANTRY;
+            break;
+        case 'W':
+            movementCost = MOVEMENT_COST_CAVALRY;
+            break;
+        case 'S':
+            movementCost = MOVEMENT_COST_ARTILLERY;
+            break;
+        default:
+            printf("Invalid unit type.\n");
+            return;
+        }
+
+        int totalMovementCost = movementCost * (abs(endRow - startRow) + abs(endCol - startCol)); // Calculate total movement cost
+
+        if ((currentPlayer == 1 && *player1Coins >= totalMovementCost) ||
+            (currentPlayer == 2 && *player2Coins >= totalMovementCost)) {
+            // Deduct the movement cost from the corresponding player's coins
+            if (currentPlayer == 1) {
+                *player1Coins -= totalMovementCost;
+            }
+            else {
+                *player2Coins -= totalMovementCost;
+            }
+
+            // Move the unit after validation
+            grid[endRow - 1][endCol] = unitType;
+            grid[startRow - 1][startCol] = ' ';
+            printf("Unit moved successfully!\n");
+        }
+        else {
+            printf("Not enough coins to move the unit.\n");
+            return;
+        }
+    }
+    else {
+        printf("Invalid movement. The target cell is not empty or out of bounds.\n");
+    }
 }
 
 bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int col) {
@@ -293,25 +426,24 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
 
     do {
         displayGrid(grid);
-        printf("\nOptions (Player %d - %d coins):\n", *currentPlayer, (*currentPlayer == 1) ? *player1Coins : *player2Coins);
+        printf("\nOptions (Player %d - %d coins):\n", getCurrentPlayer(), (getCurrentPlayer() == 1) ? *player1Coins : *player2Coins);
         printf("1. Place Building\n2. Remove Building\n3. Place Unit\n4. Move Unit\n5. Attack with Unit\n6. End Turn\n");
 
-        int option;
         printf("Enter your choice: ");
         scanf_s("%d", &option);
 
         switch (option) {
         case 1:
-            playerPlaceBuilding(grid, *currentPlayer, player1Coins, player2Coins);
+            playerPlaceBuilding(grid, getCurrentPlayer(), player1Coins, player2Coins);
             break;
         case 2:
             playerRemoveBuilding(grid);
             break;
-        case 3:  //UNDER DEVELOPMENT
-            printf("Placing a unit...\n");
+        case 3:
+            playerPlaceUnit(grid, getCurrentPlayer(), player1Coins, player2Coins);
             break;
-        case 4:  //UNDER DEVELOPMENT
-            printf("Moving a unit...\n");
+        case 4:
+            playerMoveUnit(grid, getCurrentPlayer(), player1Coins, player2Coins);
             break;
         case 5:  //UNDER DEVELOPMENT
             printf("Attacking with a unit...\n");
