@@ -102,7 +102,7 @@ bool isCellEmpty(char grid[ROWS][COLS], int row, int col, int length) {
     return true;
 }
 
-void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
+void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) { //BUG : DEDUCT COINS EVEN WHEN 1 BASE IS ALREADY PLACED
     const char* unit = NULL;
     int row = 0, col = 0, unitCost = 0;
 
@@ -384,21 +384,30 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
     size_t length = strlen(building);
     if (isCellEmpty(grid, row, col, length)) {
         if (currentPlayer == 1 && *player1Coins >= buildingCost) {
-            // Deduct the building cost from player 1's coins
-            *player1Coins -= buildingCost;
+            // Place the building after checking for coins
+            if (placeBuilding(grid, building, row - 1, col)) {
+                // Deduct the building cost from player 1's coins
+                *player1Coins -= buildingCost;
+                printf("Building placed successfully!\n");
+            }
+            else {
+                printf("Invalid placement. The selected cell is not empty or out of bounds.\n");
+            }
         }
         else if (currentPlayer == 2 && *player2Coins >= buildingCost) {
-            // Deduct the building cost from player 2's coins
-            *player2Coins -= buildingCost;
+            // Place the building after checking for coins
+            if (placeBuilding(grid, building, row - 1, col)) {
+                // Deduct the building cost from player 2's coins
+                *player2Coins -= buildingCost;
+                printf("Building placed successfully!\n");
+            }
+            else {
+                printf("Invalid placement. The selected cell is not empty or out of bounds.\n");
+            }
         }
         else {
             printf("Not enough coins to build %s.\n", building);
             return;
-        }
-
-        // Place the building after checking for coins
-        if (placeBuilding(grid, building, row - 1, col)) {
-            printf("Building placed successfully!\n");
         }
     }
     else {
@@ -426,7 +435,12 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
 
     do {
         displayGrid(grid);
-        printf("\nOptions (Player %d - %d coins):\n", getCurrentPlayer(), (getCurrentPlayer() == 1) ? *player1Coins : *player2Coins);
+        if (*currentPlayer == 1) {
+            printf("\nOptions (Player 1 - Gondor/Rivendell - %d coins):\n", *player1Coins);
+        }
+        else {
+            printf("\nOptions (Player 2 - Mordor - %d coins):\n", *player2Coins);
+        }
         printf("1. Place Building\n2. Remove Building\n3. Place Unit\n4. Move Unit\n5. Attack with Unit\n6. End Turn\n");
 
         printf("Enter your choice: ");
@@ -478,9 +492,11 @@ void startNewGame() {
             if (scanf_s("%19s", playerChoice, (unsigned int)sizeof(playerChoice)) == 1) {
                 if (playerChoice[0] == '2' || (playerChoice[0] == 'M' && playerChoice[1] == 'o' && playerChoice[2] == 'r' && playerChoice[3] == 'd' && playerChoice[4] == 'o' && playerChoice[5] == 'r')) {
                     printf("You have chosen to play as Mordor.\n");
+                    turn = 2;  // Set the first turn to player 2
                 }
                 else {
                     printf("You have chosen to play as Gondor/Rivendell.\n");
+                    turn = 1;  // Set the first turn to player 1
                 }
                 displayGameGrid(&player1Coins, &player2Coins, &turn, grid);
                 printf("Starting the new game...\n");
