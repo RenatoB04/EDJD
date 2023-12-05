@@ -6,19 +6,26 @@ class Program
 {
     static void Main()
     {
+        Condominio.dadosCarregados = false;
+        Condominio.CarregarDadosDoFicheiro(Condominio.caminhoFicheiro);
+        Despesa.dadosCarregados = false;
+        Despesa.CarregarDadosDoFicheiro(Despesa.caminhoFicheiro);
+        Documento.dadosCarregados = false;
+        Documento.CarregarDadosDoFicheiro(Documento.caminhoFicheiro);
+        Inquilino.dadosCarregados = false;
+        Inquilino.CarregarDadosDoFicheiro(Inquilino.caminhoFicheiro);
         Pagamento.dadosCarregados = false;
-        Condominio.InicializarDados();
-        Despesa.InicializarDados();
-        Documento.InicializarDados();
-        Inquilino.InicializarDados();
-        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
-        Proprietario.InicializarDados();
-        Receita.InicializarDados();
-        Reuniao.InicializarDados();
+        Pagamento.CarregarDadosDoFicheiro(Pagamento.caminhoFicheiro);
+        Proprietario.dadosCarregados = false;
+        Proprietario.CarregarDadosDoFicheiro(Proprietario.caminhoFicheiro);
+        Receita.dadosCarregados = false;
+        Receita.CarregarDadosDoFicheiro(Receita.caminhoFicheiro);
+        Reuniao.dadosCarregados = false;
+        Reuniao.CarregarDadosDoFicheiro(Reuniao.caminhoFicheiro);
 
         while (true)
         {
-            Console.WriteLine("\nBem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registro\n3. Sair");
+            Console.WriteLine("Bem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registro\n3. Sair");
             if (int.TryParse(Console.ReadLine(), out int opcao))
             {
                 Console.Clear();
@@ -96,9 +103,14 @@ class Program
     {
         if (!Pagamento.dadosCarregados)
     {
-        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
+        Pagamento.CarregarDadosDoFicheiro(Pagamento.caminhoFicheiro);
         Pagamento.dadosCarregados = true;
     }
+        if (!Condominio.dadosCarregados)
+        {
+            Condominio.CarregarDadosDoFicheiro(Condominio.caminhoFicheiro);
+            Condominio.dadosCarregados = true;
+        }
         Console.WriteLine("Escolha uma classe para adicionar um novo registro:");
         Console.WriteLine("1. Condomínios\n2. Despesa\n3. Documento\n4. Inquilino\n5. Pagamento\n6. Proprietários\n7. Receita\n8. Reuniões");
 
@@ -108,28 +120,36 @@ class Program
             switch (opcao)
             {
                 case 1:
+                    Condominio.AdicionarCondominio();
+                    Condominio.GuardarDadosNoFicheiro(Condominio.caminhoFicheiro);
                     break;
                 case 2:
+                    Despesa.AdicionarDespesa();
+                    Despesa.GuardarDadosNoFicheiro(Despesa.caminhoFicheiro);
                     break;
                 case 3:
+                    Documento.AdicionarDocumento();
+                    Documento.GuardarDadosNoFicheiro(Documento.caminhoFicheiro);
                     break;
                 case 4:
+                    Inquilino.AdicionarInquilino();
+                    Inquilino.GuardarDadosNoFicheiro(Inquilino.caminhoFicheiro);
                     break;
                 case 5:
-                    if (!Pagamento.dadosCarregados)
-                    {
-                        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
-                    }
-
                     Pagamento.AdicionarPagamento();
-                    Pagamento.SalvarDadosNoArquivo(Pagamento.caminhoArquivo);
-                    Console.WriteLine("Pagamento adicionado com sucesso!");
+                    Pagamento.GuardarDadosNoFicheiro(Pagamento.caminhoFicheiro);
                     break;
                 case 6:
+                    Proprietario.AdicionarProprietario();
+                    Proprietario.GuardarDadosNoFicheiro(Proprietario.caminhoFicheiro);
                     break;
                 case 7:
+                    Receita.AdicionarReceita();
+                    Receita.GuardarDadosNoFicheiro(Receita.caminhoFicheiro);
                     break;
                 case 8:
+                    Reuniao.AdicionarReuniao();
+                    Reuniao.GuardarDadosNoFicheiro(Reuniao.caminhoFicheiro);
                     break;
                 default:
                     Console.WriteLine("Opção inválida. Tente novamente.");
@@ -147,41 +167,35 @@ class Program
         Console.WriteLine($"Informações da classe {typeof(T).Name}:");
         foreach (var item in lista)
         {
-            if (item is Condominio condominio)
+            switch (item)
             {
-                Console.WriteLine($"Nome: {condominio.Nome}, Morada: {condominio.Morada}");
-            }
-            else if (item is Despesa despesa)
-            {
-                Console.WriteLine($"Descrição: {despesa.Descricao}, Valor: {despesa.Valor}, Data: {despesa.Data.ToShortDateString()}, Unidade do Condomínio: {despesa.UnidadeCondominio}");
-            }
-            else if (item is Documento documento)
-            {
-                Console.WriteLine($"Nome: {documento.Nome}, Tipo: {documento.Tipo}, Data de Criação: {documento.DataCriacao.ToShortDateString()}, Número de Identificação: {documento.NumeroIdentificacao}");
-            }
-            else if (item is Inquilino inquilino)
-            {
-                Console.WriteLine($"Nome: {inquilino.Nome}, Morada: {inquilino.Morada}, Contacto: {inquilino.Contacto}, Unidade do Condomínio: {inquilino.UnidadeCondominio}, Número de Identificação: {inquilino.NumeroIdentificacao}");
-            }
-            else if (item is Pagamento pagamento)
-            {
-                Console.WriteLine($"Descrição: {pagamento.Descricao}, Valor Pago: {pagamento.ValorPago}, Data: {pagamento.Data.ToShortDateString()}, Unidade do Condomínio: {pagamento.UnidadeCondominio}, Número de Identificação: {pagamento.NumeroIdentificacao}");
-            }
-            else if (item is Proprietario proprietario)
-            {
-                Console.WriteLine($"Nome: {proprietario.Nome}, Morada: {proprietario.Morada}, Contacto: {proprietario.Contacto}, Unidade do Condomínio: {proprietario.UnidadeCondominio}, Número de Identificação: {proprietario.NumeroIdentificacao}");
-            }
-            else if (item is Receita receita)
-            {
-                Console.WriteLine($"Descrição: {receita.Descricao}, Valor: {receita.Valor}, Data: {receita.Data.ToShortDateString()}, Unidade do Condomínio: {receita.UnidadeCondominio}");
-            }
-            else if (item is Reuniao reuniao)
-            {
-                Console.WriteLine($"Assunto: {reuniao.Assunto}, Data e Hora: {reuniao.DataHora}, Local: {reuniao.Local}, Unidade do Condomínio: {reuniao.UnidadeCondominio}");
-            }
-            else
-            {
-                Console.WriteLine(item);
+                case Condominio condominio:
+                    Console.WriteLine($"Nome: {condominio.Nome}, Morada: {condominio.Morada}");
+                    break;
+                case Despesa despesa:
+                    Console.WriteLine($"Descrição: {despesa.Descricao}, Valor: {despesa.Valor}, Data: {despesa.Data.ToShortDateString()}, Unidade do Condomínio: {despesa.UnidadeCondominio}, Estado: {despesa.Estado}");
+                    break;
+                case Documento documento:
+                    Console.WriteLine($"Nome: {documento.Nome}, Tipo: {documento.Tipo}, Data de Criação: {documento.DataCriacao.ToShortDateString()}");
+                    break;
+                case Inquilino inquilino:
+                    Console.WriteLine($"Nome: {inquilino.Nome}, Morada: {inquilino.Morada}, Contacto: {inquilino.Contacto}, Unidade do Condomínio: {inquilino.UnidadeCondominio}");
+                    break;
+                case Pagamento pagamento:
+                    Console.WriteLine($"Descrição: {pagamento.Descricao}, Valor Pago: {pagamento.ValorPago}, Data: {pagamento.Data.ToShortDateString()}, Unidade do Condomínio: {pagamento.UnidadeCondominio}, Estado: {pagamento.Estado}");
+                    break;
+                case Proprietario proprietario:
+                    Console.WriteLine($"Nome: {proprietario.Nome}, Morada: {proprietario.Morada}, Contacto: {proprietario.Contacto}, Unidade do Condomínio: {proprietario.UnidadeCondominio}");
+                    break;
+                case Receita receita:
+                    Console.WriteLine($"Descrição: {receita.Descricao}, Valor: {receita.Valor}, Data: {receita.Data.ToShortDateString()}, Unidade do Condomínio: {receita.UnidadeCondominio}");
+                    break;
+                case Reuniao reuniao:
+                    Console.WriteLine($"Assunto: {reuniao.Assunto}, Data e Hora: {reuniao.DataHora}, Local: {reuniao.Local}, Unidade do Condomínio: {reuniao.UnidadeCondominio}");
+                    break;
+                default:
+                    Console.WriteLine(item);
+                    break;
             }
         }
     }

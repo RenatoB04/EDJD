@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 public class Receita
 {
@@ -9,6 +10,8 @@ public class Receita
     public int UnidadeCondominio { get; set; }
 
     private static List<Receita> ListaReceita = new List<Receita>();
+    public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "receitas.txt");
+    public static bool dadosCarregados = false;
 
     public Receita(string descricao, decimal valor, DateTime data, int unidadeCondominio)
     {
@@ -16,18 +19,84 @@ public class Receita
         Valor = valor;
         Data = data;
         UnidadeCondominio = unidadeCondominio;
+    }
 
-        ListaReceita.Add(this);
+    public static void AdicionarReceita()
+    {
+        Console.Write("Descrição da Receita: ");
+        string descricao = Console.ReadLine();
+
+        Console.Write("Valor da Receita: ");
+        if (decimal.TryParse(Console.ReadLine(), out decimal valor))
+        {
+            Console.Write("Data da Receita (yyyy-MM-dd): ");
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime data))
+            {
+                Console.Write("Unidade do Condomínio: ");
+                if (int.TryParse(Console.ReadLine(), out int unidadeCondominio))
+                {
+                    Receita receita = new Receita(descricao, valor, data, unidadeCondominio);
+                    ListaReceita.Add(receita);
+                    Console.WriteLine("Receita adicionada com sucesso!");
+                    GuardarDadosNoFicheiro(caminhoFicheiro);
+                }
+                else
+                {
+                    Console.WriteLine("Unidade do Condomínio inválida.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Data inválida.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Valor da Receita inválido.");
+        }
     }
 
     public static List<Receita> ObterTodos()
     {
         return ListaReceita;
     }
-    public static void InicializarDados()
+
+    public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        Receita receita1 = new Receita("Taxa de Limpeza", 120.0m, new DateTime(2023, 11, 1), 1);
-        Receita receita2 = new Receita("Caução 2ºA", 500.0m, new DateTime(2023, 11, 15), 2);
-        Receita receita3 = new Receita("Rendas Outubro", 8000.0m, new DateTime(2023, 11, 1), 1);
+        if (!dadosCarregados && File.Exists(caminhoFicheiro))
+        {
+            ListaReceita.Clear();
+
+            string[] linhas = File.ReadAllLines(caminhoFicheiro);
+
+            foreach (string linha in linhas)
+            {
+                string[] dados = linha.Split(',');
+                if (dados.Length == 4)
+                {
+                    Receita receita = new Receita(
+                        dados[0].Trim(),
+                        decimal.Parse(dados[1].Trim()),
+                        DateTime.Parse(dados[2].Trim()),
+                        int.Parse(dados[3].Trim())
+                    );
+
+                    ListaReceita.Add(receita);
+                }
+            }
+
+            dadosCarregados = true;
+        }
+    }
+
+    public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
+    {
+        using (StreamWriter writer = new StreamWriter(caminhoFicheiro))
+        {
+            foreach (Receita receita in ListaReceita)
+            {
+                writer.WriteLine($"{receita.Descricao},{receita.Valor},{receita.Data},{receita.UnidadeCondominio}");
+            }
+        }
     }
 }

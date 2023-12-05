@@ -7,18 +7,20 @@ public class Pagamento
     public string Descricao { get; set; }
     public decimal ValorPago { get; set; }
     public DateTime Data { get; set; }
+    public string Estado { get; set; }
     public int UnidadeCondominio { get; set; }
-    public int NumeroIdentificacao { get; set; }
 
     private static List<Pagamento> ListaPagamento = new List<Pagamento>();
+    public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pagamentos.txt");
+    public static bool dadosCarregados = false;
 
-    public Pagamento(string descricao, decimal valorPago, DateTime data, int unidadeCondominio, int numeroIdentificacao)
+    public Pagamento(string descricao, decimal valorPago, DateTime data, string estado, int unidadeCondominio)
     {
         Descricao = descricao;
         ValorPago = valorPago;
         Data = data;
+        Estado = estado;
         UnidadeCondominio = unidadeCondominio;
-        NumeroIdentificacao = numeroIdentificacao;
     }
 
     public static void AdicionarPagamento()
@@ -32,21 +34,16 @@ public class Pagamento
             Console.Write("Data (yyyy-MM-dd): ");
             if (DateTime.TryParse(Console.ReadLine(), out DateTime data))
             {
+                Console.Write("Estado do Pagamento: ");
+                string estado = Console.ReadLine();
+
                 Console.Write("Unidade do Condomínio: ");
                 if (int.TryParse(Console.ReadLine(), out int unidadeCondominio))
                 {
-                    Console.Write("Número de Identificação: ");
-                    if (int.TryParse(Console.ReadLine(), out int numeroIdentificacao))
-                    {
-                        Pagamento pagamento = new Pagamento(descricao, valorPago, data, unidadeCondominio, numeroIdentificacao);
-                        ListaPagamento.Add(pagamento);
-                        Console.WriteLine("Pagamento adicionado com sucesso!");
-                        SalvarDadosNoArquivo(caminhoArquivo);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Número de Identificação inválido.");
-                    }
+                    Pagamento pagamento = new Pagamento(descricao, valorPago, data, estado, unidadeCondominio);
+                    ListaPagamento.Add(pagamento);
+                    Console.WriteLine("Pagamento adicionado com sucesso!");
+                    GuardarDadosNoFicheiro(caminhoFicheiro);
                 }
                 else
                 {
@@ -69,70 +66,42 @@ public class Pagamento
         return ListaPagamento;
     }
 
-    public static string caminhoArquivo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pagamentos.txt");
-    public static bool dadosCarregados = false;
-
-    static void ExibirInformacoes<T>(List<T> lista)
+    public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        Console.WriteLine($"Informações da classe {typeof(T).Name}:");
+        if (!dadosCarregados && File.Exists(caminhoFicheiro))
+        {
+            ListaPagamento.Clear();
 
-        if (lista.Count == 0)
-        {
-            Console.WriteLine("Nenhum registro encontrado.");
-        }
-        else
-        {
-            foreach (var item in lista)
+            string[] linhas = File.ReadAllLines(caminhoFicheiro);
+
+            foreach (string linha in linhas)
             {
-                if (item is Pagamento pagamento)
+                string[] dados = linha.Split(',');
+                if (dados.Length == 5)
                 {
-                    Console.WriteLine($"Descrição: {pagamento.Descricao}, Valor Pago: {pagamento.ValorPago}, Data: {pagamento.Data.ToShortDateString()}, Unidade do Condomínio: {pagamento.UnidadeCondominio}, Número de Identificação: {pagamento.NumeroIdentificacao}");
-                }
-                else
-                {
-                    Console.WriteLine(item);
+                    Pagamento pagamento = new Pagamento(
+                        dados[0].Trim(),
+                        decimal.Parse(dados[1].Trim()),
+                        DateTime.Parse(dados[2].Trim()),
+                        dados[3].Trim(),
+                        int.Parse(dados[4].Trim())
+                    );
+
+                    ListaPagamento.Add(pagamento);
                 }
             }
-        }
-    }
-    public static void CarregarDadosDoArquivo(string caminhoArquivo)
-    {
-        if (!dadosCarregados && File.Exists(caminhoArquivo))
-        {
-            if (File.Exists(caminhoArquivo))
-            {
-                ListaPagamento.Clear();
 
-                string[] linhas = File.ReadAllLines(caminhoArquivo);
-
-                foreach (string linha in linhas)
-                {
-                    string[] dados = linha.Split(',');
-                    if (dados.Length == 5)
-                    {
-                        Pagamento pagamento = new Pagamento(
-                            dados[0].Trim(),
-                            decimal.Parse(dados[1].Trim()),
-                            DateTime.Parse(dados[2].Trim()),
-                            int.Parse(dados[3].Trim()),
-                            int.Parse(dados[4].Trim())
-                        );
-
-                        ListaPagamento.Add(pagamento);
-                    }
-                }
-            }
             dadosCarregados = true;
         }
     }
 
-    public static void SalvarDadosNoArquivo(string caminhoArquivo)
+    public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
-        using (StreamWriter writer = new StreamWriter(caminhoArquivo))
+        using (StreamWriter writer = new StreamWriter(caminhoFicheiro))
         {
             foreach (Pagamento pagamento in ListaPagamento)
             {
-                writer.WriteLine($"{pagamento.Descricao},{pagamento.ValorPago},{pagamento.Data},{pagamento.UnidadeCondominio},{pagamento.NumeroIdentificacao}");
+                writer.WriteLine($"{pagamento.Descricao},{pagamento.ValorPago},{pagamento.Data},{pagamento.Estado},{pagamento.UnidadeCondominio}");
             }
         }
     }
