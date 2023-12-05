@@ -1,3 +1,0 @@
-Ana Maia,Condomínio 1 4ºB,111222333,1,12
-José Orta,Condomínio 2 1ºD,444555666,2,27
-Marta Ramos,Condomínio 2 2ºA,777888999,1,34

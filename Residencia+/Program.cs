@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 class Program
 {
     static void Main()
     {
+        Pagamento.dadosCarregados = false;
         Condominio.InicializarDados();
         Despesa.InicializarDados();
         Documento.InicializarDados();
         Inquilino.InicializarDados();
-        Pagamento.InicializarDados();
+        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
         Proprietario.InicializarDados();
         Receita.InicializarDados();
         Reuniao.InicializarDados();
@@ -90,10 +92,13 @@ class Program
         }
     }
 
-    //Inacabado (Função de adicionar novo registo)
-
     static void AdicionarNovoRegisto()
     {
+        if (!Pagamento.dadosCarregados)
+    {
+        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
+        Pagamento.dadosCarregados = true;
+    }
         Console.WriteLine("Escolha uma classe para adicionar um novo registro:");
         Console.WriteLine("1. Condomínios\n2. Despesa\n3. Documento\n4. Inquilino\n5. Pagamento\n6. Proprietários\n7. Receita\n8. Reuniões");
 
@@ -111,6 +116,14 @@ class Program
                 case 4:
                     break;
                 case 5:
+                    if (!Pagamento.dadosCarregados)
+                    {
+                        Pagamento.CarregarDadosDoArquivo(Pagamento.caminhoArquivo);
+                    }
+
+                    Pagamento.AdicionarPagamento();
+                    Pagamento.SalvarDadosNoArquivo(Pagamento.caminhoArquivo);
+                    Console.WriteLine("Pagamento adicionado com sucesso!");
                     break;
                 case 6:
                     break;
