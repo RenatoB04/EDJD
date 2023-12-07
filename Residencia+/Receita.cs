@@ -11,7 +11,6 @@ public class Receita
 
     private static List<Receita> ListaReceita = new List<Receita>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "receitas.txt");
-    public static bool dadosCarregados = false;
 
     public Receita(string descricao, decimal valor, DateTime data, int unidadeCondominio)
     {
@@ -58,15 +57,16 @@ public class Receita
 
     public static List<Receita> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaReceita;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaReceita.Clear();
+        ListaReceita.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -84,8 +84,6 @@ public class Receita
                     ListaReceita.Add(receita);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

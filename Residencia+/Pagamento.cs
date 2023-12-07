@@ -12,7 +12,6 @@ public class Pagamento
 
     private static List<Pagamento> ListaPagamento = new List<Pagamento>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pagamentos.txt");
-    public static bool dadosCarregados = false;
 
     public Pagamento(string descricao, decimal valorPago, DateTime data, string estado, int unidadeCondominio)
     {
@@ -63,15 +62,16 @@ public class Pagamento
 
     public static List<Pagamento> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaPagamento;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaPagamento.Clear();
+        ListaPagamento.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -90,8 +90,6 @@ public class Pagamento
                     ListaPagamento.Add(pagamento);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

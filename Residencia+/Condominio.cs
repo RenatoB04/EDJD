@@ -10,7 +10,6 @@ public class Condominio
 
     private static List<Condominio> ListaCondominio = new List<Condominio>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "condominios.txt");
-    public static bool dadosCarregados = false;
 
     public Condominio(string nome, string morada, string contacto)
     {
@@ -38,35 +37,32 @@ public class Condominio
 
     public static List<Condominio> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaCondominio;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
+        ListaCondominio.Clear();
+
+        if (File.Exists(caminhoFicheiro))
         {
-            if (File.Exists(caminhoFicheiro))
+            string[] linhas = File.ReadAllLines(caminhoFicheiro);
+
+            foreach (string linha in linhas)
             {
-                ListaCondominio.Clear();
-
-                string[] linhas = File.ReadAllLines(caminhoFicheiro);
-
-                foreach (string linha in linhas)
+                string[] dados = linha.Split(',');
+                if (dados.Length == 3)
                 {
-                    string[] dados = linha.Split(',');
-                    if (dados.Length == 3)
-                    {
-                        Condominio condominio = new Condominio(
-                            dados[0].Trim(),
-                            dados[1].Trim(),
-                            dados[2].Trim()
-                        );
+                    Condominio condominio = new Condominio(
+                        dados[0].Trim(),
+                        dados[1].Trim(),
+                        dados[2].Trim()
+                    );
 
-                        ListaCondominio.Add(condominio);
-                    }
+                    ListaCondominio.Add(condominio);
                 }
             }
-            dadosCarregados = true;
         }
     }
 

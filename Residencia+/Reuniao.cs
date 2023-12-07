@@ -11,7 +11,6 @@ public class Reuniao
 
     private static List<Reuniao> ListaReuniao = new List<Reuniao>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reunioes.txt");
-    public static bool dadosCarregados = false;
 
     public Reuniao(string assunto, DateTime dataHora, string local, int unidadeCondominio)
     {
@@ -53,15 +52,16 @@ public class Reuniao
 
     public static List<Reuniao> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaReuniao;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaReuniao.Clear();
+        ListaReuniao.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -79,8 +79,6 @@ public class Reuniao
                     ListaReuniao.Add(reuniao);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

@@ -12,7 +12,6 @@ public class Proprietario
 
     private static List<Proprietario> ListaProprietario = new List<Proprietario>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "proprietarios.txt");
-    public static bool dadosCarregados = false;
 
     public Proprietario(string nome, string morada, string contacto, string inquilino, int unidadeCondominio)
     {
@@ -53,15 +52,16 @@ public class Proprietario
 
     public static List<Proprietario> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaProprietario;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaProprietario.Clear();
+        ListaProprietario.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -80,8 +80,6 @@ public class Proprietario
                     ListaProprietario.Add(proprietario);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

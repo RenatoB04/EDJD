@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 class Program
 {
     static void Main()
     {
-        Condominio.dadosCarregados = false;
         Condominio.CarregarDadosDoFicheiro(Condominio.caminhoFicheiro);
-        Despesa.dadosCarregados = false;
         Despesa.CarregarDadosDoFicheiro(Despesa.caminhoFicheiro);
-        Documento.dadosCarregados = false;
         Documento.CarregarDadosDoFicheiro(Documento.caminhoFicheiro);
-        Inquilino.dadosCarregados = false;
         Inquilino.CarregarDadosDoFicheiro(Inquilino.caminhoFicheiro);
-        Pagamento.dadosCarregados = false;
         Pagamento.CarregarDadosDoFicheiro(Pagamento.caminhoFicheiro);
-        Proprietario.dadosCarregados = false;
         Proprietario.CarregarDadosDoFicheiro(Proprietario.caminhoFicheiro);
-        Receita.dadosCarregados = false;
         Receita.CarregarDadosDoFicheiro(Receita.caminhoFicheiro);
-        Reuniao.dadosCarregados = false;
         Reuniao.CarregarDadosDoFicheiro(Reuniao.caminhoFicheiro);
 
         while (true)
@@ -101,16 +92,6 @@ class Program
 
     static void AdicionarNovoRegisto()
     {
-        if (!Pagamento.dadosCarregados)
-    {
-        Pagamento.CarregarDadosDoFicheiro(Pagamento.caminhoFicheiro);
-        Pagamento.dadosCarregados = true;
-    }
-        if (!Condominio.dadosCarregados)
-        {
-            Condominio.CarregarDadosDoFicheiro(Condominio.caminhoFicheiro);
-            Condominio.dadosCarregados = true;
-        }
         Console.WriteLine("Escolha uma classe para adicionar um novo registro:");
         Console.WriteLine("1. Condomínios\n2. Despesa\n3. Documento\n4. Inquilino\n5. Pagamento\n6. Proprietários\n7. Receita\n8. Reuniões");
 
@@ -170,7 +151,7 @@ class Program
             switch (item)
             {
                 case Condominio condominio:
-                    Console.WriteLine($"Nome: {condominio.Nome}, Morada: {condominio.Morada}");
+                    Console.WriteLine($"Nome: {condominio.Nome}, Morada: {condominio.Morada}, Contacto: {condominio.Contacto}");
                     break;
                 case Despesa despesa:
                     Console.WriteLine($"Descrição: {despesa.Descricao}, Valor: {despesa.Valor}, Data: {despesa.Data.ToShortDateString()}, Unidade do Condomínio: {despesa.UnidadeCondominio}, Estado: {despesa.Estado}");

@@ -12,7 +12,6 @@ public class Despesa
 
     private static List<Despesa> ListaDespesa = new List<Despesa>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "despesas.txt");
-    public static bool dadosCarregados = false;
 
     public Despesa(string descricao, decimal valor, DateTime data, int unidadeCondominio, string estado)
     {
@@ -79,15 +78,16 @@ public class Despesa
 
     public static List<Despesa> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaDespesa;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaDespesa.Clear();
+        ListaDespesa.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -106,8 +106,6 @@ public class Despesa
                     ListaDespesa.Add(despesa);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

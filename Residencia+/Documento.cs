@@ -11,7 +11,6 @@ public class Documento
 
     private static List<Documento> ListaDocumento = new List<Documento>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "documentos.txt");
-    public static bool dadosCarregados = false;
 
     public Documento(string nome, string tipo, DateTime dataCriacao, int unidadeCondominio)
     {
@@ -69,15 +68,16 @@ public class Documento
 
     public static List<Documento> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaDocumento;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaDocumento.Clear();
+        ListaDocumento.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -95,8 +95,6 @@ public class Documento
                     ListaDocumento.Add(documento);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 

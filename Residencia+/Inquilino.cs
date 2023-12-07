@@ -11,7 +11,6 @@ public class Inquilino
 
     private static List<Inquilino> ListaInquilino = new List<Inquilino>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "inquilinos.txt");
-    public static bool dadosCarregados = false;
 
     public Inquilino(string nome, string morada, string contacto, int unidadeCondominio)
     {
@@ -64,15 +63,16 @@ public class Inquilino
 
     public static List<Inquilino> ObterTodos()
     {
+        CarregarDadosDoFicheiro(caminhoFicheiro);
         return ListaInquilino;
     }
 
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
-        if (!dadosCarregados && File.Exists(caminhoFicheiro))
-        {
-            ListaInquilino.Clear();
+        ListaInquilino.Clear();
 
+        if (File.Exists(caminhoFicheiro))
+        {
             string[] linhas = File.ReadAllLines(caminhoFicheiro);
 
             foreach (string linha in linhas)
@@ -90,8 +90,6 @@ public class Inquilino
                     ListaInquilino.Add(inquilino);
                 }
             }
-
-            dadosCarregados = true;
         }
     }
 
