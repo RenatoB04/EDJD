@@ -16,7 +16,8 @@ class Program
 
         while (true)
         {
-            Console.WriteLine("Bem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registro\n3. Sair");
+            Console.WriteLine("Bem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registro\n3. Remover dados\n4. Sair");
+
             if (int.TryParse(Console.ReadLine(), out int opcao))
             {
                 Console.Clear();
@@ -29,6 +30,9 @@ class Program
                         AdicionarNovoRegisto();
                         break;
                     case 3:
+                        RemoverDados();
+                        break;
+                    case 4:
                         Console.WriteLine("A encerrar o programa.");
                         return;
                     default:
@@ -42,6 +46,51 @@ class Program
             }
 
             Console.WriteLine();
+        }
+    }
+
+    static void RemoverDados()
+    {
+        Console.WriteLine("Escolha uma classe para remover dados:");
+        Console.WriteLine("1. Condomínios\n2. Despesas\n3. Documentos\n4. Inquilinos\n5. Pagamentos\n6. Proprietários\n7. Receitas\n8. Reuniões");
+
+        if (int.TryParse(Console.ReadLine(), out int opcao))
+        {
+            Console.Clear();
+            switch (opcao)
+            {
+                case 1:
+                    Condominio.RemoverDados();
+                    break;
+                case 2:
+                    Despesa.RemoverDados();
+                    break;
+                case 3:
+                    Documento.RemoverDados();
+                    break;
+                case 4:
+                    Inquilino.RemoverDados();
+                    break;
+                case 5:
+                    Pagamento.RemoverDados();
+                    break;
+                case 6:
+                    Proprietario.RemoverDados();
+                    break;
+                case 7:
+                    Receita.RemoverDados();
+                    break;
+                case 8:
+                    Reuniao.RemoverDados();
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Opção inválida. Tente novamente.");
         }
     }
 

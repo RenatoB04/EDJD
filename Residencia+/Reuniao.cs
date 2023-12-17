@@ -56,6 +56,25 @@ public class Reuniao
         return ListaReuniao;
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva o assunto da Reunião que deseja remover: ");
+        string assunto = Console.ReadLine();
+
+        Reuniao reuniaoParaRemover = ListaReuniao.Find(r => r.Assunto.Equals(assunto, StringComparison.OrdinalIgnoreCase));
+
+        if (reuniaoParaRemover != null)
+        {
+            ListaReuniao.Remove(reuniaoParaRemover);
+            Console.WriteLine("Reunião removida com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Reunião não encontrada.");
+        }
+    }
+
     public static void CarregarDadosDoFicheiro(string caminhoFicheiro)
     {
         ListaReuniao.Clear();

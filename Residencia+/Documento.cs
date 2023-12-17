@@ -98,6 +98,25 @@ public class Documento
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva o nome do Documento que deseja remover: ");
+        string nome = Console.ReadLine();
+
+        Documento documentoParaRemover = ListaDocumento.Find(d => d.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+
+        if (documentoParaRemover != null)
+        {
+            ListaDocumento.Remove(documentoParaRemover);
+            Console.WriteLine("Documento removido com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Documento não encontrado.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

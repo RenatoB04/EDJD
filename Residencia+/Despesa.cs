@@ -109,6 +109,25 @@ public class Despesa
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva a descrição da Despesa que deseja remover: ");
+        string descricao = Console.ReadLine();
+
+        Despesa despesaParaRemover = ListaDespesa.Find(d => d.Descricao.Equals(descricao, StringComparison.OrdinalIgnoreCase));
+
+        if (despesaParaRemover != null)
+        {
+            ListaDespesa.Remove(despesaParaRemover);
+            Console.WriteLine("Despesa removida com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Despesa não encontrada.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

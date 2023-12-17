@@ -87,6 +87,25 @@ public class Receita
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva a descrição da Receita que deseja remover: ");
+        string descricao = Console.ReadLine();
+
+        Receita receitaParaRemover = ListaReceita.Find(r => r.Descricao.Equals(descricao, StringComparison.OrdinalIgnoreCase));
+
+        if (receitaParaRemover != null)
+        {
+            ListaReceita.Remove(receitaParaRemover);
+            Console.WriteLine("Receita removida com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Receita não encontrada.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

@@ -93,6 +93,25 @@ public class Inquilino
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva o nome do Inquilino que deseja remover: ");
+        string nome = Console.ReadLine();
+
+        Inquilino inquilinoParaRemover = ListaInquilino.Find(i => i.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+
+        if (inquilinoParaRemover != null)
+        {
+            ListaInquilino.Remove(inquilinoParaRemover);
+            Console.WriteLine("Inquilino removido com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Inquilino não encontrado.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

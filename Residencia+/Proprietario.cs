@@ -83,6 +83,25 @@ public class Proprietario
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva o nome do Proprietário que deseja remover: ");
+        string nome = Console.ReadLine();
+
+        Proprietario proprietarioParaRemover = ListaProprietario.Find(p => p.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+
+        if (proprietarioParaRemover != null)
+        {
+            ListaProprietario.Remove(proprietarioParaRemover);
+            Console.WriteLine("Proprietário removido com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Proprietário não encontrado.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

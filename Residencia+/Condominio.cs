@@ -66,6 +66,25 @@ public class Condominio
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva o nome do Condomínio que deseja remover: ");
+        string nome = Console.ReadLine();
+
+        Condominio condominioParaRemover = ListaCondominio.Find(c => c.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+
+        if (condominioParaRemover != null)
+        {
+            ListaCondominio.Remove(condominioParaRemover);
+            Console.WriteLine("Condomínio removido com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Condomínio não encontrado.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))

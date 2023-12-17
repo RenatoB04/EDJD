@@ -93,6 +93,25 @@ public class Pagamento
         }
     }
 
+    public static void RemoverDados()
+    {
+        Console.Write("Escreva a descrição do Pagamento que deseja remover: ");
+        string descricao = Console.ReadLine();
+
+        Pagamento pagamentoParaRemover = ListaPagamento.Find(p => p.Descricao.Equals(descricao, StringComparison.OrdinalIgnoreCase));
+
+        if (pagamentoParaRemover != null)
+        {
+            ListaPagamento.Remove(pagamentoParaRemover);
+            Console.WriteLine("Pagamento removido com sucesso!");
+            GuardarDadosNoFicheiro(caminhoFicheiro);
+        }
+        else
+        {
+            Console.WriteLine("Pagamento não encontrado.");
+        }
+    }
+
     public static void GuardarDadosNoFicheiro(string caminhoFicheiro)
     {
         using (StreamWriter writer = new StreamWriter(caminhoFicheiro))
