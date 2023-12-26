@@ -38,6 +38,7 @@ const int BUILDING_COST_ARMOURY = 30;
 const int UNIT_COST_INFANTRY = 10;
 const int UNIT_COST_CAVALRY = 15;
 const int UNIT_COST_ARTILLERY = 20;
+const int ATTACK_COST = 15; // You can adjust the cost as needed
 
 // Combat and health
 const int ATTACK_POWER_INFANTRY = 5;
@@ -430,6 +431,90 @@ void playerRemoveBuilding(char grid[ROWS][COLS]) {
     removeBuilding(grid, row - 1, col);
 }
 
+bool isValidAttack(char attackingUnit, char attackedUnit) {
+    const char player1Units[] = { INFANTRY_GONDORIAN_GUARDS, CAVALRY_SWAN_KNIGHTS, ARTILLERY_TREBUCHETS };
+    const char player2Units[] = { INFANTRY_ORC_WARRIORS, CAVALRY_WARGS, ARTILLERY_SIEGE_TOWERS };
+
+    if ((attackingUnit == INFANTRY_GONDORIAN_GUARDS && strchr(player2Units, attackedUnit) != NULL) ||
+        (attackingUnit == INFANTRY_ORC_WARRIORS && strchr(player1Units, attackedUnit) != NULL)) {
+        return true;
+    }
+
+    printf("Invalid attack. The target cell does not contain a valid unit.\n");
+    return false;
+}
+
+void attackWithUnity(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
+    int startRow, startCol, endRow, endCol;
+
+    printf("Enter the current row and column (e.g., 3 A) of the attacking unit: ");
+    scanf_s("%d", &startRow);
+    char startColLetter;
+    scanf_s(" %c", &startColLetter);
+    startCol = startColLetter - 'A';
+
+    char attackingUnit = grid[startRow - 1][startCol];
+    if ((attackingUnit == INFANTRY_GONDORIAN_GUARDS && currentPlayer != 1) ||
+        (attackingUnit == INFANTRY_ORC_WARRIORS && currentPlayer != 2)) {
+        printf("Invalid selection. You can only attack with your own units.\n");
+        return;
+    }
+
+    printf("Enter the target row and column (e.g., 4 B) of the unit to attack: ");
+    scanf_s("%d", &endRow);
+    char endColLetter;
+    scanf_s(" %c", &endColLetter);
+    endCol = endColLetter - 'A';
+
+    char attackedUnit = grid[endRow - 1][endCol];
+
+    if (isValidAttack(attackingUnit, attackedUnit)) {
+        int attackCost = ATTACK_COST;
+        if (currentPlayer == 1) {
+            *player1Coins -= attackCost;
+        }
+        else {
+            *player2Coins -= attackCost;
+        }
+
+        int healthPoints = 0;
+        switch (attackedUnit) {
+        case 'G':
+            healthPoints = HEALTH_INFANTRY;
+            break;
+        case 'K':
+            healthPoints = HEALTH_CAVALRY;
+            break;
+        case 'T':
+            healthPoints = HEALTH_ARTILLERY;
+            break;
+        case 'O':
+            healthPoints = HEALTH_INFANTRY;
+            break;
+        case 'W':
+            healthPoints = HEALTH_CAVALRY;
+            break;
+        case 'S':
+            healthPoints = HEALTH_ARTILLERY;
+            break;
+        default:
+            printf("Invalid unit type to attack.\n");
+            return;
+        }
+
+        grid[endRow - 1][endCol] = ' ';
+
+        if (currentPlayer == 1) {
+            *player2Coins -= healthPoints;
+        }
+        else {
+            *player1Coins -= healthPoints;
+        }
+
+        printf("Unit attacked successfully! %d health points deducted from the target.\n", healthPoints);
+    }
+}
+
 void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, char grid[ROWS][COLS]) {
     int option = 0;
 
@@ -460,7 +545,7 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
             playerMoveUnit(grid, getCurrentPlayer(), player1Coins, player2Coins);
             break;
         case 5:  //UNDER DEVELOPMENT
-            printf("Attacking with a unit...\n");
+            attackWithUnity(grid, getCurrentPlayer(), &player1Coins, &player2Coins);
             break;
         case 6:
             printf("Ending the turn...\n");
