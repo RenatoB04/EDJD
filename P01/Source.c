@@ -38,7 +38,7 @@ const int BUILDING_COST_ARMOURY = 30;
 const int UNIT_COST_INFANTRY = 10;
 const int UNIT_COST_CAVALRY = 15;
 const int UNIT_COST_ARTILLERY = 20;
-const int ATTACK_COST = 15; // You can adjust the cost as needed
+const int ATTACK_COST = 5;
 
 // Combat and health
 const int ATTACK_POWER_INFANTRY = 5;
@@ -432,16 +432,12 @@ void playerRemoveBuilding(char grid[ROWS][COLS]) {
 }
 
 bool isValidAttack(char attackingUnit, char attackedUnit, int currentPlayer) {
-    printf("Debug - Attacker: %c, Defender: %c, Player: %d\n", attackingUnit, attackedUnit, currentPlayer);
 
     // Check if the attacking unit belongs to the opposite player
     if ((currentPlayer == 1 && strchr("GKT", attackingUnit) != NULL && strchr("OWS", attackedUnit) != NULL) ||
         (currentPlayer == 2 && strchr("OWS", attackingUnit) != NULL && strchr("GKT", attackedUnit) != NULL)) {
-        printf("Debug - Valid attack\n");
         return true;
     }
-
-    printf("Debug - Invalid attack\n");
     return false;
 }
 
@@ -517,25 +513,28 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             printf("Invalid unit type to attack.\n");
             return;
         }
-
         // Update the health of the attacked unit
         if (attackedUnit != ' ') {
-            grid[endRow - 1][endCol] -= attackPower;
+            int row = endRow - 1;
+            int col = endCol;
 
-            if (grid[endRow - 1][endCol] <= 'A') {
-                grid[endRow - 1][endCol] = ' ';
-                printf("Unit destroyed! %d health points deducted from the target.\n", attackPower);
+            char unitType = grid[row][col];  // Store the character in a variable
+            int currentHealth = unitType - '0';  // Convert the character to its corresponding numeric value
+
+            int updatedHealth = currentHealth - attackPower;  // Update the health points
+
+            if (updatedHealth <= 0) {
+                grid[row][col] = ' ';  // Set the cell to empty if health is zero or negative
+                printf("Unit destroyed! %d health points deducted from the target.\n", currentHealth);
             }
             else {
+                // Update only the health points, keeping the character unchanged
+                grid[row][col] = '0' + updatedHealth;  // Convert the updated health to a character and update the grid
                 printf("Unit attacked successfully! %d health points deducted from the target.\n", attackPower);
             }
         }
     }
-    else {
-        printf("Invalid attack. The target cell does not contain a valid unit.\n");
-    }
 }
-
 
 void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, char grid[ROWS][COLS]) {
     int option = 0;
