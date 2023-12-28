@@ -63,6 +63,7 @@ int getCurrentPlayer() {
     return (turn % 2 == 1) ? 1 : 2;
 }
 
+int unitHealth[ROWS][COLS];
 int player1BasePlaced = 0;
 int player2BasePlaced = 0;
 
@@ -149,7 +150,35 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
             printf("Not enough coins to build %s.\n", unit);
             return;
         }
+
         grid[row - 1][col] = *unit;
+        int initialHealth = 0;
+        switch (*unit) {
+        case 'G':
+            initialHealth = HEALTH_INFANTRY;
+            break;
+        case 'K':
+            initialHealth = HEALTH_CAVALRY;
+            break;
+        case 'T':
+            initialHealth = HEALTH_ARTILLERY;
+            break;
+        case 'O':
+            initialHealth = HEALTH_INFANTRY;
+            break;
+        case 'W':
+            initialHealth = HEALTH_CAVALRY;
+            break;
+        case 'S':
+            initialHealth = HEALTH_ARTILLERY;
+            break;
+        default:
+            printf("Invalid unit type.\n");
+            return;
+        }
+
+        unitHealth[row - 1][col] = initialHealth;
+
         printf("Unit placed successfully!\n");
     }
     else {
@@ -238,12 +267,10 @@ bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int co
 
     if (strncmp(building, BASE_GONDOR, 4) == 0 || strncmp(building, BASE_MORDOR, 4) == 0) {
         buildingHealth = HEALTH_BASE;
-
         if ((getCurrentPlayer() == 1 && player1BasePlaced) || (getCurrentPlayer() == 2 && player2BasePlaced)) {
             printf("You can only place one base per game.\n");
             return false;
         }
-
         if (getCurrentPlayer() == 1) {
             player1BasePlaced = 1;
         }
@@ -419,6 +446,10 @@ bool isValidAttack(char attackingUnit, char attackedUnit, int currentPlayer) {
     return false;
 }
 
+void updateUnitHealth(int row, int col, int updatedHealth) {
+    unitHealth[row][col] = updatedHealth;
+}
+
 void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
     int startRow, startCol, endRow, endCol;
 
@@ -446,6 +477,7 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     if (isValidAttack(attackingUnit, attackedUnit, currentPlayer)) {
         int attackCost = ATTACK_COST;
         int attackPower = 0;
+        int targetHealth = 0;
 
         if (currentPlayer == 1) {
             if (*player1Coins >= attackCost) {
@@ -494,16 +526,17 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             int row = endRow - 1;
             int col = endCol;
 
-            int currentHealth = attackedUnit - '0';
+            int currentHealth = unitHealth[row][col];
 
             int updatedHealth = currentHealth - attackPower;
 
             if (updatedHealth <= 0) {
                 grid[row][col] = ' ';
-                printf("Unit destroyed! %d health points deducted from the target.\n", currentHealth);
+                printf("Unit defeated! The target unit has been removed from the grid.\n");
             }
             else {
                 printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
+                unitHealth[row][col] = updatedHealth;
             }
         }
     }
@@ -558,6 +591,12 @@ void startNewGame() {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             grid[i][j] = ' ';
+        }
+    }
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            unitHealth[i][j] = HEALTH_BASE;
         }
     }
 
