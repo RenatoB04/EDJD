@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 
 #define STARTING_COINS 100
 
@@ -19,9 +20,9 @@ const char ARMOURY_DARK_FORGE[] = "DF";
 
 // Units
 const char INFANTRY_GONDORIAN_GUARDS = 'G';
-const char CAVALRY_SWAN_KNIGHTS[] = "K"; //Updated
+const char CAVALRY_SWAN_KNIGHTS[] = "K";
 const char ARTILLERY_TREBUCHETS = 'T';
-const char INFANTRY_ORC_WARRIORS[] = "O"; //Updated
+const char INFANTRY_ORC_WARRIORS[] = "O";
 const char CAVALRY_WARGS = 'W';
 const char ARTILLERY_SIEGE_TOWERS[] = "S";
 
@@ -88,12 +89,10 @@ void displayGrid(char grid[ROWS][COLS]) {
 }
 
 bool isCellEmpty(char grid[ROWS][COLS], int row, int col, int length) {
-    // Check if the cells are within the grid boundaries
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS || col + length > COLS) {
         return false;
     }
 
-    // Check if the cells are empty
     for (int i = 0; i < length; i++) {
         if (grid[row][col + i] != ' ') {
             return false;
@@ -103,7 +102,7 @@ bool isCellEmpty(char grid[ROWS][COLS], int row, int col, int length) {
     return true;
 }
 
-void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) { //BUG : DEDUCT COINS EVEN WHEN 1 BASE IS ALREADY PLACED
+void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins, int* player2Coins) {
     const char* unit = NULL;
     int row = 0, col = 0, unitCost = 0;
 
@@ -135,26 +134,22 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
     scanf_s("%d", &row);
     char colLetter;
     scanf_s(" %c", &colLetter);
-    col = colLetter - 'A'; // Convert letter to column index
+    col = colLetter - 'A';
 
-    size_t length = 1;  // Units occupy only one cell
+    size_t length = 1;
 
     if (isCellEmpty(grid, row, col, length)) {
         if (currentPlayer == 1 && *player1Coins >= unitCost) {
-            // Deduct the unit cost from player 1's coins
             *player1Coins -= unitCost;
         }
         else if (currentPlayer == 2 && *player2Coins >= unitCost) {
-            // Deduct the unit cost from player 2's coins
             *player2Coins -= unitCost;
         }
         else {
             printf("Not enough coins to build %s.\n", unit);
             return;
         }
-
-        // Place the unit after checking for coins
-        grid[row-1][col] = *unit;
+        grid[row - 1][col] = *unit;
         printf("Unit placed successfully!\n");
     }
     else {
@@ -169,21 +164,19 @@ void playerMoveUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     scanf_s("%d", &startRow);
     char startColLetter;
     scanf_s(" %c", &startColLetter);
-    startCol = startColLetter - 'A'; // Convert letter to column index
+    startCol = startColLetter - 'A';
 
     printf("Enter the target row and column (e.g., 4 B) where you want to move the unit: ");
     scanf_s("%d", &endRow);
     char endColLetter;
     scanf_s(" %c", &endColLetter);
-    endCol = endColLetter - 'A'; // Convert letter to column index
+    endCol = endColLetter - 'A';
 
-    size_t length = 1;  // Units occupy only one cell
+    size_t length = 1;
 
-    // Check if the target cell is empty and within bounds
     if (isCellEmpty(grid, endRow - 1, endCol, length)) {
         int movementCost = 0;
 
-        // Determine the movement cost based on the type of unit
         char unitType = grid[startRow - 1][startCol];
         switch (unitType) {
         case 'G':
@@ -209,11 +202,10 @@ void playerMoveUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             return;
         }
 
-        int totalMovementCost = movementCost * (abs(endRow - startRow) + abs(endCol - startCol)); // Calculate total movement cost
+        int totalMovementCost = movementCost * (abs(endRow - startRow) + abs(endCol - startCol));
 
         if ((currentPlayer == 1 && *player1Coins >= totalMovementCost) ||
             (currentPlayer == 2 && *player2Coins >= totalMovementCost)) {
-            // Deduct the movement cost from the corresponding player's coins
             if (currentPlayer == 1) {
                 *player1Coins -= totalMovementCost;
             }
@@ -221,7 +213,6 @@ void playerMoveUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
                 *player2Coins -= totalMovementCost;
             }
 
-            // Move the unit after validation
             grid[endRow - 1][endCol] = unitType;
             grid[startRow - 1][startCol] = ' ';
             printf("Unit moved successfully!\n");
@@ -243,19 +234,16 @@ bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int co
     }
 
     int length = strlen(building);
-    int buildingHealth = 0;  // Start the hp points
+    int buildingHealth = 0;
 
-    // Assign the correct hp points based on the building type
     if (strncmp(building, BASE_GONDOR, 4) == 0 || strncmp(building, BASE_MORDOR, 4) == 0) {
         buildingHealth = HEALTH_BASE;
 
-        // Check if the player has already placed a base
         if ((getCurrentPlayer() == 1 && player1BasePlaced) || (getCurrentPlayer() == 2 && player2BasePlaced)) {
             printf("You can only place one base per game.\n");
             return false;
         }
 
-        // Mark the base as placed for the current player
         if (getCurrentPlayer() == 1) {
             player1BasePlaced = 1;
         }
@@ -273,20 +261,18 @@ bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int co
     if (isCellEmpty(grid, row, col, length)) {
         for (int i = 0; i < length; i++) {
             grid[row][col + i] = building[i];
-            // Assign the hp points to the building
             buildingHealth = buildingHealth;
         }
-        return true;  // Placed successfully
+        return true;
     }
     else {
         printf("Invalid placement. The selected cell is not empty or out of bounds.\n");
-        return false;  // Failed to place
+        return false;
     }
 }
 
 void removeBuilding(char grid[ROWS][COLS], int row, int col) {
     if (row >= 0 && row < ROWS && col >= 0 && col < COLS && grid[row][col] != ' ') {
-        // Remove the building
         int i = 0;
         while (col + i < COLS && grid[row][col + i] != ' ') {
             grid[row][col + i] = ' ';
@@ -304,7 +290,6 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
     int row = 0, col = 0, buildingCost = 0;
 
     if (currentPlayer == 1) {
-        // Player 1 (Gondor/Rivendell) building options
         printf("Player 1 (Gondor/Rivendell) building options:\n");
         printf("1. Gondor Base\n2. Shire Mine\n3. Rohan Barracks\n4. Lothlorien Stables\n5. Gondorian Armoury\n");
         printf("Choose a building (1-5): ");
@@ -338,7 +323,6 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
         }
     }
     else if (currentPlayer == 2) {
-        // Player 2 (Mordor) building options
         printf("Player 2 (Mordor) building options:\n");
         printf("1. Mordor Base\n2. Erebor Mine\n3. Isengard Barracks\n4. Mirkwood Stables\n5. Dark Armoury\n");
         printf("Choose a building (1-5): ");
@@ -380,14 +364,12 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
     scanf_s("%d", &row);
     char colLetter;
     scanf_s(" %c", &colLetter);
-    col = colLetter - 'A'; // Convert letter to column index
+    col = colLetter - 'A';
 
     size_t length = strlen(building);
     if (isCellEmpty(grid, row, col, length)) {
         if (currentPlayer == 1 && *player1Coins >= buildingCost) {
-            // Place the building after checking for coins
             if (placeBuilding(grid, building, row - 1, col)) {
-                // Deduct the building cost from player 1's coins
                 *player1Coins -= buildingCost;
                 printf("Building placed successfully!\n");
             }
@@ -396,9 +378,7 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
             }
         }
         else if (currentPlayer == 2 && *player2Coins >= buildingCost) {
-            // Place the building after checking for coins
             if (placeBuilding(grid, building, row - 1, col)) {
-                // Deduct the building cost from player 2's coins
                 *player2Coins -= buildingCost;
                 printf("Building placed successfully!\n");
             }
@@ -426,14 +406,12 @@ void playerRemoveBuilding(char grid[ROWS][COLS]) {
 
     char colLetter;
     scanf_s(" %c", &colLetter);
-    col = colLetter - 'A'; // Convert letter to column index
+    col = colLetter - 'A';
 
     removeBuilding(grid, row - 1, col);
 }
 
 bool isValidAttack(char attackingUnit, char attackedUnit, int currentPlayer) {
-
-    // Check if the attacking unit belongs to the opposite player
     if ((currentPlayer == 1 && strchr("GKT", attackingUnit) != NULL && strchr("OWS", attackedUnit) != NULL) ||
         (currentPlayer == 2 && strchr("OWS", attackingUnit) != NULL && strchr("GKT", attackedUnit) != NULL)) {
         return true;
@@ -469,7 +447,6 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
         int attackCost = ATTACK_COST;
         int attackPower = 0;
 
-        // Deduct the attack cost from the corresponding player's coins
         if (currentPlayer == 1) {
             if (*player1Coins >= attackCost) {
                 *player1Coins -= attackCost;
@@ -489,7 +466,6 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             }
         }
 
-        // Determine the attack power based on the type of unit
         switch (attackingUnit) {
         case 'G':
             attackPower = ATTACK_POWER_INFANTRY;
@@ -513,24 +489,21 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             printf("Invalid unit type to attack.\n");
             return;
         }
-        // Update the health of the attacked unit
+
         if (attackedUnit != ' ') {
             int row = endRow - 1;
             int col = endCol;
 
-            char unitType = grid[row][col];  // Store the character in a variable
-            int currentHealth = unitType - '0';  // Convert the character to its corresponding numeric value
+            int currentHealth = attackedUnit - '0';
 
-            int updatedHealth = currentHealth - attackPower;  // Update the health points
+            int updatedHealth = currentHealth - attackPower;
 
             if (updatedHealth <= 0) {
-                grid[row][col] = ' ';  // Set the cell to empty if health is zero or negative
+                grid[row][col] = ' ';
                 printf("Unit destroyed! %d health points deducted from the target.\n", currentHealth);
             }
             else {
-                // Update only the health points, keeping the character unchanged
-                grid[row][col] = '0' + updatedHealth;  // Convert the updated health to a character and update the grid
-                printf("Unit attacked successfully! %d health points deducted from the target.\n", attackPower);
+                printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
             }
         }
     }
@@ -582,7 +555,6 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
 void startNewGame() {
     int gameMode;
     char grid[ROWS][COLS];
-    // Initialize the grid with some default value
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             grid[i][j] = ' ';
@@ -598,11 +570,11 @@ void startNewGame() {
             if (scanf_s("%19s", playerChoice, (unsigned int)sizeof(playerChoice)) == 1) {
                 if (playerChoice[0] == '2' || (playerChoice[0] == 'M' && playerChoice[1] == 'o' && playerChoice[2] == 'r' && playerChoice[3] == 'd' && playerChoice[4] == 'o' && playerChoice[5] == 'r')) {
                     printf("You have chosen to play as Mordor.\n");
-                    turn = 2;  // Set the first turn to player 2
+                    turn = 2;
                 }
                 else {
                     printf("You have chosen to play as Gondor/Rivendell.\n");
-                    turn = 1;  // Set the first turn to player 1
+                    turn = 1;
                 }
                 displayGameGrid(&player1Coins, &player2Coins, &turn, grid);
                 printf("Starting the new game...\n");
