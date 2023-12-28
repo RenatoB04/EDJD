@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <time.h>
 
 #define STARTING_COINS 100
 
@@ -64,6 +63,8 @@ int getCurrentPlayer() {
 }
 
 int unitHealth[ROWS][COLS];
+int buildingHealth[ROWS][COLS];
+
 int player1BasePlaced = 0;
 int player2BasePlaced = 0;
 
@@ -439,8 +440,8 @@ void playerRemoveBuilding(char grid[ROWS][COLS]) {
 }
 
 bool isValidAttack(char attackingUnit, char attackedUnit, int currentPlayer) {
-    if ((currentPlayer == 1 && strchr("GKT", attackingUnit) != NULL && strchr("OWS", attackedUnit) != NULL) ||
-        (currentPlayer == 2 && strchr("OWS", attackingUnit) != NULL && strchr("GKT", attackedUnit) != NULL)) {
+    if ((currentPlayer == 1 && strchr("GKT", attackingUnit) != NULL) ||
+        (currentPlayer == 2 && strchr("OWSGF", attackingUnit) != NULL)) {
         return true;
     }
     return false;
@@ -477,7 +478,6 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     if (isValidAttack(attackingUnit, attackedUnit, currentPlayer)) {
         int attackCost = ATTACK_COST;
         int attackPower = 0;
-        int targetHealth = 0;
 
         if (currentPlayer == 1) {
             if (*player1Coins >= attackCost) {
@@ -526,17 +526,51 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             int row = endRow - 1;
             int col = endCol;
 
-            int currentHealth = unitHealth[row][col];
-
-            int updatedHealth = currentHealth - attackPower;
-
-            if (updatedHealth <= 0) {
-                grid[row][col] = ' ';
-                printf("Unit defeated! The target unit has been removed from the grid.\n");
+            if (strchr("GKT", attackedUnit) != NULL) {
+                if (unitHealth[row][col] <= 0) {
+                    printf("Unit defeated! The target unit has already been defeated.\n");
+                }
+                else {
+                    int updatedHealth = unitHealth[row][col] - attackPower;
+                    if (updatedHealth <= 0) {
+                        grid[row][col] = ' ';  // Remove unit
+                        printf("Unit defeated! The target unit has been removed from the grid.\n");
+                    }
+                    else {
+                        printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
+                        updateUnitHealth(row, col, updatedHealth);
+                    }
+                }
             }
             else {
-                printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
-                unitHealth[row][col] = updatedHealth;
+                int buildingTypeIndex = strchr(BASE_GONDOR, attackedUnit) ? 0 : 1;
+                int initialHealth = (buildingTypeIndex == 0) ? HEALTH_BASE : HEALTH_MINE;
+
+                if (buildingHealth[row][col] <= 0) {
+                    if (grid[row][col] != ' ') {
+                        // The building has already been defeated but not removed from the grid
+                        // Remove all cells that the building occupies
+                        for (int i = 0; i < COLS; i++) {
+                            if (grid[row][i] == attackedUnit) {
+                                grid[row][i] = ' ';
+                            }
+                        }
+                        printf("Building defeated! The target building has been removed from the grid.\n");
+                    }
+                    else {
+                        // The building has already been defeated and removed
+                        printf("Building defeated! The target building has already been defeated.\n");
+                    }
+                }
+                else {
+                    // Continue with the attack if the building is still present
+                    int updatedHealth = buildingHealth[row][col] - attackPower;
+                    if (updatedHealth <= 0) {
+                        updatedHealth = 0;  // Ensure that health doesn't go below 0
+                    }
+                    printf("Building attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
+                    buildingHealth[row][col] = updatedHealth;
+                }
             }
         }
     }
@@ -597,6 +631,23 @@ void startNewGame() {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             unitHealth[i][j] = HEALTH_BASE;
+        }
+    }
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (grid[i][j] == 'G' || grid[i][j] == 'M') {
+                buildingHealth[i][j] = HEALTH_BASE;
+            }
+            else if (grid[i][j] == 'S' || grid[i][j] == 'E') {
+                buildingHealth[i][j] = HEALTH_MINE;
+            }
+            else if (strchr("RIL", grid[i][j]) != NULL) {
+                buildingHealth[i][j] = HEALTH_BARRACKS_STABLES_ARMOURY;
+            }
+            else {
+                buildingHealth[i][j] = 0; // Set default value
+            }
         }
     }
 
