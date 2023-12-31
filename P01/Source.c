@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define STARTING_COINS 100
-
 // Buildings
 const char BASE_GONDOR[] = "GGGG";
 const char BASE_MORDOR[] = "MMMM";
@@ -51,6 +49,7 @@ const int HEALTH_INFANTRY = 30;
 const int HEALTH_CAVALRY = 40;
 const int HEALTH_ARTILLERY = 20;
 
+#define STARTING_COINS 100
 int player1Coins = STARTING_COINS;
 int player2Coins = STARTING_COINS;
 int turn = 1;
@@ -67,6 +66,10 @@ int buildingHealth[ROWS][COLS];
 
 int player1BasePlaced = 0;
 int player2BasePlaced = 0;
+
+void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int turn);
+void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn);
+char grid[ROWS][COLS];
 
 void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
@@ -533,7 +536,7 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
                 else {
                     int updatedHealth = unitHealth[row][col] - attackPower;
                     if (updatedHealth <= 0) {
-                        grid[row][col] = ' ';  // Remove unit
+                        grid[row][col] = ' ';
                         printf("Unit defeated! The target unit has been removed from the grid.\n");
                     }
                     else {
@@ -548,8 +551,6 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
 
                 if (buildingHealth[row][col] <= 0) {
                     if (grid[row][col] != ' ') {
-                        // The building has already been defeated but not removed from the grid
-                        // Remove all cells that the building occupies
                         for (int i = 0; i < COLS; i++) {
                             if (grid[row][i] == attackedUnit) {
                                 grid[row][i] = ' ';
@@ -558,15 +559,13 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
                         printf("Building defeated! The target building has been removed from the grid.\n");
                     }
                     else {
-                        // The building has already been defeated and removed
                         printf("Building defeated! The target building has already been defeated.\n");
                     }
                 }
                 else {
-                    // Continue with the attack if the building is still present
                     int updatedHealth = buildingHealth[row][col] - attackPower;
                     if (updatedHealth <= 0) {
-                        updatedHealth = 0;  // Ensure that health doesn't go below 0
+                        updatedHealth = 0;
                     }
                     printf("Building attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
                     buildingHealth[row][col] = updatedHealth;
@@ -587,7 +586,7 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
         else {
             printf("\nOptions (Player 2 - Mordor - %d coins):\n", *player2Coins);
         }
-        printf("1. Place Building\n2. Remove Building\n3. Place Unit\n4. Move Unit\n5. Attack with Unit\n6. End Turn\n");
+        printf("1. Place Building\n2. Remove Building\n3. Place Unit\n4. Move Unit\n5. Attack with Unit\n6. End Turn\n7. Save Game\n");
 
         printf("Enter your choice: ");
         scanf_s("%d", &option);
@@ -611,6 +610,9 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
         case 6:
             printf("Ending the turn...\n");
             *currentPlayer = (*currentPlayer == 1) ? 2 : 1;
+            break;
+        case 7:
+            saveGame(grid, player1Coins, player2Coins, turn);
             break;
         default:
             printf("Invalid option. Please try again.\n");
@@ -646,7 +648,7 @@ void startNewGame() {
                 buildingHealth[i][j] = HEALTH_BARRACKS_STABLES_ARMOURY;
             }
             else {
-                buildingHealth[i][j] = 0; // Set default value
+                buildingHealth[i][j] = 0;
             }
         }
     }
@@ -688,8 +690,51 @@ void startNewGame() {
     }
 }
 
-void loadGame() {  //UNDER DEVELOPMENT
-    printf("\nLoading Game (Under Development)...\n");
+void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int turn) {
+    FILE* file = fopen("savegame.txt", "w");
+
+    if (file == NULL) {
+        printf("Error opening file for writing.\n");
+        return;
+    }
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fprintf(file, "%c", (grid[i][j] == ' ') ? ' ' : grid[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fprintf(file, "%d %d %d", player1Coins, player2Coins, turn);
+
+    fclose(file);
+}
+
+void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn) {
+    FILE* file = fopen("savegame.txt", "r");
+
+    if (file == NULL) {
+        printf("No saved game found.\n");
+        return;
+    }
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            char c;
+            fscanf_s(file, " %c", &c);
+            if (c == '\n') {
+                fscanf_s(file, " %c", &c);
+            }
+            grid[i][j] = (c == ' ') ? ' ' : c;
+        }
+    }
+
+    fscanf_s(file, "%d %d %d", player1Coins, player2Coins, turn);
+
+    fclose(file);
+
+    printf("Game loaded successfully!\n");
+    displayGameGrid(player1Coins, player2Coins, turn, grid);
 }
 
 void settings() {  //UNDER DEVELOPMENT
@@ -709,7 +754,7 @@ int main() {
             startNewGame();
             break;
         case 2:
-            loadGame();
+            loadGame(grid, &player1Coins, &player2Coins, &turn);
             break;
         case 3:
             settings();
