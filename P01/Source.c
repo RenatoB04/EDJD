@@ -16,11 +16,11 @@ const char ARMOURY_GONDORIAN_FORGE[] = "GF";
 const char ARMOURY_DARK_FORGE[] = "DF";
 
 // Units
-const char INFANTRY_GONDORIAN_GUARDS = 'G';
+const char INFANTRY_GONDORIAN_GUARDS[] = "G";
 const char CAVALRY_SWAN_KNIGHTS[] = "K";
-const char ARTILLERY_TREBUCHETS = 'T';
+const char ARTILLERY_TREBUCHETS[] = "T";
 const char INFANTRY_ORC_WARRIORS[] = "O";
-const char CAVALRY_WARGS = 'W';
+const char CAVALRY_WARGS[] = "W";
 const char ARTILLERY_SIEGE_TOWERS[] = "S";
 
 // Economy
@@ -76,10 +76,6 @@ char grid[ROWS][COLS];
 
 void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
-}
-
-void clearConsole() {
-    system("cls");
 }
 
 void displayGrid(char grid[ROWS][COLS]) {
@@ -214,8 +210,11 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
             return;
         }
 
-        if (row > 0 && row <= ROWS && col >= 0 && col < COLS) {
+        if (row > 0 && row <= ROWS && col >= 0 && col < COLS && row - 1 < ROWS && col < COLS) {
             unitHealth[row - 1][col] = initialHealth;
+        }
+        else {
+            printf("Invalid row or column values for updating unit health.\n");
         }
 
         printf("Unit placed successfully!\n");
@@ -646,8 +645,6 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
     }
 
     do {
-        clearConsole();  // Call the clearConsole function
-
         displayGrid(grid);
         if (*currentPlayer == 1) {
             printf("\nOptions (Player 1 - Gondor/Rivendell - %d coins):\n", *player1Coins);

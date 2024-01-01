@@ -1,12 +1,9 @@
 ﻿  Source.c
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(103,43): warning C4028: formal parameter 2 different from declaration
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(103,62): warning C4028: formal parameter 3 different from declaration
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(103,81): warning C4028: formal parameter 4 different from declaration
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(155,65): warning C4047: ':': 'int' differs in levels of indirection from 'const char *'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(159,60): warning C4047: ':': 'const char *' differs in levels of indirection from 'int'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(163,60): warning C4047: ':': 'int' differs in levels of indirection from 'const char *'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(179,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(247,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(306,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(447,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(99,43): warning C4028: formal parameter 2 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(99,62): warning C4028: formal parameter 3 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(99,81): warning C4028: formal parameter 4 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(175,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(246,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(305,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(446,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
   P01.vcxproj -> C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\x64\Debug\P01.exe
