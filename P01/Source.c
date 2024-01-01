@@ -525,52 +525,57 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
             return;
         }
 
-        if (attackedUnit != ' ') {
-            int row = endRow - 1;
-            int col = endCol;
+        if (abs(endRow - startRow) <= 1 && abs(endCol - startCol) <= 1) {
+            if (attackedUnit != ' ') {
+                int row = endRow - 1;
+                int col = endCol;
 
-            if (strchr("GKT", attackedUnit) != NULL) {
-                if (unitHealth[row][col] <= 0) {
-                    printf("Unit defeated! The target unit has already been defeated.\n");
-                }
-                else {
-                    int updatedHealth = unitHealth[row][col] - attackPower;
-                    if (updatedHealth <= 0) {
-                        grid[row][col] = ' ';
-                        printf("Unit defeated! The target unit has been removed from the grid.\n");
+                if (strchr("GKT", attackedUnit) != NULL) {
+                    if (unitHealth[row][col] <= 0) {
+                        printf("Unit defeated! The target unit has already been defeated.\n");
                     }
                     else {
-                        printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
-                        updateUnitHealth(row, col, updatedHealth);
-                    }
-                }
-            }
-            else {
-                int buildingTypeIndex = strchr(BASE_GONDOR, attackedUnit) ? 0 : 1;
-                int initialHealth = (buildingTypeIndex == 0) ? HEALTH_BASE : HEALTH_MINE;
-
-                if (buildingHealth[row][col] <= 0) {
-                    if (grid[row][col] != ' ') {
-                        for (int i = 0; i < COLS; i++) {
-                            if (grid[row][i] == attackedUnit) {
-                                grid[row][i] = ' ';
-                            }
+                        int updatedHealth = unitHealth[row][col] - attackPower;
+                        if (updatedHealth <= 0) {
+                            grid[row][col] = ' ';
+                            printf("Unit defeated! The target unit has been removed from the grid.\n");
                         }
-                        printf("Building defeated! The target building has been removed from the grid.\n");
-                    }
-                    else {
-                        printf("Building defeated! The target building has already been defeated.\n");
+                        else {
+                            printf("Unit attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
+                            updateUnitHealth(row, col, updatedHealth);
+                        }
                     }
                 }
                 else {
-                    int updatedHealth = buildingHealth[row][col] - attackPower;
-                    if (updatedHealth <= 0) {
-                        updatedHealth = 0;
+                    int buildingTypeIndex = strchr(BASE_GONDOR, attackedUnit) ? 0 : 1;
+                    int initialHealth = (buildingTypeIndex == 0) ? HEALTH_BASE : HEALTH_MINE;
+
+                    if (buildingHealth[row][col] <= 0) {
+                        if (grid[row][col] != ' ') {
+                            for (int i = 0; i < COLS; i++) {
+                                if (grid[row][i] == attackedUnit) {
+                                    grid[row][i] = ' ';
+                                }
+                            }
+                            printf("Building defeated! The target building has been removed from the grid.\n");
+                        }
+                        else {
+                            printf("Building defeated! The target building has already been defeated.\n");
+                        }
                     }
-                    printf("Building attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
-                    buildingHealth[row][col] = updatedHealth;
+                    else {
+                        int updatedHealth = buildingHealth[row][col] - attackPower;
+                        if (updatedHealth <= 0) {
+                            updatedHealth = 0;
+                        }
+                        printf("Building attacked successfully! %d health points deducted from the target. Remaining Health: %d\n", attackPower, updatedHealth);
+                        buildingHealth[row][col] = updatedHealth;
+                    }
                 }
             }
+        }
+        else {
+            printf("Invalid attack. The target unit is not within attack range.\n");
         }
     }
 }
@@ -612,7 +617,7 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
             *currentPlayer = (*currentPlayer == 1) ? 2 : 1;
             break;
         case 7:
-            saveGame(grid, player1Coins, player2Coins, turn);
+            saveGame(grid, &player1Coins, &player2Coins, &turn);
             break;
         default:
             printf("Invalid option. Please try again.\n");
@@ -690,7 +695,12 @@ void startNewGame() {
     }
 }
 
-void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int turn) {
+void saveGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* currentTurn) {
+    if (player1Coins == NULL || player2Coins == NULL || currentTurn == NULL) {
+        printf("Error: Null pointer passed to saveGame.\n");
+        return;
+    }
+
     FILE* file = fopen("savegame.txt", "w");
 
     if (file == NULL) {
@@ -705,7 +715,8 @@ void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int tur
         fprintf(file, "\n");
     }
 
-    fprintf(file, "%d %d %d", player1Coins, player2Coins, turn);
+    fprintf(file, "\n%d %d %d", *player1Coins, *player2Coins, *currentTurn);
+    printf("Saved coins: Player 1: %d, Player 2: %d\n", *player1Coins, *player2Coins);
 
     fclose(file);
 }
@@ -718,18 +729,18 @@ void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* 
         return;
     }
 
+    char line[COLS + 2];
     for (int i = 0; i < ROWS; i++) {
+        fgets(line, sizeof(line), file);
         for (int j = 0; j < COLS; j++) {
-            char c;
-            fscanf_s(file, " %c", &c);
-            if (c == '\n') {
-                fscanf_s(file, " %c", &c);
-            }
-            grid[i][j] = (c == ' ') ? ' ' : c;
+            grid[i][j] = line[j];
         }
     }
 
+    fgetc(file);
+
     fscanf_s(file, "%d %d %d", player1Coins, player2Coins, turn);
+    printf("Loaded coins: Player 1: %d, Player 2: %d\n", *player1Coins, *player2Coins);
 
     fclose(file);
 
