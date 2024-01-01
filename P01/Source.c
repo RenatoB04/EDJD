@@ -100,6 +100,32 @@ void displayGrid(char grid[ROWS][COLS]) {
     }
 }
 
+void saveGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* currentTurn) {
+    if (player1Coins == NULL || player2Coins == NULL || currentTurn == NULL) {
+        printf("Error: Null pointer passed to saveGame.\n");
+        return;
+    }
+
+    FILE* file = fopen("savegame.txt", "w");
+
+    if (file == NULL) {
+        printf("Error opening file for writing.\n");
+        return;
+    }
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fprintf(file, "%c", (grid[i][j] == ' ') ? ' ' : grid[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fprintf(file, "\n%d %d %d", *player1Coins, *player2Coins, *currentTurn);
+    printf("Saved coins: Player 1: %d, Player 2: %d\n", *player1Coins, *player2Coins);
+
+    fclose(file);
+}
+
 bool isCellEmpty(char grid[ROWS][COLS], int row, int col, int length) {
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS || col + length > COLS) {
         return false;
@@ -126,15 +152,15 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
 
     switch (choice) {
     case 1:
-        unit = (currentPlayer == 1) ? &INFANTRY_GONDORIAN_GUARDS : &INFANTRY_ORC_WARRIORS;
+        unit = (currentPlayer == 1) ? INFANTRY_GONDORIAN_GUARDS : INFANTRY_ORC_WARRIORS;
         unitCost = UNIT_COST_INFANTRY;
         break;
     case 2:
-        unit = (currentPlayer == 1) ? &CAVALRY_SWAN_KNIGHTS : &CAVALRY_WARGS;
+        unit = (currentPlayer == 1) ? CAVALRY_SWAN_KNIGHTS : CAVALRY_WARGS;
         unitCost = UNIT_COST_CAVALRY;
         break;
     case 3:
-        unit = (currentPlayer == 1) ? &ARTILLERY_TREBUCHETS : &ARTILLERY_SIEGE_TOWERS;
+        unit = (currentPlayer == 1) ? ARTILLERY_TREBUCHETS : ARTILLERY_SIEGE_TOWERS;
         unitCost = UNIT_COST_ARTILLERY;
         break;
     default:
@@ -145,7 +171,7 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
     printf("Enter the row and column (e.g., 3 A) where you want to place the unit: ");
     scanf_s("%d", &row);
     char colLetter;
-    scanf_s(" %c", &colLetter);
+    scanf_s(" %c", &colLetter, 1);
     col = colLetter - 'A';
 
     size_t length = 1;
@@ -188,7 +214,9 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
             return;
         }
 
-        unitHealth[row - 1][col] = initialHealth;
+        if (row > 0 && row <= ROWS && col >= 0 && col < COLS) {
+            unitHealth[row - 1][col] = initialHealth;
+        }
 
         printf("Unit placed successfully!\n");
     }
@@ -203,13 +231,15 @@ void playerMoveUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     printf("Enter the current row and column (e.g., 3 A) of the unit you want to move: ");
     scanf_s("%d", &startRow);
     char startColLetter;
-    scanf_s(" %c", &startColLetter);
+    scanf_s(" %c", &startColLetter, 1);
+
     startCol = startColLetter - 'A';
 
     printf("Enter the target row and column (e.g., 4 B) where you want to move the unit: ");
     scanf_s("%d", &endRow);
     char endColLetter;
-    scanf_s(" %c", &endColLetter);
+    scanf_s(" %c", &endColLetter, 1);
+
     endCol = endColLetter - 'A';
 
     size_t length = 1;
@@ -410,7 +440,7 @@ void playerPlaceBuilding(char grid[ROWS][COLS], int currentPlayer, int* player1C
     printf("Enter the row and column (e.g., 3 A) where you want to place the building: ");
     scanf_s("%d", &row);
     char colLetter;
-    scanf_s(" %c", &colLetter);
+    scanf_s(" %c", &colLetter, 1);
     col = colLetter - 'A';
 
     size_t length = strlen(building);
@@ -452,7 +482,7 @@ void playerRemoveBuilding(char grid[ROWS][COLS]) {
     }
 
     char colLetter;
-    scanf_s(" %c", &colLetter);
+    scanf_s(" %c", &colLetter, 1);
     col = colLetter - 'A';
 
     removeBuilding(grid, row - 1, col);
@@ -476,7 +506,7 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     printf("Enter the current row and column (e.g., 3 A) of the attacking unit: ");
     scanf_s("%d", &startRow);
     char startColLetter;
-    scanf_s(" %c", &startColLetter);
+    scanf_s(" %c", &startColLetter, 1);
     startCol = startColLetter - 'A';
 
     char attackingUnit = grid[startRow - 1][startCol];
@@ -489,7 +519,7 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     printf("Enter the target row and column (e.g., 4 B) of the unit to attack: ");
     scanf_s("%d", &endRow);
     char endColLetter;
-    scanf_s(" %c", &endColLetter);
+    scanf_s(" %c", &endColLetter, 1);
     endCol = endColLetter - 'A';
 
     char attackedUnit = grid[endRow - 1][endCol];
@@ -729,32 +759,6 @@ void startNewGame() {
         printf("Error reading game mode.\n");
         exit(EXIT_FAILURE);
     }
-}
-
-void saveGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* currentTurn) {
-    if (player1Coins == NULL || player2Coins == NULL || currentTurn == NULL) {
-        printf("Error: Null pointer passed to saveGame.\n");
-        return;
-    }
-
-    FILE* file = fopen("savegame.txt", "w");
-
-    if (file == NULL) {
-        printf("Error opening file for writing.\n");
-        return;
-    }
-
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            fprintf(file, "%c", (grid[i][j] == ' ') ? ' ' : grid[i][j]);
-        }
-        fprintf(file, "\n");
-    }
-
-    fprintf(file, "\n%d %d %d", *player1Coins, *player2Coins, *currentTurn);
-    printf("Saved coins: Player 1: %d, Player 2: %d\n", *player1Coins, *player2Coins);
-
-    fclose(file);
 }
 
 void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn) {
