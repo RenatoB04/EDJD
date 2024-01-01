@@ -67,12 +67,19 @@ int buildingHealth[ROWS][COLS];
 int player1BasePlaced = 0;
 int player2BasePlaced = 0;
 
+int player1Mines = 0;
+int player2Mines = 0;
+
 void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int turn);
 void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn);
 char grid[ROWS][COLS];
 
 void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
+}
+
+void clearConsole() {
+    system("cls");
 }
 
 void displayGrid(char grid[ROWS][COLS]) {
@@ -268,6 +275,15 @@ bool placeBuilding(char grid[ROWS][COLS], const char building[], int row, int co
 
     int length = strlen(building);
     int buildingHealth = 0;
+
+    if (strncmp(building, MINE_SHIRE, 2) == 0 || strncmp(building, MINE_EREBOR, 2) == 0) {
+        if (getCurrentPlayer() == 1) {
+            player1Mines++;
+        }
+        else if (getCurrentPlayer() == 2) {
+            player2Mines++;
+        }
+    }
 
     if (strncmp(building, BASE_GONDOR, 4) == 0 || strncmp(building, BASE_MORDOR, 4) == 0) {
         buildingHealth = HEALTH_BASE;
@@ -580,10 +596,28 @@ void attackWithUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins,
     }
 }
 
+void updateMineIncome(int currentPlayer) {
+    if (currentPlayer == 1) {
+        player1Coins += player1Mines * MINE_INCOME;
+    }
+    else {
+        player2Coins += player2Mines * MINE_INCOME;
+    }
+}
+
 void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, char grid[ROWS][COLS]) {
     int option = 0;
 
+    if (*currentPlayer == 1) {
+        *player1Coins += player1Mines * MINE_INCOME;
+    }
+    else {
+        *player2Coins += player2Mines * MINE_INCOME;
+    }
+
     do {
+        clearConsole();  // Call the clearConsole function
+
         displayGrid(grid);
         if (*currentPlayer == 1) {
             printf("\nOptions (Player 1 - Gondor/Rivendell - %d coins):\n", *player1Coins);
@@ -615,9 +649,10 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
         case 6:
             printf("Ending the turn...\n");
             *currentPlayer = (*currentPlayer == 1) ? 2 : 1;
+            updateMineIncome(*currentPlayer);
             break;
         case 7:
-            saveGame(grid, &player1Coins, &player2Coins, &turn);
+            saveGame(grid, player1Coins, player2Coins, currentPlayer);
             break;
         default:
             printf("Invalid option. Please try again.\n");
@@ -629,6 +664,7 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
 void startNewGame() {
     int gameMode;
     char grid[ROWS][COLS];
+
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             grid[i][j] = ' ';
@@ -658,10 +694,10 @@ void startNewGame() {
         }
     }
 
-    printf("\n=== New Game Setup ===\nChoose the game mode:\n1. Single Player\n2. Two Players\nEnter your choice: ");
+    printf("\n=== New Game Setup ===\nChoose the game mode:\n1. Two Players\nEnter your choice: ");
 
     if (scanf_s("%d", &gameMode) == 1) {
-        if (gameMode == 2) {
+        if (gameMode == 1) {
             char playerChoice[20];
             printf("\nChoose your side:\n1. Gondor/Rivendell\n2. Mordor\nEnter your choice: ");
             if (scanf_s("%19s", playerChoice, (unsigned int)sizeof(playerChoice)) == 1) {
@@ -681,7 +717,7 @@ void startNewGame() {
                 exit(EXIT_FAILURE);
             }
         }
-        else if (gameMode == 1) {
+        else if (gameMode == 2) {
             printf("Single-player mode is currently under development.\n");
         }
         else {

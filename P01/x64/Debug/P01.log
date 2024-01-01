@@ -1,75 +1,75 @@
 ﻿  Source.c
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(122,66): warning C4047: ':': 'const char *' differs in levels of indirection from 'const char (*)[2]'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(126,61): warning C4047: ':': 'const char (*)[2]' differs in levels of indirection from 'const char *'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(126,14): warning C4047: '=': 'const char *' differs in levels of indirection from 'const char (*)[2]'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(130,61): warning C4047: ':': 'const char *' differs in levels of indirection from 'const char (*)[2]'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(141,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(141,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(129,66): warning C4047: ':': 'const char *' differs in levels of indirection from 'const char (*)[2]'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(133,61): warning C4047: ':': 'const char (*)[2]' differs in levels of indirection from 'const char *'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(133,14): warning C4047: '=': 'const char *' differs in levels of indirection from 'const char (*)[2]'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(137,61): warning C4047: ':': 'const char *' differs in levels of indirection from 'const char (*)[2]'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(148,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(148,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(141,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(148,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(141,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(148,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(146,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(199,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(199,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(153,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(206,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(206,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(199,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(206,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(199,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(206,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(205,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(205,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(212,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(212,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(205,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(212,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(205,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(212,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(210,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(269,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(397,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(397,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(217,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(276,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(413,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(413,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(397,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(413,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(397,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(413,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(401,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(439,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(439,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(417,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(455,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(455,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(439,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(455,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(439,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(455,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(463,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(463,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(479,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(479,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(463,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(479,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(463,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(479,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(476,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(476,13):
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(492,13): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(492,13):
   placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(476,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(492,13):
   the missing variadic argument 2 is required by format string '%c'
-  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(476,13):
+  C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(492,13):
   this argument is used as a buffer size
   
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,28): warning C4047: 'function': 'int' differs in levels of indirection from 'int **'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,28): warning C4024: 'saveGame': different types for formal and actual parameter 2
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,43): warning C4047: 'function': 'int' differs in levels of indirection from 'int **'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,43): warning C4024: 'saveGame': different types for formal and actual parameter 3
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,58): warning C4047: 'function': 'int' differs in levels of indirection from 'int *'
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(621,58): warning C4024: 'saveGame': different types for formal and actual parameter 4
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(699,43): warning C4028: formal parameter 2 different from declaration
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(699,62): warning C4028: formal parameter 3 different from declaration
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(699,81): warning C4028: formal parameter 4 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,28): warning C4047: 'function': 'int' differs in levels of indirection from 'int *'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,28): warning C4024: 'saveGame': different types for formal and actual parameter 2
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,42): warning C4047: 'function': 'int' differs in levels of indirection from 'int *'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,42): warning C4024: 'saveGame': different types for formal and actual parameter 3
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,56): warning C4047: 'function': 'int' differs in levels of indirection from 'int *'
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(655,56): warning C4024: 'saveGame': different types for formal and actual parameter 4
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(734,43): warning C4028: formal parameter 2 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(734,62): warning C4028: formal parameter 3 different from declaration
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(734,81): warning C4028: formal parameter 4 different from declaration
   P01.vcxproj -> C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\x64\Debug\P01.exe
