@@ -4,16 +4,16 @@
 #include <string.h>
 
 // Buildings
-const char BASE_GONDOR[] = "GGGG";
+const char BASE_GONDOR[] = "BBBB";
 const char BASE_MORDOR[] = "MMMM";
-const char MINE_SHIRE[] = "SS";
+const char MINE_SHIRE[] = "HH";
 const char MINE_EREBOR[] = "EE";
 const char BARRACKS_ROHAN[] = "RR";
 const char BARRACKS_ISENGARD[] = "II";
 const char STABLES_LOTHLORIEN[] = "LL";
-const char STABLES_MIRKWOOD[] = "MK";
-const char ARMOURY_GONDORIAN_FORGE[] = "GF";
-const char ARMOURY_DARK_FORGE[] = "DF";
+const char STABLES_MIRKWOOD[] = "OO";
+const char ARMOURY_GONDORIAN_FORGE[] = "GG";
+const char ARMOURY_DARK_FORGE[] = "DD";
 
 // Units
 const char INFANTRY_GONDORIAN_GUARDS[] = "G";
@@ -76,6 +76,20 @@ char grid[ROWS][COLS];
 
 void displayMainMenu() {
     printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
+}
+
+int isBaseDestroyed(char grid[ROWS][COLS], int currentPlayer) {
+    const char* base = (currentPlayer == 1) ? BASE_GONDOR : BASE_MORDOR;
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS - 3; j++) {
+            if (strncmp(grid[i] + j, base, 4) == 0) {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
 }
 
 void displayGrid(char grid[ROWS][COLS]) {
@@ -676,7 +690,17 @@ void displayGameGrid(int* player1Coins, int* player2Coins, int* currentPlayer, c
         case 6:
             printf("Ending the turn...\n");
             *currentPlayer = (*currentPlayer == 1) ? 2 : 1;
-            updateMineIncome(*currentPlayer);
+
+            if ((*currentPlayer == 1 && player2BasePlaced == 1) || (*currentPlayer == 2 && player1BasePlaced == 1)) {
+                updateMineIncome(*currentPlayer);
+                if ((*currentPlayer == 1 && isBaseDestroyed(grid, 2)) || (*currentPlayer == 2 && isBaseDestroyed(grid, 1))) {
+                    printf("Player %d wins!\n", *currentPlayer);
+                    return;
+                }
+            }
+            else {
+                printf("Opponent's base not placed yet. Cannot declare a winner.\n");
+            }
             break;
         case 7:
             saveGame(grid, player1Coins, player2Coins, currentPlayer);
@@ -814,6 +838,7 @@ int main() {
             printf("Invalid choice. Please try again.\n");
             break;
         }
+
     } while (choice != 4);
 
     return 0;
