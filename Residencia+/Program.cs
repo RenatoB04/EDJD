@@ -16,7 +16,7 @@ class Program
 
         while (true)
         {
-            Console.WriteLine("Bem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registro\n3. Remover dados\n4. Sair");
+            Console.WriteLine("Bem-vindo ao Residencia+\nEscolha uma opção:\n1. Consultar informações\n2. Adicionar novo registo\n3. Remover dados\n4. Sair");
 
             if (int.TryParse(Console.ReadLine(), out int opcao))
             {
@@ -141,7 +141,7 @@ class Program
 
     static void AdicionarNovoRegisto()
     {
-        Console.WriteLine("Escolha uma classe para adicionar um novo registro:");
+        Console.WriteLine("Escolha uma classe para adicionar um novo registo:");
         Console.WriteLine("1. Condomínios\n2. Despesa\n3. Documento\n4. Inquilino\n5. Pagamento\n6. Proprietários\n7. Receita\n8. Reuniões");
 
         if (int.TryParse(Console.ReadLine(), out int opcao))

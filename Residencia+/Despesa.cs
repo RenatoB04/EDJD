@@ -8,7 +8,7 @@ public class Despesa
     public decimal Valor { get; set; }
     public DateTime Data { get; set; }
     public int UnidadeCondominio { get; set; }
-    public int Estado { get; set; }
+    public string Estado { get; set; }
 
     private static List<Despesa> ListaDespesa = new List<Despesa>();
     public static string caminhoFicheiro = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "despesas.txt");
@@ -19,7 +19,7 @@ public class Despesa
         Valor = valor;
         Data = data;
         UnidadeCondominio = unidadeCondominio;
-        Estado = Estado;
+        Estado = estado;
     }
 
     public static void AdicionarDespesa()
