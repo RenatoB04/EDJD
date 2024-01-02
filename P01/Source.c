@@ -24,6 +24,7 @@ const char CAVALRY_WARGS[] = "W";
 const char ARTILLERY_SIEGE_TOWERS[] = "S";
 
 // Economy
+#define STARTING_COINS 100
 const int MOVEMENT_COST_INFANTRY = 2;
 const int MOVEMENT_COST_CAVALRY = 1;
 const int MOVEMENT_COST_ARTILLERY = 3;
@@ -49,17 +50,12 @@ const int HEALTH_INFANTRY = 30;
 const int HEALTH_CAVALRY = 40;
 const int HEALTH_ARTILLERY = 20;
 
-#define STARTING_COINS 100
 int player1Coins = STARTING_COINS;
 int player2Coins = STARTING_COINS;
 int turn = 1;
 
 #define ROWS 17
 #define COLS 26
-
-int getCurrentPlayer() {
-    return (turn % 2 == 1) ? 1 : 2;
-}
 
 int unitHealth[ROWS][COLS];
 int buildingHealth[ROWS][COLS];
@@ -70,12 +66,11 @@ int player2BasePlaced = 0;
 int player1Mines = 0;
 int player2Mines = 0;
 
-void saveGame(char grid[ROWS][COLS], int player1Coins, int player2Coins, int turn);
 void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn);
 char grid[ROWS][COLS];
 
-void displayMainMenu() {
-    printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Settings\n4. Exit\n");
+int getCurrentPlayer() {
+    return (turn % 2 == 1) ? 1 : 2;
 }
 
 int isBaseDestroyed(char grid[ROWS][COLS], int currentPlayer) {
@@ -164,14 +159,29 @@ void playerPlaceUnit(char grid[ROWS][COLS], int currentPlayer, int* player1Coins
     case 1:
         unit = (currentPlayer == 1) ? INFANTRY_GONDORIAN_GUARDS : INFANTRY_ORC_WARRIORS;
         unitCost = UNIT_COST_INFANTRY;
+        const char* requiredBarracks = (currentPlayer == 1) ? BARRACKS_ROHAN : BARRACKS_ISENGARD;
+        if (!strstr(grid[0], requiredBarracks)) {
+            printf("Cannot place infantry units without placing Barracks.\n");
+            return;
+        }
         break;
     case 2:
         unit = (currentPlayer == 1) ? CAVALRY_SWAN_KNIGHTS : CAVALRY_WARGS;
         unitCost = UNIT_COST_CAVALRY;
+        const char* requiredCavalry = (currentPlayer == 1) ? STABLES_LOTHLORIEN : STABLES_MIRKWOOD;
+        if (!strstr(grid[0], requiredCavalry)) {
+            printf("Cannot place cavalry units without placing Stables.\n");
+            return;
+        }
         break;
     case 3:
         unit = (currentPlayer == 1) ? ARTILLERY_TREBUCHETS : ARTILLERY_SIEGE_TOWERS;
         unitCost = UNIT_COST_ARTILLERY;
+        const char* requiredArmory = (currentPlayer == 1) ? ARMOURY_GONDORIAN_FORGE : ARMOURY_DARK_FORGE;
+        if (!strstr(grid[0], requiredArmory)) {
+            printf("Cannot place artillery without a required armory.\n");
+            return;
+        }
         break;
     default:
         printf("Invalid choice.\n");
@@ -809,15 +819,11 @@ void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* 
     displayGameGrid(player1Coins, player2Coins, turn, grid);
 }
 
-void settings() {  //UNDER DEVELOPMENT
-    printf("\nSettings (Under Development)...\n");
-}
-
 int main() {
     int choice;
 
     do {
-        displayMainMenu();
+        printf("=== Main Menu ===\n1. Start New Game\n2. Load Game\n3. Exit\n");
         printf("Enter your choice: ");
         scanf_s("%d", &choice);
 
@@ -829,9 +835,6 @@ int main() {
             loadGame(grid, &player1Coins, &player2Coins, &turn);
             break;
         case 3:
-            settings();
-            break;
-        case 4:
             printf("Exiting the game. Goodbye!\n");
             break;
         default:
@@ -839,7 +842,7 @@ int main() {
             break;
         }
 
-    } while (choice != 4);
+    } while (choice != 3);
 
     return 0;
 }
