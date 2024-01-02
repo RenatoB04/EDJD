@@ -732,29 +732,6 @@ void startNewGame() {
         }
     }
 
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            unitHealth[i][j] = HEALTH_BASE;
-        }
-    }
-
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            if (grid[i][j] == 'G' || grid[i][j] == 'M') {
-                buildingHealth[i][j] = HEALTH_BASE;
-            }
-            else if (grid[i][j] == 'S' || grid[i][j] == 'E') {
-                buildingHealth[i][j] = HEALTH_MINE;
-            }
-            else if (strchr("RIL", grid[i][j]) != NULL) {
-                buildingHealth[i][j] = HEALTH_BARRACKS_STABLES_ARMOURY;
-            }
-            else {
-                buildingHealth[i][j] = 0;
-            }
-        }
-    }
-
     printf("\n=== New Game Setup ===\nChoose the game mode:\n1. Two Players\nEnter your choice: ");
 
     if (scanf_s("%d", &gameMode) == 1) {
