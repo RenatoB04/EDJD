@@ -1,6 +1,6 @@
 ﻿  Source.c
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(199,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(270,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(329,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(470,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(234,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(315,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(381,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\Source.c(538,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
   P01.vcxproj -> C:\Users\Lenovo\Documents\GitHub\P01-PI\P01\x64\Debug\P01.exe
