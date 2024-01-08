@@ -1,3 +1,9 @@
+/* Needs fixing:
+- Building Health
+- Mine's coin count even after being destroyed
+- Player 2 Artillery is set as a building
+- Input validations*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -876,27 +882,35 @@ void startNewGame() {
 
 // Function to load a saved game from a file
 void loadGame(char grid[ROWS][COLS], int* player1Coins, int* player2Coins, int* turn) {
+    // Open the savegame.txt file for reading
     FILE* file = fopen("savegame.txt", "r");
 
-    // Check if the file was successfully opened
+    // Check if the file exists
     if (file == NULL) {
         printf("No saved game found.\n");
         return;
     }
 
-    // Read the game grid from the file
+    // Read the game grid from the file and populate the grid array
+    char line[COLS + 2];
     for (int i = 0; i < ROWS; i++) {
-        fgets(grid[i], COLS + 1, file);
+        fgets(line, sizeof(line), file);
+        for (int j = 0; j < COLS; j++) {
+            grid[i][j] = line[j];
+        }
     }
 
-    // Read player coins and current turn
+    // Consume the newline character after the grid data
+    fgetc(file);
+
     fscanf_s(file, "%d %d %d", player1Coins, player2Coins, turn);
+
     printf("Loaded coins: Player 1: %d, Player 2: %d\n", *player1Coins, *player2Coins);
 
+    // Close the file after reading
     fclose(file);
 
     printf("Game loaded successfully!\n");
-
     displayGameGrid(player1Coins, player2Coins, turn, grid);
 }
 
