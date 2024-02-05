@@ -1,5 +1,6 @@
 /* Needs fixing:
 - Building Health
+- Mine's coin not being added sucessfully after each turn
 - Mine's coin count even after being destroyed
 - Player 2 Artillery is set as a building
 - Input validations*/
