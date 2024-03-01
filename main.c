@@ -1,14 +1,26 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <limits.h>
 
 #define MAX_SIZE 10
+
+void printMatrix(int matrix[MAX_SIZE][MAX_SIZE], int n) {
+    printf("Matriz:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
 
 int maxSum(int matrix[MAX_SIZE][MAX_SIZE], int n) {
     int sum = 0;
     int selectedRows[MAX_SIZE] = {0};
     int selectedCols[MAX_SIZE] = {0};
 
-    printf("Selected numbers:\n");
+    printf("Numeros selecionados:\n");
 
     for (int i = 0; i < n; i++) {
         int max = 0;
@@ -35,19 +47,29 @@ int maxSum(int matrix[MAX_SIZE][MAX_SIZE], int n) {
 }
 
 int main() {
-    int matrix[MAX_SIZE][MAX_SIZE] = {
-        {7, 53, 183, 439, 863},
-        {497, 383, 563, 79, 973},
-        {287, 63, 343, 169, 583},
-        {627, 343, 773, 959, 943},
-        {767, 473, 103, 699, 303}
-    };
+    FILE *file = fopen("matriz.txt", "r");
+    if (file == NULL) {
+        fprintf(stderr, "Erro ao abrir o arquivo.\n");
+        return 1;
+    }
 
-    int n = sizeof(matrix[0]) / sizeof(matrix[0][0]);
+    int matrix[MAX_SIZE][MAX_SIZE];
+    int n = 0;
+
+    while (fscanf(file, "%d", &matrix[n][0]) != EOF) {
+        for (int j = 1; j < MAX_SIZE; j++) {
+            fscanf(file, ";%d", &matrix[n][j]);
+        }
+        n++;
+    }
+
+    fclose(file);
+
+    printMatrix(matrix, n);
 
     int result = maxSum(matrix, n);
 
-    printf("Maximum possible sum: %d\n", result);
+    printf("\nSoma maxima possivel: %d\n", result);
 
     return 0;
 }
