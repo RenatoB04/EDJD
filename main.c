@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 #define MAX_SIZE 10
 
@@ -22,22 +21,26 @@ int maxSum(int matrix[MAX_SIZE][MAX_SIZE], int n) {
 
     printf("Numeros selecionados:\n");
 
-    for (int i = 0; i < n; i++) {
+    for (int k = 0; k < n; k++) {
         int max = 0;
-        int maxIndex = -1;
+        int maxRowIndex = -1;
+        int maxColIndex = -1;
 
-        for (int j = 0; j < n; j++) {
-            if (!selectedRows[i] && !selectedCols[j] && matrix[i][j] > max) {
-                max = matrix[i][j];
-                maxIndex = j;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!selectedRows[i] && !selectedCols[j] && matrix[i][j] > max) {
+                    max = matrix[i][j];
+                    maxRowIndex = i;
+                    maxColIndex = j;
+                }
             }
         }
 
-        if (maxIndex != -1) {
+        if (maxRowIndex != -1 && maxColIndex != -1) {
             printf("%d ", max);
             sum += max;
-            selectedRows[i] = 1;
-            selectedCols[maxIndex] = 1;
+            selectedRows[maxRowIndex] = 1;
+            selectedCols[maxColIndex] = 1;
         }
     }
 
