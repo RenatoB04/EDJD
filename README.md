@@ -1,6 +1,6 @@
-<pre>Estruturas de Dados Avançadas
+# Estruturas de Dados Avançadas
 
-Fase 1 - Listas ligadas
+<pre>Fase 1 - Listas ligadas
 Pretende-se uma solução para o cálculo da soma máxima possível dos inteiros de 
 uma matriz de inteiros com qualquer dimensão, de modo que nenhum dos inteiros 
 selecionados compartilhe a mesma linha ou coluna. Por exemplo, a soma máxima 
