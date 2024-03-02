@@ -1,52 +1,33 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdbool.h>
 
-#define MAX_SIZE 10
+#define MAX_SIZE 5
 
-void printMatrix(int matrix[MAX_SIZE][MAX_SIZE], int n) {
-    printf("Matriz:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
+int maxSum = 0;
+int combination[5];
+int maxCombination[5];
 
-int maxSum(int matrix[MAX_SIZE][MAX_SIZE], int n) {
-    int sum = 0;
-    int selectedRows[MAX_SIZE] = {0};
-    int selectedCols[MAX_SIZE] = {0};
-
-    printf("Numeros selecionados:\n");
-
-    for (int k = 0; k < n; k++) {
-        int max = 0;
-        int maxRowIndex = -1;
-        int maxColIndex = -1;
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (!selectedRows[i] && !selectedCols[j] && matrix[i][j] > max) {
-                    max = matrix[i][j];
-                    maxRowIndex = i;
-                    maxColIndex = j;
-                }
+void findMaxSum(int matrix[MAX_SIZE][MAX_SIZE], int n, int row, int col, int sum, bool usedRows[MAX_SIZE], bool usedCols[MAX_SIZE]) {
+    if (col >= n) {
+        if (sum > maxSum) {
+            maxSum = sum;
+            for (int i = 0; i < 5; i++) {
+                maxCombination[i] = combination[i];
             }
         }
-
-        if (maxRowIndex != -1 && maxColIndex != -1) {
-            printf("%d ", max);
-            sum += max;
-            selectedRows[maxRowIndex] = 1;
-            selectedCols[maxColIndex] = 1;
-        }
+        return;
     }
 
-    printf("\n");
-
-    return sum;
+    for (int i = 0; i < n; i++) {
+        if (!usedRows[i] && !usedCols[col]) {
+            usedRows[i] = true;
+            usedCols[col] = true;
+            combination[col] = matrix[i][col];
+            findMaxSum(matrix, n, row, col + 1, sum + matrix[i][col], usedRows, usedCols);
+            usedRows[i] = false;
+            usedCols[col] = false;
+        }
+    }
 }
 
 int main() {
@@ -57,22 +38,32 @@ int main() {
     }
 
     int matrix[MAX_SIZE][MAX_SIZE];
-    int n = 0;
-
-    while (fscanf(file, "%d", &matrix[n][0]) != EOF) {
-        for (int j = 1; j < MAX_SIZE; j++) {
-            fscanf(file, ";%d", &matrix[n][j]);
+    printf("Matriz:\n");
+    for (int i = 0; i < MAX_SIZE; i++) {
+        for (int j = 0; j < MAX_SIZE; j++) {
+            if (fscanf(file, "%d", &matrix[i][j]) != 1) {
+                fprintf(stderr, "Erro ao ler o arquivo.\n");
+                fclose(file);
+                return 1;
+            }
+            printf("%d ", matrix[i][j]);
+            fgetc(file);
         }
-        n++;
+        printf("\n");
     }
 
     fclose(file);
 
-    printMatrix(matrix, n);
+    bool usedRows[MAX_SIZE] = {false};
+    bool usedCols[MAX_SIZE] = {false};
 
-    int result = maxSum(matrix, n);
+    findMaxSum(matrix, MAX_SIZE, 0, 0, 0, usedRows, usedCols);
 
-    printf("\nSoma maxima possivel: %d\n", result);
+    printf("\nElementos selecionados:\n");
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", maxCombination[i]);
+    }
+    printf("\n\nMaior soma possivel: %d\n\n", maxSum);
 
     return 0;
 }
