@@ -1,4 +1,4 @@
-# Turn-based strategy game
+# Programação Imperativa
  
 <pre>1 - Introduction 
 The project assignment subject is inspired by the novel The Lord of the Rings,
