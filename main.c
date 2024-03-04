@@ -9,17 +9,18 @@ typedef struct Node {
 
 typedef struct ED {
     Node* head;
+    int length;
 } ED;
 
 int maxSum = 0;
 int *combination;
 int *maxCombination;
 
-void findMaxSum(ED* matrix, int n, int row, int col, int sum, bool *usedRows, bool *usedCols) {
-    if (col >= n) {
+void findMaxSum(ED* matrix, int n, int m, int row, int col, int sum, bool *usedRows, bool *usedCols) {
+    if (col >= m) {
         if (sum > maxSum) {
             maxSum = sum;
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < m; i++) {
                 maxCombination[i] = combination[i];
             }
         }
@@ -35,7 +36,7 @@ void findMaxSum(ED* matrix, int n, int row, int col, int sum, bool *usedRows, bo
                 node = node->next;
             }
             combination[col] = node->data;
-            findMaxSum(matrix, n, row, col + 1, sum + node->data, usedRows, usedCols);
+            findMaxSum(matrix, n, m, row, col + 1, sum + node->data, usedRows, usedCols);
             usedRows[i] = false;
             usedCols[col] = false;
         }
@@ -49,21 +50,25 @@ int main() {
         return 1;
     }
 
-    int n = 0;
+    int n = 0, m = 0;
     char ch;
     while(!feof(file)) {
         ch = fgetc(file);
         if(ch == '\n' || ch == EOF) {
             n++;
         }
+        if(ch == ';' && n == 1) {
+            m++;
+        }
     }
+    m++;
     rewind(file);
 
     ED* matrix = malloc(n * sizeof(ED));
     for (int i = 0; i < n; i++) {
         matrix[i].head = NULL;
         Node** current = &(matrix[i].head);
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < m; j++) {
             *current = malloc(sizeof(Node));
             if (fscanf(file, "%d;", &((*current)->data)) != 1) {
                 fprintf(stderr, "Erro ao ler o arquivo.\n");
@@ -75,8 +80,8 @@ int main() {
         *current = NULL;
     }
 
-    combination = malloc(n * sizeof(int));
-    maxCombination = malloc(n * sizeof(int));
+    combination = malloc(m * sizeof(int));
+    maxCombination = malloc(m * sizeof(int));
 
     printf("Matriz:\n");
     for (int i = 0; i < n; i++) {
@@ -91,12 +96,12 @@ int main() {
     fclose(file);
 
     bool *usedRows = calloc(n, sizeof(bool));
-    bool *usedCols = calloc(n, sizeof(bool));
+    bool *usedCols = calloc(m, sizeof(bool));
 
-    findMaxSum(matrix, n, 0, 0, 0, usedRows, usedCols);
+    findMaxSum(matrix, n, m, 0, 0, 0, usedRows, usedCols);
 
     printf("\nElementos selecionados:\n");
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < m; i++) {
         printf("%d ", maxCombination[i]);
     }
     printf("\n\nMaior soma possivel: %d\n", maxSum);
