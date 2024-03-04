@@ -2,11 +2,20 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+typedef struct List {
+    Node* head;
+} List;
+
 int maxSum = 0;
 int *combination;
 int *maxCombination;
 
-void findMaxSum(int **matrix, int n, int row, int col, int sum, bool *usedRows, bool *usedCols) {
+void findMaxSum(List* matrix, int n, int row, int col, int sum, bool *usedRows, bool *usedCols) {
     if (col >= n) {
         if (sum > maxSum) {
             maxSum = sum;
@@ -21,8 +30,12 @@ void findMaxSum(int **matrix, int n, int row, int col, int sum, bool *usedRows, 
         if (!usedRows[i] && !usedCols[col]) {
             usedRows[i] = true;
             usedCols[col] = true;
-            combination[col] = matrix[i][col];
-            findMaxSum(matrix, n, row, col + 1, sum + matrix[i][col], usedRows, usedCols);
+            Node* node = matrix[i].head;
+            for (int j = 0; j < col; j++) {
+                node = node->next;
+            }
+            combination[col] = node->data;
+            findMaxSum(matrix, n, row, col + 1, sum + node->data, usedRows, usedCols);
             usedRows[i] = false;
             usedCols[col] = false;
         }
@@ -46,9 +59,20 @@ int main() {
     }
     rewind(file);
 
-    int **matrix = malloc(n * sizeof(int *));
+    List* matrix = malloc(n * sizeof(List));
     for (int i = 0; i < n; i++) {
-        matrix[i] = malloc(n * sizeof(int));
+        matrix[i].head = NULL;
+        Node** current = &(matrix[i].head);
+        for (int j = 0; j < n; j++) {
+            *current = malloc(sizeof(Node));
+            if (fscanf(file, "%d;", &((*current)->data)) != 1) {
+                fprintf(stderr, "Erro ao ler o arquivo.\n");
+                fclose(file);
+                return 1;
+            }
+            current = &((*current)->next);
+        }
+        *current = NULL;
     }
 
     combination = malloc(n * sizeof(int));
@@ -56,13 +80,10 @@ int main() {
 
     printf("Matriz:\n");
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (fscanf(file, "%d;", &matrix[i][j]) != 1) {
-                fprintf(stderr, "Erro ao ler o arquivo.\n");
-                fclose(file);
-                return 1;
-            }
-            printf("%d ", matrix[i][j]);
+        Node* node = matrix[i].head;
+        while (node != NULL) {
+            printf("%d ", node->data);
+            node = node->next;
         }
         printf("\n");
     }
@@ -80,9 +101,13 @@ int main() {
     }
     printf("\n\nMaior soma possivel: %d\n", maxSum);
 
-    // Free dynamically allocated memory
     for (int i = 0; i < n; i++) {
-        free(matrix[i]);
+        Node* node = matrix[i].head;
+        while (node != NULL) {
+            Node* next = node->next;
+            free(node);
+            node = next;
+        }
     }
     free(matrix);
     free(usedRows);
