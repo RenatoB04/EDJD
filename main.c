@@ -7,15 +7,15 @@ typedef struct Node {
     struct Node* next;
 } Node;
 
-typedef struct List {
+typedef struct ED {
     Node* head;
-} List;
+} ED;
 
 int maxSum = 0;
 int *combination;
 int *maxCombination;
 
-void findMaxSum(List* matrix, int n, int row, int col, int sum, bool *usedRows, bool *usedCols) {
+void findMaxSum(ED* matrix, int n, int row, int col, int sum, bool *usedRows, bool *usedCols) {
     if (col >= n) {
         if (sum > maxSum) {
             maxSum = sum;
@@ -59,7 +59,7 @@ int main() {
     }
     rewind(file);
 
-    List* matrix = malloc(n * sizeof(List));
+    ED* matrix = malloc(n * sizeof(ED));
     for (int i = 0; i < n; i++) {
         matrix[i].head = NULL;
         Node** current = &(matrix[i].head);
