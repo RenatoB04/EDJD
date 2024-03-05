@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct Node {
     int data;
@@ -43,6 +44,45 @@ void findMaxSum(ED* matrix, int n, int m, int row, int col, int sum, bool *usedR
     }
 }
 
+void insertNode(ED* matrix, int data) {
+    Node* newNode = malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (matrix->head == NULL) {
+        matrix->head = newNode;
+    } else {
+        Node* temp = matrix->head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+void printMatrix(ED* matrix, int n, int m) {
+    for (int i = 0; i < n; i++) {
+        Node* node = matrix[i].head;
+        while (node != NULL) {
+            printf("%d ", node->data);
+            node = node->next;
+        }
+        printf("\n");
+    }
+}
+
+void freeMatrix(ED* matrix, int n) {
+    for (int i = 0; i < n; i++) {
+        Node* node = matrix[i].head;
+        while (node != NULL) {
+            Node* next = node->next;
+            free(node);
+            node = next;
+        }
+    }
+    free(matrix);
+}
+
 int main() {
     FILE *file = fopen("matriz.txt", "r");
     if (file == NULL) {
@@ -73,6 +113,7 @@ int main() {
             if (fscanf(file, "%d;", &((*current)->data)) != 1) {
                 fprintf(stderr, "Erro ao ler o arquivo.\n");
                 fclose(file);
+                freeMatrix(matrix, n);
                 return 1;
             }
             current = &((*current)->next);
@@ -80,43 +121,72 @@ int main() {
         *current = NULL;
     }
 
+    fclose(file);
+
     combination = malloc(m * sizeof(int));
     maxCombination = malloc(m * sizeof(int));
 
-    printf("Matriz:\n");
-    for (int i = 0; i < n; i++) {
-        Node* node = matrix[i].head;
-        while (node != NULL) {
-            printf("%d ", node->data);
-            node = node->next;
+    int option;
+    do {
+        printf("\nOpcoes:\n");
+        printf("1. Calcular matriz atual\n");
+        printf("2. Adicionar linha\n");
+        printf("3. Calcular matriz modificada\n");
+        printf("4. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &option);
+        getchar();
+
+        switch(option) {
+            case 1:
+                printf("\nMatriz Atual:\n");
+                printMatrix(matrix, n, m);
+                bool *usedRows = calloc(n, sizeof(bool));
+                bool *usedCols = calloc(m, sizeof(bool));
+                findMaxSum(matrix, n, m, 0, 0, 0, usedRows, usedCols);
+                printf("\nElementos selecionados:\n");
+                for (int i = 0; i < m; i++) {
+                    printf("%d ", maxCombination[i]);
+                }
+                printf("\n\nMaior soma possivel: %d\n", maxSum);
+                free(usedRows);
+                free(usedCols);
+                break;
+            case 2:
+                printf("\nInsira os numeros para a nova linha no formato 1;2;3;n:\n");
+                ED* newLineMatrix = malloc(sizeof(ED));
+                newLineMatrix->head = NULL;
+                for (int j = 0; j < m; j++) {
+                    int data;
+                    scanf("%d;", &data);
+                    insertNode(newLineMatrix, data);
+                }
+                matrix = realloc(matrix, (n + 1) * sizeof(ED));
+                matrix[n] = *newLineMatrix;
+                n++;
+                free(newLineMatrix);
+                break;
+            case 3:
+                printf("\nMatriz Modificada:\n");
+                printMatrix(matrix, n, m);
+                maxSum = 0;
+                memset(maxCombination, 0, m * sizeof(int));
+                findMaxSum(matrix, n, m, 0, 0, 0, calloc(n, sizeof(bool)), calloc(m, sizeof(bool)));
+                printf("\nElementos selecionados:\n");
+                for (int i = 0; i < m; i++) {
+                    printf("%d ", maxCombination[i]);
+                }
+                printf("\n\nMaior soma possivel: %d\n", maxSum);
+                break;
+            case 4:
+                printf("\nA sair...\n");
+                break;
+            default:
+                printf("\nOpcaoo inválida. Tente novamente.\n");
         }
-        printf("\n");
-    }
+    } while (option != 4);
 
-    fclose(file);
-
-    bool *usedRows = calloc(n, sizeof(bool));
-    bool *usedCols = calloc(m, sizeof(bool));
-
-    findMaxSum(matrix, n, m, 0, 0, 0, usedRows, usedCols);
-
-    printf("\nElementos selecionados:\n");
-    for (int i = 0; i < m; i++) {
-        printf("%d ", maxCombination[i]);
-    }
-    printf("\n\nMaior soma possivel: %d\n", maxSum);
-
-    for (int i = 0; i < n; i++) {
-        Node* node = matrix[i].head;
-        while (node != NULL) {
-            Node* next = node->next;
-            free(node);
-            node = next;
-        }
-    }
-    free(matrix);
-    free(usedRows);
-    free(usedCols);
+    freeMatrix(matrix, n);
     free(combination);
     free(maxCombination);
 
