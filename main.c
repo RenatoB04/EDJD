@@ -28,17 +28,21 @@ void findMaxSum(ED* matrix, int n, int m, int row, int col, int sum, bool *usedR
         return;
     }
 
+    Node* node = matrix[row].head;
     for (int j = 0; j < m; j++) {
-        if (!usedCols[j]) {
-            usedCols[j] = true;
-            Node* node = matrix[row].head;
-            for (int k = 0; k < j; k++) {
-                node = node->next;
-            }
+        if (!usedCols[j] && !usedRows[row]) {
             combination[row] = node->data;
+            usedCols[j] = true;
+            usedRows[row] = true;
             findMaxSum(matrix, n, m, row + 1, 0, sum + node->data, usedRows, usedCols);
             usedCols[j] = false;
+            usedRows[row] = false;
         }
+        node = node->next;
+    }
+
+    if (node == NULL) {
+        findMaxSum(matrix, n, m, row + 1, 0, sum, usedRows, usedCols);
     }
 }
 
