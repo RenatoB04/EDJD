@@ -10,19 +10,24 @@ typedef struct Node {
 
 typedef struct ED {
     Node* head;
-    int length;
 } ED;
 
 int maxSum = 0;
 int *combination;
 int *maxCombination;
+bool *usedIndices;
 
 void findMaxSum(ED* matrix, int n, int m, int row, int col, int sum, bool *usedRows, bool *usedCols) {
     if (row == n) {
         if (sum > maxSum) {
             maxSum = sum;
             for (int i = 0; i < n; i++) {
-                maxCombination[i] = combination[i];
+                if (usedRows[i]) {
+                    maxCombination[i] = combination[i];
+                    usedIndices[i] = true;
+                } else {
+                    usedIndices[i] = false;
+                }
             }
         }
         return;
@@ -89,6 +94,16 @@ void printMatrix(ED* matrix, int n, int m) {
     }
 }
 
+void printMaxCombination(ED* matrix, int n, int m) {
+    printf("\nElementos selecionados:\n");
+    for (int i = 0; i < n; i++) {
+        if (usedIndices[i]) {
+            printf("%d ", maxCombination[i]);
+        }
+    }
+    printf("\n");
+}
+
 void freeMatrix(ED* matrix, int n) {
     for (int i = 0; i < n; i++) {
         Node* node = matrix[i].head;
@@ -143,6 +158,7 @@ int main() {
 
     combination = malloc(n * sizeof(int));
     maxCombination = malloc(n * sizeof(int));
+    usedIndices = calloc(n, sizeof(bool));
 
     int option;
     do {
@@ -202,11 +218,8 @@ int main() {
                 bool *usedRowsMod = calloc(n, sizeof(bool));
                 bool *usedColsMod = calloc(m, sizeof(bool));
                 findMaxSum(matrix, n, m, 0, 0, 0, usedRowsMod, usedColsMod);
-                printf("\nElementos selecionados:\n");
-                for (int i = 0; i < n; i++) {
-                    printf("%d ", maxCombination[i]);
-                }
-                printf("\n\nMaior soma possivel: %d\n", maxSum);
+                printMaxCombination(matrix, n, m);
+                printf("\nMaior soma possivel: %d\n", maxSum);
                 free(usedRowsMod);
                 free(usedColsMod);
                 break;
@@ -221,6 +234,7 @@ int main() {
     freeMatrix(matrix, n);
     free(combination);
     free(maxCombination);
+    free(usedIndices);
 
     return 0;
 }
