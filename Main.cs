@@ -53,9 +53,6 @@ namespace P02_TDV
         private double _elapsedTime = 0;
         private double _blinkInterval = 0.5;
 
-        private DialogueManager _dialogueManager;
-        private DialogueEntity[] _entities;
-
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -114,29 +111,6 @@ namespace P02_TDV
             _tutorialButton = new TextButton("Tutorial", new Vector2(GraphicsDevice.Viewport.Width / 2 - _font.MeasureString("Tutorial").X / 2, GraphicsDevice.Viewport.Height / 2), _font);
             _quitButton = new TextButton("Sair", new Vector2(GraphicsDevice.Viewport.Width / 2 - _font.MeasureString("Sair").X / 2, GraphicsDevice.Viewport.Height / 2 + _font.MeasureString("Sair").Y * 1.5f), _font);
 
-            #region DIALOGUE
-            _entities = new DialogueEntity[]
-            {
-                new DialogueEntity("Character A", new string[]
-                {
-                    "Teste1"
-                }),
-                new DialogueEntity("Character B", new string[]
-                {
-                    "Teste2"
-                }),
-                new DialogueEntity("Character C", new string[]
-                {
-                    "Teste3"
-                })
-            };
-        
-            Texture2D dialogueBoxTexture = Content.Load<Texture2D>("Overlay/DialogueBox");
-
-            Rectangle dialogueBox = new Rectangle(10, State.SCREENHEIGHT - 100, State.SCREENWIDTH - 20, 90);
-            _dialogueManager = new DialogueManager(_font, dialogueBox, dialogueBoxTexture);
-            #endregion
-
             LoadNextLevel();
             Reset();
         }
@@ -145,27 +119,6 @@ namespace P02_TDV
         {
             State.Instance.CurrentKey = Keyboard.GetState();
             _numObject = _gameObjects.Count;
-
-            #region DIALOGUE
-            if (Keyboard.GetState().IsKeyDown(Keys.A) && State.Instance.CurrentKey != State.Instance.PreviousKey)
-            {
-                _dialogueManager.SetCurrentEntity(_entities[0]);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.B) && State.Instance.CurrentKey != State.Instance.PreviousKey)
-            {
-                _dialogueManager.SetCurrentEntity(_entities[1]);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.C) && State.Instance.CurrentKey != State.Instance.PreviousKey)
-            {
-                _dialogueManager.SetCurrentEntity(_entities[2]);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S) && State.Instance.CurrentKey != State.Instance.PreviousKey)
-            {
-                _dialogueManager.CloseDialogueBox();
-            }
-
-            _dialogueManager.Update(gameTime);
-            #endregion
 
             switch (State.Instance.CurrentGameState)
             {
@@ -536,8 +489,6 @@ namespace P02_TDV
                 _tutorialButton.Draw(_spriteBatch, Color.White, Color.Yellow);
                 _quitButton.Draw(_spriteBatch, Color.White, Color.Yellow);
             }
-
-            _dialogueManager.Draw(_spriteBatch);
 
             State.Instance.messageLog.Draw(_spriteBatch, gameTime);
 
