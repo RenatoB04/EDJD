@@ -8,14 +8,12 @@ namespace P02_TDV;
 public class MessageLog
 {
     private readonly List<string> messages;
-    private readonly List<float> messageTimes; // New list to store message times
+    private readonly List<float> messageTimes;
     private readonly int maxMessages;
     private readonly Vector2 position;
     private readonly SpriteFont font;
-    private float displayDuration = 3f; // Duration in seconds to display each message
-
-    //private float animationSpeed = 0.5f; // Speed at which the message moves up (pixels per second)
-    private float animationDuration = 1f; // Duration for which the message should animate (seconds)
+    private float displayDuration = 3f;
+    private float animationDuration = 1f;
 
     public MessageLog(int maxMessages, Vector2 position, SpriteFont font)
     {
@@ -23,18 +21,18 @@ public class MessageLog
         this.position = position;
         this.font = font;
         messages = new List<string>();
-        messageTimes = new List<float>(); // Initialize the message times list
+        messageTimes = new List<float>();
     }
 
     public void AddMessage(string message, GameTime gameTime)
     {
         messages.Add(message);
-        messageTimes.Add((float)gameTime.TotalGameTime.TotalSeconds); // Store the current game time
+        messageTimes.Add((float)gameTime.TotalGameTime.TotalSeconds);
 
         if (messages.Count > maxMessages)
         {
             messages.RemoveAt(0);
-            messageTimes.RemoveAt(0); // Remove the corresponding message time
+            messageTimes.RemoveAt(0);
         }
     }
 
@@ -47,7 +45,6 @@ public class MessageLog
             float elapsedTime = totalSeconds - messageTimes[i];
             if (elapsedTime <= displayDuration)
             {
-                // Calculate the vertical position based on the animation
                 float animationProgress = Math.Min(elapsedTime, animationDuration) / animationDuration;
                 float verticalOffset = -font.LineSpacing * (1 - animationProgress);
 
@@ -59,7 +56,7 @@ public class MessageLog
         }
     }
 
-   #if false //old version not display animation
+   #if false
         private readonly List<string> messages;
         private readonly int maxMessages;
         private readonly Vector2 position;

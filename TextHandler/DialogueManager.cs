@@ -46,7 +46,6 @@ namespace P02_TDV
                 string wrappedDialogueText = WrapText(_currentEntity.GetCurrentLine(), 66);
 
                 spriteBatch.DrawString(_font, wrappedDialogueText, new Vector2(_dialogueBox.X + 10, _dialogueBox.Y + 10), Color.White);
-                //spriteBatch.Draw(_game.Content.Load<Texture2D>("DialogueBox"), _dialogueBox, Color.White);
             }
         }
 
