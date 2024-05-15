@@ -40,10 +40,6 @@ namespace P02_TDV
 
         public Player Player = new(null);
 
-        public List<GameObject> gameObjects = null;
-
-        public Texture2D Tuxture = null;
-
         public int levelIndex;
 
         public int life = 3;
