@@ -63,7 +63,6 @@ namespace P02_TDV
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            
             if (isVisible)
             {
                 if (MovingDirection == Direction.Right)
@@ -170,7 +169,7 @@ namespace P02_TDV
 
             HandleCollisions();
 
-            hasPlayerEnterto(gameTime);
+            hasPlayerEntered(gameTime);
             BossLevelHandler();
 
             base.Update(gameTime, gameObjects);
@@ -232,7 +231,7 @@ namespace P02_TDV
         }
         #endregion
 
-        #region Level Handele In map By Player
+        #region Level Handle In map By Player
         public void Level2WarpPoint()
         {
             if (Vector2.Distance(Position, new Vector2(40, 418)) < 20)
@@ -291,7 +290,7 @@ namespace P02_TDV
             }
         }
 
-        public void hasPlayerEnterto(GameTime gameTime)
+        public void hasPlayerEntered(GameTime gameTime)
         {
             switch (State.Instance.levelIndex)
             {
@@ -431,7 +430,7 @@ namespace P02_TDV
 
                         State.Instance.messageLog.AddMessage("A porta abriu-se", gameTime);
 
-                        State.Instance.messageLog.AddMessage("Adquiriste o Olho das Cores", gameTime);
+                        State.Instance.messageLog.AddMessage("Adquiriste o Olho das Cores",gameTime);
                         State.Instance.messageLog.AddMessage("Pressiona TAB para ativar", gameTime);
 
                         State.Instance.isColorSight = true;
