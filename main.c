@@ -41,7 +41,7 @@ Graph* createGraph(int numVertices) {
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < numVertices; i++) {
-        graph->vertices[i] = NULL;
+        graph->vertices[i] = createVertex(i);
     }
     return graph;
 }
@@ -55,6 +55,23 @@ void addEdge(Vertex *src, Vertex *dest) {
     newEdge->destination = dest;
     newEdge->next = src->edges;
     src->edges = newEdge;
+}
+
+void removeEdge(Vertex *src, Vertex *dest) {
+    Edge *prev = NULL;
+    Edge *current = src->edges;
+    while (current != NULL && current->destination != dest) {
+        prev = current;
+        current = current->next;
+    }
+    if (current != NULL) {
+        if (prev != NULL) {
+            prev->next = current->next;
+        } else {
+            src->edges = current->next;
+        }
+        free(current);
+    }
 }
 
 void freeGraph(Graph *graph) {
@@ -71,7 +88,7 @@ void freeGraph(Graph *graph) {
     free(graph);
 }
 
-void loadMatrixFromFile(const char *filename, int ***matrix, int *rows, int *cols) {
+void loadMatrixFromFile(const char *filename, Graph *graph) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("Erro ao abrir o arquivo %s\n", filename);
@@ -79,42 +96,91 @@ void loadMatrixFromFile(const char *filename, int ***matrix, int *rows, int *col
     }
     char line[1000];
     int row = 0;
-    int max_cols = 0;
-    *matrix = malloc(sizeof(int*));
     while (fgets(line, sizeof(line), file) != NULL) {
-        *matrix = realloc(*matrix, (row + 1) * sizeof(int*));
-        (*matrix)[row] = malloc(sizeof(int) * 100);
         char *token = strtok(line, ";");
         int col = 0;
         while (token != NULL) {
-            (*matrix)[row][col++] = atoi(token);
+            int value = atoi(token);
+            if (value != 0) {
+                addEdge(graph->vertices[row], graph->vertices[col]);
+            }
+            col++;
             token = strtok(NULL, ";");
         }
-        if (col > max_cols)
-            max_cols = col;
         row++;
     }
-    *rows = row;
-    *cols = max_cols;
+    fclose(file);
+}
+
+void printMatrixFromFile(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    char line[1000];
+    while (fgets(line, sizeof(line), file) != NULL) {
+        printf("%s", line);
+    }
     fclose(file);
 }
 
 int main() {
     const char *filename = "matriz.txt";
-    int **matrix = NULL;
-    int rows, cols;
-    loadMatrixFromFile(filename, &matrix, &rows, &cols);
-    printf("\nMatriz lida do arquivo:\n\n");
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%d ", matrix[i][j]);
+    int numVertices = 5;
+    Graph *graph = createGraph(numVertices);
+    loadMatrixFromFile(filename, graph);
+    
+    int option;
+    do {
+        printf("\nMenu:\n");
+        printf("1. Imprimir matriz do arquivo\n");
+        printf("2. Adicionar vertice\n");
+        printf("3. Remover vertice\n");
+        printf("4. Adicionar aresta\n");
+        printf("5. Remover aresta\n");
+        printf("6. Procurar caminho\n");
+        printf("7. Calcular soma dos valores dos vertices num dado caminho\n");
+        printf("8. Encontrar caminho com maior soma\n");
+        printf("9. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &option);
+        
+        switch(option) {
+            case 1:
+                printf("\nMatriz do arquivo:\n\n");
+                printMatrixFromFile(filename);
+                printf("\n");
+                break;
+            case 2:
+                // Implementação para adicionar vértice
+                break;
+            case 3:
+                // Implementação para remover vértice
+                break;
+            case 4:
+                // Implementação para adicionar aresta
+                break;
+            case 5:
+                // Implementação para remover aresta
+                break;
+            case 6:
+                // Implementação para procurar caminho
+                break;
+            case 7:
+                // Implementação para calcular soma dos valores dos vértices em um dado caminho
+                break;
+            case 8:
+                // Implementação para encontrar caminho com maior soma
+                break;
+            case 9:
+                printf("\nEncerrando o programa.\n");
+                break;
+            default:
+                printf("\nOpção inválida. Por favor, escolha uma opção válida.\n");
         }
-        printf("\n");
-    }
-    for (int i = 0; i < rows; i++) {
-        free(matrix[i]);
-    }
-    printf("\n");
-    free(matrix);
+    } while(option != 9);
+
+    freeGraph(graph);
     return 0;
 }
