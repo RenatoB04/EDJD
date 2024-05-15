@@ -341,25 +341,6 @@ namespace P02_TDV
                     }
 
                     {
-                        if (Vector2.Distance(Position, new Vector2(1440, 835)) < 4)
-                        {
-                            State.Instance.messageLog.AddMessage("Por finalizar", gameTime);
-                        }
-                        if (Vector2.Distance(Position, new Vector2(1200, 835)) < 4)
-                        {
-                            State.Instance.messageLog.AddMessage("Por finalizar", gameTime);
-                        }
-                        if (Vector2.Distance(Position, new Vector2(968, 835)) < 4)
-                        {
-                            State.Instance.messageLog.AddMessage("Por finalizar", gameTime);
-                        }
-                        if (Vector2.Distance(Position, new Vector2(720, 835)) < 4)
-                        {
-                            State.Instance.messageLog.AddMessage("Por finalizar", gameTime);
-                        }
-                    }
-
-                    {
                         if (!State.Instance.isSkillDefected && Vector2.Distance(Position, new Vector2(1000, 2000)) < 1000)
                         {
                             State.Instance.messageLog.AddMessage("Ainda nao podes acessar esta zona", gameTime);
