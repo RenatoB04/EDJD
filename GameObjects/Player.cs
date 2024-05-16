@@ -52,6 +52,8 @@ namespace P02_TDV
             }
         }
 
+        private HashSet<string> displayedMessages = new HashSet<string>();
+
         public Player(Texture2D texture) : base(texture)
         {
         }
@@ -89,6 +91,7 @@ namespace P02_TDV
 
             MovingDirection = Direction.Right;
             isInvincible = false;
+            displayedMessages.Clear();
 
             base.Reset();
         }
@@ -304,7 +307,7 @@ namespace P02_TDV
                     {
                         if (swap && Vector2.Distance(Position, new Vector2(3120, 387)) < 5)
                         {
-                            State.Instance.messageLog.AddMessage("Elimina todos os inimigos para continuar", gameTime);
+                            AddMessageOnce("Elimina todos os inimigos para continuar", gameTime);
                         }
                     }
 
@@ -317,104 +320,81 @@ namespace P02_TDV
 
                     if (State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(3048, 797)) < 10)
                     {
-                        {
-                            State.Instance.level.tiles[44, 25] = new Tile(null, TileCollision.Passable);
-
-                            State.Instance.level.tiles[76, 25] = new Tile(null, TileCollision.Passable);
-
-                            State.Instance.messageLog.AddMessage("A porta secreta foi destrancada" +
-                                "" +
-                                "", gameTime);
-                        }
+                        State.Instance.level.tiles[44, 25] = new Tile(null, TileCollision.Passable);
+                        State.Instance.level.tiles[76, 25] = new Tile(null, TileCollision.Passable);
+                        AddMessageOnce("A porta secreta foi destrancada", gameTime);
                     }
 
                     if (State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(398, 830)) < 5)
                     {
-
-                        {
-                            State.Instance.isDig = true;
-                            State.Instance.level.tiles[10, 26] = new Tile(null, TileCollision.Passable);
-                            State.Instance.messageLog.AddMessage("Adquiriste a habilidade de escavar", gameTime);
-                            State.Instance.messageLog.AddMessage("Pressiona Q para escavar", gameTime);
-                        }
+                        State.Instance.isDig = true;
+                        State.Instance.level.tiles[10, 26] = new Tile(null, TileCollision.Passable);
+                        AddMessageOnce("Adquiriste a habilidade de escavar", gameTime);
+                        AddMessageOnce("Pressiona Q para escavar", gameTime);
                     }
 
+                    if (!State.Instance.isSkillDefected && Vector2.Distance(Position, new Vector2(1000, 2000)) < 1000)
                     {
-                        if (!State.Instance.isSkillDefected && Vector2.Distance(Position, new Vector2(1000, 2000)) < 1000)
-                        {
-                            State.Instance.messageLog.AddMessage("Ainda nao podes acessar esta zona", gameTime);
-                            State.Instance.messageLog.AddMessage("Precisas de desbloquear a habilidade da perfeicao primeiro", gameTime);
-                            State.Instance.life = 0;
-                        }
+                        AddMessageOnce("Ainda nao podes acessar esta zona", gameTime);
+                        AddMessageOnce("Precisas de desbloquear a habilidade da perfeicao primeiro", gameTime);
+                        State.Instance.life = 0;
                     }
 
+                    if (!State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(1800, 803)) < 5)
                     {
-                        if (!State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(1800, 803)) < 5)
-                        {
-                            State.Instance.messageLog.AddMessage("Encontra a chave neste nivel", gameTime);
-                            isHint = true;
-                        }
-
-                        if (Vector2.Distance(Position, new Vector2(520, 867)) < 5)
-                        {
-                            isHint = true;
-                        }
-
-                        if (swap && Vector2.Distance(Position, new Vector2(520, 867)) < 5)
-                        {
-                            State.Instance.messageLog.AddMessage("Tenta saltar na parede", gameTime);
-                        }
+                        AddMessageOnce("Encontra a chave neste nivel", gameTime);
+                        isHint = true;
                     }
 
+                    if (Vector2.Distance(Position, new Vector2(520, 867)) < 5)
                     {
-                        if (!State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(2968, 799)) < 5)
-                        {
-                            State.Instance.messageLog.AddMessage("Elimina o Boss primeiro", gameTime);
-                        }
+                        isHint = true;
                     }
 
+                    if (swap && Vector2.Distance(Position, new Vector2(520, 867)) < 5)
                     {
-                        if (Vector2.Distance(Position, new Vector2(1150, 1600)) < 10)
-                        {
-                            State.Instance.messageLog.AddMessage("Acabou, provaste ser digno.", gameTime);
-                            State.Instance.CurrentGameState = State.GameState.GameWin;
-                        }
+                        AddMessageOnce("Tenta saltar na parede", gameTime);
+                    }
+
+                    if (!State.Instance.isBoss1Dead && Vector2.Distance(Position, new Vector2(2968, 799)) < 5)
+                    {
+                        AddMessageOnce("Elimina o Boss primeiro", gameTime);
+                    }
+
+                    if (Vector2.Distance(Position, new Vector2(1150, 1600)) < 10)
+                    {
+                        AddMessageOnce("Acabou, provaste ser digno.", gameTime);
+                        State.Instance.CurrentGameState = State.GameState.GameWin;
                     }
 
                     break;
                 case 2:
                     Level2WarpPoint();
 
+                    if (Vector2.Distance(Position, new Vector2(1487, 1055)) < 5)
                     {
-                        if (Vector2.Distance(Position, new Vector2(1487, 1055)) < 5)
-                        {
-                            State.Instance.messageLog.AddMessage("Adquiriste a habilidade da perfeicao", gameTime);
-                            State.Instance.isSkillDefected = true;
-                            State.Instance.level.tiles[37, 33] = new Tile(null, TileCollision.Passable);
-                        }
+                        AddMessageOnce("Adquiriste a habilidade da perfeicao", gameTime);
+                        State.Instance.isSkillDefected = true;
+                        State.Instance.level.tiles[37, 33] = new Tile(null, TileCollision.Passable);
                     }
 
+                    if (swap && Vector2.Distance(Position, new Vector2(2480, 415)) < 10)
                     {
-                        if (swap && Vector2.Distance(Position, new Vector2(2480, 415)) < 10)
-                        {
-                            State.Instance.messageLog.AddMessage("Tenta escavar", gameTime);
-                        }
-                        if (Vector2.Distance(Position, new Vector2(2480, 415)) < 5)
-                        {
-                            isHint = true;
-                        }
+                        AddMessageOnce("Tenta escavar", gameTime);
+                    }
+                    if (Vector2.Distance(Position, new Vector2(2480, 415)) < 5)
+                    {
+                        isHint = true;
                     }
 
                     break;
                 case 3:
+                    if (Vector2.Distance(Position, new Vector2(3000, 0)) < 10)
                     {
-                        if (Vector2.Distance(Position, new Vector2(3000, 0)) < 10)
-                        {
-                            State.Instance.messageLog.AddMessage("Desbloqueaste a habilidade de obter dicas", gameTime);
-                            State.Instance.messageLog.AddMessage("Pressiona H quando estiveres num ? amarelo", gameTime);
-                            State.Instance.isCunning = true;
-                            State.Instance.level.tiles[75, 0] = new Tile(null, TileCollision.Passable);
-                        }
+                        AddMessageOnce("Desbloqueaste a habilidade de obter dicas", gameTime);
+                        AddMessageOnce("Pressiona H quando estiveres num ? amarelo", gameTime);
+                        State.Instance.isCunning = true;
+                        State.Instance.level.tiles[75, 0] = new Tile(null, TileCollision.Passable);
                     }
 
                     break;
@@ -427,19 +407,24 @@ namespace P02_TDV
                     if (State.Instance.isColorSight == false && State.Instance.isBoss1Dead)
                     {
                         State.Instance.level.tiles[68, 35] = new Tile(null, TileCollision.Passable);
-
-                        State.Instance.messageLog.AddMessage("A porta abriu-se", gameTime);
-
-                        State.Instance.messageLog.AddMessage("Adquiriste o Olho das Cores",gameTime);
-                        State.Instance.messageLog.AddMessage("Pressiona TAB para ativar", gameTime);
-
+                        AddMessageOnce("A porta abriu-se", gameTime);
+                        AddMessageOnce("Adquiriste o Olho das Cores", gameTime);
+                        AddMessageOnce("Pressiona TAB para ativar", gameTime);
                         State.Instance.isColorSight = true;
-
-                        State.Instance.messageLog.AddMessage("O Boss foi eliminado", gameTime);
+                        AddMessageOnce("O Boss foi eliminado", gameTime);
                     }
 
                     break;
                 default: break;
+            }
+        }
+
+        private void AddMessageOnce(string message, GameTime gameTime)
+        {
+            if (!displayedMessages.Contains(message))
+            {
+                State.Instance.messageLog.AddMessage(message, gameTime);
+                displayedMessages.Add(message);
             }
         }
 
