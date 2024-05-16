@@ -13,3 +13,5 @@ Referências:
 - [1-Bit Pack](https://kenney-assets.itch.io/1-bit-pack)
 - [Background Music](https://youtu.be/mRN_T6JkH-c?si=2VRXJ6iuM0hwj-us)
 - [Efeitos Sonoros](https://opengameart.org/)
+- [Super Dialogue Audio Pack](https://dillonbecker.itch.io/sdap)
+- [16-Bit Sound Pack](https://jdwasabi.itch.io/8-bit-16-bit-sound-effects-pack)
