@@ -31,10 +31,22 @@ void loadMatrixFromFile(const char *filename, int ***matrix, int *rows, int *col
 }
 
 void printMatrix(int **matrix, int rows, int cols) {
-    printf("Matriz lida do arquivo:\n\n");
+    printf("Matriz do arquivo:\n\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             printf("%4d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void convertMatrixToGraph(int **matrix, int rows, int cols) {
+    int count = 1;
+    printf("Matriz convertida:\n\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix[i][j] = count++;
+            printf("%3d ", matrix[i][j]);
         }
         printf("\n");
     }
@@ -47,6 +59,7 @@ int main() {
     int choice;
     do {
         printf("\n1 - Imprimir matriz do arquivo\n");
+        printf("2 - Converter matriz para grafo\n");
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &choice);
@@ -55,6 +68,14 @@ int main() {
             case 1:
                 loadMatrixFromFile(filename, &matrix, &rows, &cols);
                 printMatrix(matrix, rows, cols);
+                for (int i = 0; i < rows; i++) {
+                    free(matrix[i]);
+                }
+                free(matrix);
+                break;
+            case 2:
+                loadMatrixFromFile(filename, &matrix, &rows, &cols);
+                convertMatrixToGraph(matrix, rows, cols);
                 for (int i = 0; i < rows; i++) {
                     free(matrix[i]);
                 }
