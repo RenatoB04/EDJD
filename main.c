@@ -12,6 +12,14 @@ typedef struct Graph {
     Node** adjLists;
 } Graph;
 
+typedef enum {
+    HORIZONTAL,
+    VERTICAL,
+    DIAGONAL
+} EdgeType;
+
+EdgeType edgeType;
+
 Node* createNode(int vertex) {
     Node* newNode = malloc(sizeof(Node));
     newNode->vertex = vertex;
@@ -48,6 +56,44 @@ void freeGraph(Graph* graph) {
     }
     free(graph->adjLists);
     free(graph);
+}
+
+int** createAdjacencyMatrix(Graph* graph, int numVertices) {
+    int** adjacencyMatrix = malloc(numVertices * sizeof(int*));
+    for (int i = 0; i < numVertices; i++) {
+        adjacencyMatrix[i] = malloc(numVertices * sizeof(int));
+        for (int j = 0; j < numVertices; j++) {
+            adjacencyMatrix[i][j] = 0;
+        }
+    }
+
+    for (int v = 0; v < numVertices; v++) {
+        Node* temp = graph->adjLists[v];
+        while (temp) {
+            adjacencyMatrix[v][temp->vertex] = 1;
+            temp = temp->next;
+        }
+    }
+
+    return adjacencyMatrix;
+}
+
+void printAdjacencyMatrix(int** adjacencyMatrix, int numVertices) {
+    printf("\nMatriz de adjacencia:\n\n");
+
+    printf("    ");
+    for (int i = 1; i < numVertices; i++) {
+        printf("%4d", i);
+    }
+    printf("\n");
+
+    for (int i = 1; i < numVertices; i++) {
+        printf("%4d", i);
+        for (int j = 1; j < numVertices; j++) {
+            printf("%4d", adjacencyMatrix[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 void loadMatrixFromFile(const char *filename, int ***matrix, int *rows, int *cols) {
@@ -90,17 +136,50 @@ void printMatrix(int **matrix, int rows, int cols) {
     }
 }
 
+void setEdgeType() {
+    int choice;
+    printf("\n1 - Arestas horizontais\n");
+    printf("2 - Arestas verticais\n");
+    printf("3 - Arestas diagonais\n");
+    printf("Opcao: ");
+    scanf("%d", &choice);
+    switch (choice) {
+        case 1:
+            edgeType = HORIZONTAL;
+            break;
+        case 2:
+            edgeType = VERTICAL;
+            break;
+        case 3:
+            edgeType = DIAGONAL;
+            break;
+        default:
+            printf("Opcao invalida. Tente novamente.\n");
+            setEdgeType();
+    }
+}
+
 Graph* convertMatrixToGraph(int **matrix, int rows, int cols) {
     int vertex = 1;
     Graph* graph = createGraph(rows * cols + 1);
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            matrix[i][j] = vertex++;
-            if (i > 0) addEdge(graph, matrix[i][j], matrix[i-1][j]);
-            if (j > 0) addEdge(graph, matrix[i][j], matrix[i][j-1]);
-            if (i < rows-1) addEdge(graph, matrix[i][j], matrix[i+1][j]);
-            if (j < cols-1) addEdge(graph, matrix[i][j], matrix[i][j+1]);
+            if (edgeType == HORIZONTAL || edgeType == DIAGONAL) {
+                if (j > 0) addEdge(graph, vertex, vertex-1);
+                if (j < cols-1) addEdge(graph, vertex, vertex+1);
+            }
+            if (edgeType == VERTICAL || edgeType == DIAGONAL) {
+                if (i > 0) addEdge(graph, vertex, vertex-cols);
+                if (i < rows-1) addEdge(graph, vertex, vertex+cols);
+            }
+            if (edgeType == DIAGONAL) { //not working correctly
+                if (i > 0 && i < rows - 1 && j > 0 && j < cols - 1) {
+                    addEdge(graph, vertex, vertex + cols + 1);
+                    addEdge(graph, vertex, vertex + cols - 1);
+                }
+            }
+            vertex++;
         }
     }
     return graph;
@@ -125,7 +204,9 @@ int main() {
 
     do {
         printf("\n1 - Imprimir matriz do arquivo\n");
-        printf("2 - Converter matriz para grafo\n");
+        printf("2 - Imprimir vertices da matriz\n");
+        printf("3 - Definir arestas\n");
+        printf("4 - Construir grafo\n");
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &choice);
@@ -149,12 +230,29 @@ int main() {
                 }
                 free(matrix);
                 break;
+            case 3:
+                setEdgeType();
+                break;
+            case 4:
+                loadMatrixFromFile(filename, &matrix, &rows, &cols);
+                graph = convertMatrixToGraph(matrix, rows, cols);
+                printGraph(graph, rows, cols);
+                int** adjacencyMatrix = createAdjacencyMatrix(graph, rows * cols + 1);
+                printAdjacencyMatrix(adjacencyMatrix, rows * cols + 1);
+                for (int i = 0; i < rows; i++) {
+                    free(matrix[i]);
+                }
+                free(matrix);
+                for (int i = 0; i < rows * cols + 1; i++) {
+                    free(adjacencyMatrix[i]);
+                }
+                free(adjacencyMatrix);
+                break;
             case 0:
-                printf("A sair...\n");
                 if (graph) freeGraph(graph);
                 break;
             default:
-                printf("Opcao inválida. Tente novamente.\n");
+                printf("Opcao invalida. Tente novamente.\n");
         }
     } while (choice != 0);
 
