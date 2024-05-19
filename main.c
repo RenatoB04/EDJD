@@ -15,7 +15,7 @@ typedef struct Graph {
 typedef enum {
     HORIZONTAL,
     VERTICAL,
-    DIAGONAL
+    HORIZONTAL_VERTICAL
 } EdgeType;
 
 EdgeType edgeType;
@@ -140,7 +140,7 @@ void setEdgeType() {
     int choice;
     printf("\n1 - Arestas horizontais\n");
     printf("2 - Arestas verticais\n");
-    printf("3 - Arestas diagonais\n");
+    printf("3 - Arestas horizontais e verticais\n");
     printf("Opcao: ");
     scanf("%d", &choice);
     switch (choice) {
@@ -151,7 +151,7 @@ void setEdgeType() {
             edgeType = VERTICAL;
             break;
         case 3:
-            edgeType = DIAGONAL;
+            edgeType = HORIZONTAL_VERTICAL;
             break;
         default:
             printf("Opcao invalida. Tente novamente.\n");
@@ -165,19 +165,13 @@ Graph* convertMatrixToGraph(int **matrix, int rows, int cols) {
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            if (edgeType == HORIZONTAL || edgeType == DIAGONAL) {
+            if (edgeType == HORIZONTAL || edgeType == HORIZONTAL_VERTICAL) {
                 if (j > 0) addEdge(graph, vertex, vertex-1);
                 if (j < cols-1) addEdge(graph, vertex, vertex+1);
             }
-            if (edgeType == VERTICAL || edgeType == DIAGONAL) {
+            if (edgeType == VERTICAL || edgeType == HORIZONTAL_VERTICAL) {
                 if (i > 0) addEdge(graph, vertex, vertex-cols);
                 if (i < rows-1) addEdge(graph, vertex, vertex+cols);
-            }
-            if (edgeType == DIAGONAL) { //not working correctly
-                if (i > 0 && i < rows - 1 && j > 0 && j < cols - 1) {
-                    addEdge(graph, vertex, vertex + cols + 1);
-                    addEdge(graph, vertex, vertex + cols - 1);
-                }
             }
             vertex++;
         }
