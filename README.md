@@ -118,6 +118,72 @@ Esta classe fornece uma estrutura organizada e padronizada para gerir os diferen
 
 # `Main.cs`
 
+O arquivo `Main.cs` contém a implementação das funções necessárias para desenhar os diferentes estados do jogo e dar reset ao jogo e inimigos. Abaixo está uma descrição detalhada dos componentes principais desta função:
+
+## Função Principal Draw
+
+### Propósito
+- Gerir a renderização dos diferentes estados do jogo e desenhar os elementos gráficos correspondentes a cada estado.
+
+### Funções Principais
+- **Tutorial**: Renderiza os tutoriais.
+- **GameWin**: Renderiza a tela de vitória.
+- **GameOver**: Renderiza uma sobreposição escura e mensagens de game over.
+- **TitleScreen**: Renderiza a tela inicial e seus elementos interativos (botões).
+
+### Propriedades
+- `spriteBatch`: Usado para desenhar texturas e textos na tela.
+- `tutorials`, `endgame`, `overlay`, `titlescreen`: Texturas usadas para desenhar os estados específicos.
+- `font`: Fonte usada para desenhar textos na tela.
+- `playButton`, `tutorialButton`, `quitButton`: Botões interativos na tela inicial.
+
+## Função Principal Reset
+
+### Propósito
+- Reiniciar o jogo e os inimigos ao começar um novo jogo ou ao mudar de nível.
+
+### Funções Principais
+- **Reset()**: Reseta o estado do jogo e reposiciona o jogador e inimigos.
+- **ResetEnemies()**: Reseta e posiciona os inimigos conforme o nível atual.
+- **LoadNextLevel()**: Carrega o próximo nível do jogo.
+- **ReloadCurrentLevel()**: Recarrega o nível atual.
+- **LoadLevel(int levelDestination)**: Carrega um nível específico.
+
+### Propriedades
+- `gameObjects`: Lista de objetos do jogo, incluindo o jogador e inimigos.
+- `gameSprite`: Textura usada para os sprites do jogo.
+- `shotSound`: Efeito sonoro do tiro do jogador.
+- `levelIndex`: Índice do nível atual.
+- `numberOfLevels`: Número total de níveis no jogo.
+
+Esta função principal fornece uma estrutura organizada e eficiente para desenhar e gerir os diferentes estados do jogo, assim como para resetar o jogo e os inimigos conforme necessário.
+
+## Função Principal Update
+
+### Propósito
+- Atualizar a lógica do jogo a cada frame, garantindo a continuidade e responsividade da experiência de jogo.
+
+### Funções Principais
+- **Update(GameTime gameTime)**: Atualiza a lógica do jogo baseada no estado atual, entradas do jogador, e atualiza os objetos do jogo.
+
+### Componentes
+- **UpdateGameObjects(GameTime gameTime)**: Atualiza todos os objetos do jogo.
+- **HandleCollisions()**: Detecta e gerencia colisões entre objetos do jogo.
+
+### Propriedades
+- `gameObjects`: Lista de objetos do jogo, incluindo jogador, inimigos e outros elementos.
+- `keyboardState`: Estado atual do teclado, utilizado para capturar entradas do jogador.
+- `gamePadState`: Estado atual do gamepad, utilizado para capturar entradas do jogador.
+- `State.Instance.CurrentGameState`: Estado atual do jogo, que determina qual lógica deve ser executada (por exemplo, tela de título, jogando, game over).
+
+Esta função principal garante que a lógica do jogo seja atualizada corretamente a cada frame, proporcionando uma experiência de jogo contínua e responsiva.
+
+## Funções de Inicialização
+- **Initialize()**: Inicializa os componentes do jogo, configurações e variáveis.
+- **LoadContent()**: Carrega todo o conteúdo do jogo, incluindo texturas, fontes e sons.
+- **UnloadContent()**: Descarrega o conteúdo não mais necessário.
+- **Constructor (Main)**: Configurações iniciais do jogo e instancia objetos principais.
+
 
 # Referências:
 - [Monogame](https://monogame.net/)
