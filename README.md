@@ -11,7 +11,7 @@ Este projeto foi desenvolvido por:
 Grande parte do source-code deste projeto foi obtido através da sample para jogos PlatFormer elaborado pelos desenvolvedores e contribuídores do MonoGame (ver referências). 
 
 Nesta documentação iremos abordar as principais classes, recursos e implementações que tornaram o nosso projeto possível.
-Iremos abordar os seguintes tópicos, na ordem em que estão apresentados:
+Iremos tratar dos seguintes tópicos, na ordem em que estão apresentados:
 - Pasta Content
 - Pasta GameObjects
 - Pasta TextHandler
