@@ -194,7 +194,17 @@ Esta função principal garante que a lógica do jogo seja atualizada corretamen
 - **UnloadContent()**: Descarrega o conteúdo não mais necessário.
 - **Constructor (Main)**: Configurações iniciais do jogo e instancia objetos principais.
 
+# Melhorias Futuras
+O Jogo está longe de estar perfeito ou finalizado, existem muitos bugs e partes incompletas.
+Reunimos abaixo uma lista de melhorias que poderiam ser implementadas no futuro, entre elas:
+- Configurações (volume, resolução, sensibilidade etc.)..
+- Leaderboard
+- Mais níveis e mais complexos
+- Novas habilidades
+- Boss mais desafiante
+- Sistema de diálogo
 
+  
 # Referências:
 - [Monogame](https://monogame.net/)
 - [Código Base](https://github.com/MonoGame/MonoGame.Samples/tree/3.8.1/Platformer2D)
