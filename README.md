@@ -8,6 +8,16 @@ Este projeto foi desenvolvido por:
 - Bruno Mesquita - 27947
 - Bento Simões - 27914
 
+Grande parte do source-code deste projeto foi obtido através da sample para jogos PlatFormer elaborado pelos desenvolvedores e contribuídores do MonoGame (ver referências). 
+
+Nesta documentação iremos abordar as principais classes, recursos e implementações que tornaram o nosso projeto possível.
+Iremos abordar os seguintes tópicos, na ordem em que estão apresentados:
+- Pasta Content
+- Pasta GameObjects
+- Pasta TextHandler
+- State.cs
+- Main.cs
+
 # Pasta `Content`
 
 A pasta `Content` do projeto contém vários ativos e recursos essenciais para o desenvolvimento do jogo. Num projeto MonoGame, esta pasta inclui todos os arquivos de conteúdo, como texturas, sons, fontes e outros recursos que o jogo utilizará. Abaixo está a estrutura e a descrição dos conteúdos principais desta pasta:
@@ -69,7 +79,7 @@ A pasta `GameObjects` contém classes e componentes essenciais para os objetos d
 Cada subpasta e arquivo dentro de `GameObjects` é responsável por uma parte específica da lógica e dos componentes do jogo, garantindo uma estrutura organizada e modular.
 
 
-# Resumo da Pasta `TextHandler`
+# Pasta `TextHandler`
 
 A pasta `TextHandler` contém classes responsáveis pela gestão e exibição de textos no jogo. Abaixo está uma descrição detalhada dos arquivos principais desta pasta:
 
