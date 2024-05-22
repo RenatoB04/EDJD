@@ -189,6 +189,40 @@ void printGraph(Graph* graph, int rows, int cols) {
     }
 }
 
+void calculateMaxSum(int **matrix, int rows, int cols) {
+    int maxSum = 0;
+
+    printf("Somas das linhas e colunas:\n\n");
+
+    if (edgeType == HORIZONTAL || edgeType == HORIZONTAL_VERTICAL) {
+        for (int i = 0; i < rows; i++) {
+            int rowSum = 0;
+            for (int j = 0; j < cols; j++) {
+                rowSum += matrix[i][j];
+            }
+            printf("Soma da linha %d: %d\n", i + 1, rowSum);
+            if (rowSum > maxSum) {
+                maxSum = rowSum;
+            }
+        }
+    }
+
+    if (edgeType == VERTICAL || edgeType == HORIZONTAL_VERTICAL) {
+        for (int j = 0; j < cols; j++) {
+            int colSum = 0;
+            for (int i = 0; i < rows; i++) {
+                colSum += matrix[i][j];
+            }
+            printf("Soma da coluna %d: %d\n", j + 1, colSum);
+            if (colSum > maxSum) {
+                maxSum = colSum;
+            }
+        }
+    }
+
+    printf("\nMaior soma possivel: %d\n", maxSum);
+}
+
 int main() {
     const char *filename = "matriz.txt";
     int **matrix = NULL;
@@ -201,6 +235,7 @@ int main() {
         printf("2 - Imprimir vertices da matriz\n");
         printf("3 - Definir arestas\n");
         printf("4 - Construir grafo\n");
+        printf("5 - Calcular maior soma\n");
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &choice);
@@ -241,6 +276,19 @@ int main() {
                     free(adjacencyMatrix[i]);
                 }
                 free(adjacencyMatrix);
+                break;
+            case 5:
+                loadMatrixFromFile(filename, &matrix, &rows, &cols);
+                printMatrix(matrix, rows, cols);
+                printf("\n");
+                graph = convertMatrixToGraph(matrix, rows, cols);
+                printGraph(graph, rows, cols);
+                printf("\n");
+                calculateMaxSum(matrix, rows, cols);
+                for (int i = 0; i < rows; i++) {
+                    free(matrix[i]);
+                }
+                free(matrix);
                 break;
             case 0:
                 if (graph) freeGraph(graph);
