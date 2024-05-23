@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 typedef struct Node {
     int vertex;
+    int weight;
     struct Node* next;
 } Node;
 
@@ -20,9 +22,10 @@ typedef enum {
 
 EdgeType edgeType;
 
-Node* createNode(int vertex) {
+Node* createNode(int vertex, int weight) {
     Node* newNode = malloc(sizeof(Node));
     newNode->vertex = vertex;
+    newNode->weight = weight;
     newNode->next = NULL;
     return newNode;
 }
@@ -38,8 +41,8 @@ Graph* createGraph(int vertices) {
     return graph;
 }
 
-void addEdge(Graph* graph, int src, int dest) {
-    Node* newNode = createNode(dest);
+void addEdge(Graph* graph, int src, int dest, int weight) {
+    Node* newNode = createNode(dest, weight);
     newNode->next = graph->adjLists[src];
     graph->adjLists[src] = newNode;
 }
@@ -70,7 +73,7 @@ int** createAdjacencyMatrix(Graph* graph, int numVertices) {
     for (int v = 0; v < numVertices; v++) {
         Node* temp = graph->adjLists[v];
         while (temp) {
-            adjacencyMatrix[v][temp->vertex] = 1;
+            adjacencyMatrix[v][temp->vertex] = temp->weight;
             temp = temp->next;
         }
     }
@@ -83,14 +86,14 @@ void printAdjacencyMatrix(int** adjacencyMatrix, int numVertices) {
 
     printf("    ");
     for (int i = 1; i < numVertices; i++) {
-        printf("%4d", i);
+        printf("%6d", i);
     }
     printf("\n");
 
     for (int i = 1; i < numVertices; i++) {
-        printf("%4d", i);
+        printf("%6d", i);
         for (int j = 1; j < numVertices; j++) {
-            printf("%4d", adjacencyMatrix[i][j]);
+            printf("%6d", adjacencyMatrix[i][j]);
         }
         printf("\n");
     }
@@ -160,20 +163,27 @@ void setEdgeType() {
 }
 
 Graph* convertMatrixToGraph(int **matrix, int rows, int cols) {
-    int vertex = 1;
     Graph* graph = createGraph(rows * cols + 1);
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
+            int vertex = i * cols + j + 1;
             if (edgeType == HORIZONTAL || edgeType == HORIZONTAL_VERTICAL) {
-                if (j > 0) addEdge(graph, vertex, vertex-1);
-                if (j < cols-1) addEdge(graph, vertex, vertex+1);
+                if (j < cols-1) {
+                    addEdge(graph, vertex, vertex + 1, matrix[i][j+1]);
+                }
+                if (j > 0) {
+                    addEdge(graph, vertex, vertex - 1, matrix[i][j-1]);
+                }
             }
             if (edgeType == VERTICAL || edgeType == HORIZONTAL_VERTICAL) {
-                if (i > 0) addEdge(graph, vertex, vertex-cols);
-                if (i < rows-1) addEdge(graph, vertex, vertex+cols);
+                if (i < rows-1) {
+                    addEdge(graph, vertex, vertex + cols, matrix[i+1][j]);
+                }
+                if (i > 0) {
+                    addEdge(graph, vertex, vertex - cols, matrix[i-1][j]);
+                }
             }
-            vertex++;
         }
     }
     return graph;
@@ -223,6 +233,62 @@ void calculateMaxSum(int **matrix, int rows, int cols) {
     printf("\nMaior soma possivel: %d\n", maxSum);
 }
 
+int minDistance(int dist[], int sptSet[], int numVertices) {
+    int min = INT_MAX, min_index;
+    for (int v = 0; v < numVertices; v++)
+        if (sptSet[v] == 0 && dist[v] <= min)
+            min = dist[v], min_index = v;
+    return min_index;
+}
+
+void dijkstra(Graph* graph, int src, int dest) {
+    int numVertices = graph->numVertices;
+    int *dist = malloc(numVertices * sizeof(int));
+    int *sptSet = malloc(numVertices * sizeof(int));
+    int *parent = malloc(numVertices * sizeof(int));
+
+    for (int i = 0; i < numVertices; i++) {
+        dist[i] = INT_MAX;
+        sptSet[i] = 0;
+        parent[i] = -1;
+    }
+    dist[src] = 0;
+    for (int count = 0; count < numVertices - 1; count++) {
+        int u = minDistance(dist, sptSet, numVertices);
+        sptSet[u] = 1;
+        Node* temp = graph->adjLists[u];
+        while (temp != NULL) {
+            int v = temp->vertex;
+            int weight = temp->weight;
+            if (!sptSet[v] && dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                parent[v] = u;
+            }
+            temp = temp->next;
+        }
+    }
+    if (dist[dest] == INT_MAX) {
+        printf("Nao existe caminho do vertice %d para o vertice %d\n", src, dest);
+    } else {
+        printf("Menor distancia do vertice %d para o vertice %d: %d\n", src, dest, dist[dest]);
+        printf("Caminho: ");
+        int *path = malloc(numVertices * sizeof(int));
+        int j = 0;
+        for (int i = dest; i != -1; i = parent[i]) {
+            path[j++] = i;
+        }
+        for (int i = j - 1; i >= 0; i--) {
+            printf("%d ", path[i]);
+        }
+        printf("\n");
+        free(path);
+    }
+
+    free(dist);
+    free(sptSet);
+    free(parent);
+}
+
 int main() {
     const char *filename = "matriz.txt";
     int **matrix = NULL;
@@ -236,6 +302,7 @@ int main() {
         printf("3 - Definir arestas\n");
         printf("4 - Construir grafo\n");
         printf("5 - Calcular maior soma\n");
+        printf("6 - Calcular menor caminho\n");
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &choice);
@@ -285,6 +352,23 @@ int main() {
                 printGraph(graph, rows, cols);
                 printf("\n");
                 calculateMaxSum(matrix, rows, cols);
+                for (int i = 0; i < rows; i++) {
+                    free(matrix[i]);
+                }
+                free(matrix);
+                break;
+            case 6:
+                loadMatrixFromFile(filename, &matrix, &rows, &cols);
+                graph = convertMatrixToGraph(matrix, rows, cols);
+                printMatrix(matrix, rows, cols);
+                printf("\n");
+                printGraph(graph, rows, cols);
+                int src, dest;
+                printf("\nVertice de origem: ");
+                scanf("%d", &src);
+                printf("Vertice de destino: ");
+                scanf("%d", &dest);
+                dijkstra(graph, src, dest);
                 for (int i = 0; i < rows; i++) {
                     free(matrix[i]);
                 }
