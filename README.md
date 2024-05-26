@@ -121,9 +121,7 @@ A função `minDistance` é utilizada para encontrar o vértice com a menor dist
         - `min = dist[v]`: Atualiza `min` com a nova menor distância.
         - `min_index = v`: Atualiza `min_index` com o índice do vértice com a menor distância.
 
-Em suma, a função `minDistance` é responsável por encontrar o vértice com a menor distância que ainda não foi processado no conjunto de vértices do grafo. Ela percorre todos os vértices
-
-, verifica se cada vértice não foi processado e se a sua distância é a menor encontrada até o momento. Esta função é essencial no algoritmo de Dijkstra, permitindo a seleção do próximo vértice a ser processado na busca pelo caminho mais curto.
+Em suma, a função `minDistance` é responsável por encontrar o vértice com a menor distância que ainda não foi processado no conjunto de vértices do grafo. Ela percorre todos os vértices, verifica se cada vértice não foi processado e se a sua distância é a menor encontrada até o momento. Esta função é essencial no algoritmo de Dijkstra, permitindo a seleção do próximo vértice a ser processado na busca pelo caminho mais curto.
 
 ## dijkstra
 
@@ -150,7 +148,7 @@ A função `dijkstra` é utilizada para encontrar o caminho mais curto entre doi
     - Se a distância para o destino `dest` for `INT_MAX`, não existe caminho entre `src` e `dest`.
     - Caso contrário, imprime a menor distância e o caminho encontrado, percorrendo o array `parent` de `dest` para `src`.
 
-Em resumo, a função `dijkstra` implementa o algoritmo de Dijkstra para encontrar o caminho mais curto entre dois vértices num grafo. A função inicializa as distâncias, processa os vértices para encontrar as menores distâncias e, finalmente, imprime a menor distância e o caminho encontrado. A função utiliza estruturas auxiliares para rastrear as distâncias, os vértices processados e os predecessores no caminho mais curto, garantindo uma implementação eficiente e correta do algoritmo de Dijkstra.
+Em resumo, a função `dijkstra` implementa o algoritmo de Dijkstra para encontrar o caminho mais curto entre dois vértices num grafo. A função inicializa as distâncias, processa os vértices para encontrar as menores distâncias e, finalmente, imprime a menor distância e o caminho encontrado. A função utiliza estruturas auxiliares para averiguar as distâncias, os vértices processados e os predecessores no caminho mais curto, garantindo uma implementação eficiente e correta do algoritmo de Dijkstra.
 
 ## main
 
