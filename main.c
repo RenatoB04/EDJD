@@ -1,3 +1,5 @@
+// Toda a documentação está disponível no README.md ou no GitHub: https://github.com/RenatoB04/P02-EDA
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,7 +99,7 @@ int** createAdjacencyMatrix(Graph* graph, int numVertices) {
 
 // Função para imprimir a matriz de adjacência
 void printAdjacencyMatrix(int** adjacencyMatrix, int numVertices) {
-    printf("\nMatriz de adjacência:\n\n");
+    printf("\nMatriz de adjacencia:\n\n");
 
     // Imprime os cabeçalhos das colunas
     printf("    ");
