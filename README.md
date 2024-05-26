@@ -17,7 +17,7 @@ O projeto está estruturado em torno de várias funções essenciais que permite
 ### Objetivos Específicos
 
 1. **Representação de Grafos:** Implementar uma estrutura de dados que utilize listas de adjacência para representar grafos.
-2. **Manipulação de Grafos:** Desenvolver funções para adicionar arestas, criar nós e liberar memória alocada para grafos.
+2. **Manipulação de Grafos:** Desenvolver funções para adicionar arestas, criar nós e libertar memória alocada para grafos.
 3. **Conversão e Impressão:** Implementar funções para converter matrizes de adjacência em grafos e imprimir suas representações de forma clara e legível.
 4. **Algoritmos de Grafos:** Implementar o algoritmo de Dijkstra para encontrar o caminho mais curto entre dois vértices.
 5. **Interface Interativa:** Criar um menu interativo que permita ao utilizador realizar várias operações relacionadas com grafos e matrizes.
@@ -164,7 +164,7 @@ O programa encontra-se otimizado e é eficaz em matrizes de até 20x20 (foi o li
 ### Possíveis Melhorias Futuras
 
 - Otimizar as funções de manipulação de grafos para melhorar o desempenho, especialmente ao lidar com grafos grandes.
-- Implementar a capacidade de guardar o estado atual do grafo e da matriz em ficheiros, permitindo ao utilizador retomar o trabalho em sessões futuras.
+- Implementar a capacidade de guardar o estado atual do grafo e da matriz em ficheiros, permitindo ao utilizador voltar o trabalho em sessões futuras.
 - Adicionar suporte para grafos direcionados, permitindo a definição de arestas com direções específicas e o cálculo de caminhos direcionados.
 
 ### Conclusão
