@@ -159,6 +159,8 @@ A função `main` implementa um menu interativo que permite ao utilizador realiz
 ## Funcionamento do Programa
 https://github.com/RenatoB04/P02-EDA/assets/47258416/038117cf-8a30-408d-9219-110c7283a347
 
+O programa encontra-se otimizado e é eficaz em matrizes de até 20x20 (foi o limite máximo testado, poderá conseguir trabalhar com matrizes ainda maiores).
+
 ### Possíveis Melhorias Futuras
 
 - Otimizar as funções de manipulação de grafos para melhorar o desempenho, especialmente ao lidar com grafos grandes.
