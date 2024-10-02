@@ -114,7 +114,7 @@ fun CalculatorButton(text: String, onClick: () -> Unit, modifier: Modifier = Mod
         onClick = onClick,
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF6200EE),
+            containerColor = Color(0xFF808080),
             contentColor = Color.White
         ),
         modifier = modifier.size(80.dp)
