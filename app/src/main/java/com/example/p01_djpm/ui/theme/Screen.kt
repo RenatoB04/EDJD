@@ -22,7 +22,8 @@ fun Screen(modifier: Modifier = Modifier) {
     var operation by remember { mutableStateOf<String?>(null) }
 
     fun updateDisplay(value: String) {
-        displayValue = if (displayValue == "0") {
+        if (value == "." && displayValue.contains(".")) return
+        displayValue = if (displayValue == "0" && value != ".") {
             value
         } else {
             displayValue + value
@@ -108,6 +109,7 @@ fun Screen(modifier: Modifier = Modifier) {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 CalculatorButton("0", onClick = { updateDisplay("0") }, Modifier.weight(1f).padding(8.dp))
+                CalculatorButton(".", onClick = { updateDisplay(".") }, Modifier.weight(1f).padding(8.dp))
                 CalculatorButton("C", onClick = { displayValue = "0" }, Modifier.weight(1f).padding(8.dp))
                 CalculatorButton("=", onClick = { calculate() }, Modifier.weight(1f).padding(8.dp))
                 CalculatorButton("/", onClick = { selectOperation("/") }, Modifier.weight(1f).padding(8.dp))
