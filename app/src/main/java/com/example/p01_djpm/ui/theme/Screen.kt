@@ -59,6 +59,14 @@ fun Screen(modifier: Modifier = Modifier) {
         displayValue = "0"
     }
 
+    fun backspace() {
+        displayValue = if (displayValue.length == 1) {
+            "0"
+        } else {
+            displayValue.dropLast(1)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -109,10 +117,14 @@ fun Screen(modifier: Modifier = Modifier) {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 CalculatorButton("0", onClick = { updateDisplay("0") }, Modifier.weight(1f).padding(8.dp))
+                CalculatorButton("⌫", onClick = { backspace() }, Modifier.weight(1f).padding(8.dp))
                 CalculatorButton(".", onClick = { updateDisplay(".") }, Modifier.weight(1f).padding(8.dp))
+                CalculatorButton("/", onClick = { selectOperation("/") }, Modifier.weight(1f).padding(8.dp))
+            }
+
+            Row(modifier = Modifier.fillMaxWidth()) {
                 CalculatorButton("C", onClick = { displayValue = "0" }, Modifier.weight(1f).padding(8.dp))
                 CalculatorButton("=", onClick = { calculate() }, Modifier.weight(1f).padding(8.dp))
-                CalculatorButton("/", onClick = { selectOperation("/") }, Modifier.weight(1f).padding(8.dp))
             }
         }
     }
