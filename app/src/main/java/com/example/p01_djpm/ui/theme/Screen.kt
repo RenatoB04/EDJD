@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.saveable.rememberSaveable
+import java.util.Locale
 
 @Composable
 fun Screen(modifier: Modifier = Modifier) {
@@ -28,21 +29,24 @@ fun Screen(modifier: Modifier = Modifier) {
         }
     }
 
+    fun formatResult(value: Double): String {
+        return if (value == value.toInt().toDouble()) {
+            value.toInt().toString()
+        } else {
+            String.format(Locale.US, "%.5f", value)
+        }
+    }
+
     fun calculate() {
         val secondOperand = displayValue.toDoubleOrNull() ?: 0.0
-        val result = when (operation) {
-            "+" -> firstOperand + secondOperand
-            "-" -> firstOperand - secondOperand
-            "*" -> firstOperand * secondOperand
-            "/" -> if (secondOperand != 0.0) firstOperand / secondOperand else Double.NaN
-            else -> null
-        }
-
-        result?.let {
-            displayValue = if (it % 1 == 0.0) {
-                it.toInt().toString()
+        when (operation) {
+            "+" -> displayValue = formatResult(firstOperand + secondOperand)
+            "-" -> displayValue = formatResult(firstOperand - secondOperand)
+            "*" -> displayValue = formatResult(firstOperand * secondOperand)
+            "/" -> displayValue = if (secondOperand != 0.0) {
+                formatResult(firstOperand / secondOperand)
             } else {
-                it.toString()
+                "Error"
             }
         }
         operation = null
