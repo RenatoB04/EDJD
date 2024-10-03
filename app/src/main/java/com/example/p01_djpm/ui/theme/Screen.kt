@@ -30,14 +30,19 @@ fun Screen(modifier: Modifier = Modifier) {
 
     fun calculate() {
         val secondOperand = displayValue.toDoubleOrNull() ?: 0.0
-        when (operation) {
-            "+" -> displayValue = (firstOperand + secondOperand).toString()
-            "-" -> displayValue = (firstOperand - secondOperand).toString()
-            "*" -> displayValue = (firstOperand * secondOperand).toString()
-            "/" -> displayValue = if (secondOperand != 0.0) {
-                (firstOperand / secondOperand).toString()
+        val result = when (operation) {
+            "+" -> firstOperand + secondOperand
+            "-" -> firstOperand - secondOperand
+            "*" -> firstOperand * secondOperand
+            "/" -> if (secondOperand != 0.0) firstOperand / secondOperand else Double.NaN
+            else -> null
+        }
+
+        result?.let {
+            displayValue = if (it % 1 == 0.0) {
+                it.toInt().toString()
             } else {
-                "Error"
+                it.toString()
             }
         }
         operation = null
@@ -72,7 +77,6 @@ fun Screen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Botões
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Bottom
