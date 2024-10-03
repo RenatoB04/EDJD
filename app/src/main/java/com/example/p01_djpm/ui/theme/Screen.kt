@@ -31,10 +31,11 @@ fun Screen(modifier: Modifier = Modifier) {
     }
 
     fun formatResult(value: Double): String {
-        return if (value == value.toInt().toDouble()) {
-            value.toInt().toString()
+        val bigDecimal = value.toBigDecimal().stripTrailingZeros()
+        return if (bigDecimal.scale() > 0) {
+            bigDecimal.setScale(minOf(6, bigDecimal.scale()), java.math.RoundingMode.HALF_UP).toPlainString()
         } else {
-            String.format(Locale.US, "%.5f", value)
+            bigDecimal.toPlainString()
         }
     }
 
