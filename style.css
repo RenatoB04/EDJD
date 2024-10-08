@@ -10,6 +10,7 @@ body {
     align-items: center;
     height: 100vh;
     background: linear-gradient(to bottom, #87CEEB, #f0f8ff);
+    overflow: hidden;
 }
 
 .scene {
@@ -19,15 +20,14 @@ body {
     justify-content: space-between;
     align-items: flex-end;
     position: relative;
-    overflow: hidden;
 }
 
 .sun {
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 50%;
     transform: translateX(-50%);
-    animation: moveSun 8s infinite alternate ease-in-out;
+    animation: moveSun 15s infinite alternate ease-in-out;
 }
 
 .cloud {
@@ -38,15 +38,16 @@ body {
     opacity: 0.8;
 }
 
-.tree {
-    position: relative;
-    margin-bottom: 30px;
-    animation: swayTree 4s infinite alternate ease-in-out;
+.ocean {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 @keyframes moveSun {
-    0% { top: 10%; }
-    100% { top: 30%; }
+    0% { top: 5%; }   /* Posição inicial mais baixa */
+    50% { top: 20%; }  /* Meio da animação */
+    100% { top: 10%; } /* Posição final, um pouco abaixo da posição do meio */
 }
 
 @keyframes moveCloud {
@@ -54,7 +55,12 @@ body {
     100% { left: 120%; }
 }
 
-@keyframes swayTree {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(2deg); }
+@keyframes wave {
+    0% { d: path("M0 100 C 100 50, 300 150, 400 100 C 500 50, 700 150, 800 100 L 800 200 L 0 200 Z"); }
+    50% { d: path("M0 100 C 100 70, 300 130, 400 100 C 500 70, 700 130, 800 100 L 800 200 L 0 200 Z"); }
+    100% { d: path("M0 100 C 100 50, 300 150, 400 100 C 500 50, 700 150, 800 100 L 800 200 L 0 200 Z"); }
+}
+
+.wave {
+    animation: wave 4s infinite alternate;
 }
