@@ -15,51 +15,54 @@ import android.view.SurfaceView
 class GameView : SurfaceView, Runnable {
 
     var playing = false
-    var gameThread : Thread? = null
-    lateinit var surfaceHolder : SurfaceHolder
-    lateinit var canvas : Canvas
+    var gameThread: Thread? = null
+    lateinit var surfaceHolder: SurfaceHolder
+    lateinit var canvas: Canvas
 
-    lateinit var paint :Paint
+    lateinit var paint: Paint
     var stars = arrayListOf<Star>()
     var enemies = arrayListOf<Enemy>()
-    lateinit var player : Player
-    lateinit var boom : Boom
-    lateinit var warrior : Warrior
+    lateinit var player: Player
+    lateinit var boom: Boom
 
     var lives = 3
+    var onGameOver: () -> Unit = {}
 
-    var onGameOver : () -> Unit = {}
+    // Projétil simplificado
+    var projectileX = -1
+    var projectileY = -1
+    var projectileActive = false
+    val projectileSpeed = 20
 
-    private fun init(context: Context, width: Int, height: Int){
-
+    private fun init(context: Context, width: Int, height: Int) {
         surfaceHolder = holder
         paint = Paint()
 
-        for (i in 0..100){
+        for (i in 0..100) {
             stars.add(Star(width, height))
         }
 
-        for (i in 0..2){
-            enemies.add(Enemy(context,width, height))
+        for (i in 0..2) {
+            enemies.add(Enemy(context, width, height))
         }
 
         player = Player(context, width, height)
-        warrior = Warrior(context, width, height)
         boom = Boom(context, width, height)
-
     }
 
     constructor(context: Context?, width: Int, height: Int) : super(context) {
         init(context!!, width, height)
     }
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init(context!!, 0, 0)
     }
+
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ){
+    ) {
         init(context!!, 0, 0)
     }
 
@@ -69,66 +72,84 @@ class GameView : SurfaceView, Runnable {
         gameThread?.start()
     }
 
-
     override fun run() {
-        while (playing){
+        while (playing) {
             update()
             draw()
             control()
         }
     }
 
-    fun update(){
-
+    fun update() {
         boom.x = -300
         boom.y = -300
 
-        for (s in stars){
+        for (s in stars) {
             s.update(player.speed)
         }
-        for (e in enemies){
+
+        for (e in enemies) {
             e.update(player.speed)
             if (Rect.intersects(player.detectCollision, e.detectCollision)) {
-
-
                 boom.x = e.x
                 boom.y = e.y
-
                 e.x = -300
-
                 lives -= 1
+            }
+        }
 
+        player.update()
 
+        // Atualizar o projétil
+        if (projectileActive) {
+            projectileX += projectileSpeed
+            if (projectileX > width) {
+                projectileActive = false
             }
 
+            // Verificar colisões com inimigos
+            for (enemy in enemies) {
+                if (Rect.intersects(
+                        Rect(projectileX, projectileY, projectileX + 20, projectileY + 20),
+                        enemy.detectCollision
+                    )
+                ) {
+                    enemies.remove(enemy)
+                    projectileActive = false
+                    break
+                }
+            }
         }
-        player.update()
-        warrior.update()
     }
 
-    fun draw(){
-        if (surfaceHolder.surface.isValid){
+    fun draw() {
+        if (surfaceHolder.surface.isValid) {
             canvas = surfaceHolder.lockCanvas()
-
-            // design code here
-
             canvas.drawColor(Color.BLACK)
 
             paint.color = Color.YELLOW
-
             for (star in stars) {
                 paint.strokeWidth = star.starWidth.toFloat()
                 canvas.drawPoint(star.x.toFloat(), star.y.toFloat(), paint)
             }
 
             canvas.drawBitmap(player.bitmap, player.x.toFloat(), player.y.toFloat(), paint)
-
-            for (e in enemies) {
-                canvas.drawBitmap(e.bitmap, e.x.toFloat(), e.y.toFloat(), paint)
+            for (enemy in enemies) {
+                canvas.drawBitmap(enemy.bitmap, enemy.x.toFloat(), enemy.y.toFloat(), paint)
             }
             canvas.drawBitmap(boom.bitmap, boom.x.toFloat(), boom.y.toFloat(), paint)
 
-            canvas.drawBitmap(warrior.bitmap, warrior.x.toFloat(), warrior.y.toFloat(), paint)
+            // Desenhar o projétil
+            if (projectileActive) {
+                paint.color = Color.RED
+                canvas.drawRect(
+                    projectileX.toFloat(),
+                    projectileY.toFloat(),
+                    (projectileX + 20).toFloat(),
+                    (projectileY + 20).toFloat(),
+                    paint
+                )
+            }
 
             paint.textSize = 42f
             canvas.drawText("Lives: $lives", 10f, 100f, paint)
@@ -137,80 +158,32 @@ class GameView : SurfaceView, Runnable {
         }
     }
 
-    var callGameOverOnce = false
-    fun control(){
+    fun control() {
         Thread.sleep(17)
-        if (lives == 0 ){
+        if (lives == 0) {
             playing = false
             Handler(Looper.getMainLooper()).post {
-                if (!callGameOverOnce) {
-                    onGameOver()
-                    callGameOverOnce = true
-                }
+                onGameOver()
                 gameThread?.join()
             }
         }
     }
 
-    private var activePointers = 0
-
-    private val touchX = FloatArray(10) { -1f } // Store X coordinates of touch points (up to 10 fingers)
-    private val touchY = FloatArray(10) { -1f }
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-
-        when(event?.action){
+        when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 player.boosting = true
-                warrior.x = event.x.toInt()
-                warrior.y = event.y.toInt()
+                // Criar projétil se não houver um ativo
+                if (!projectileActive) {
+                    projectileX = player.x + player.bitmap.width
+                    projectileY = player.y + player.bitmap.height / 2
+                    projectileActive = true
+                }
             }
             MotionEvent.ACTION_UP -> {
                 player.boosting = false
             }
-            MotionEvent.ACTION_MOVE -> {
-                warrior.x = event.x.toInt()
-                warrior.y = event.y.toInt()
-            }
         }
-
-        activePointers = event?.pointerCount?:0
-
-        // Process each touch point
-        for (i in 0 until activePointers) {
-            val pointerId = event?.getPointerId(i)?:0
-            touchX[pointerId] = event?.getX(i)?:-1f
-            touchY[pointerId] = event?.getY(i)?:-1f
-        }
-
-        // Handle touch actions
-        when (event?.actionMasked) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
-                // A new finger touched the screen
-
-
-            }
-            MotionEvent.ACTION_MOVE -> {
-                // Handle movement of each finger
-            }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
-                // A finger was lifted up
-                val pointerIndex = event.actionIndex
-                val pointerId = event.getPointerId(pointerIndex)
-                touchX[pointerId] = -1f
-                touchY[pointerId] = -1f
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                // Reset all points on cancel
-                for (i in touchX.indices) {
-                    touchX[i] = -1f
-                    touchY[i] = -1f
-                }
-            }
-        }
-
-
         return true
     }
-
 }
