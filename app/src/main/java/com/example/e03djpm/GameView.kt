@@ -38,10 +38,12 @@ class GameView : SurfaceView, Runnable {
         surfaceHolder = holder
         paint = Paint()
 
+        // Criar estrelas
         for (i in 0..100) {
             stars.add(Star(width, height))
         }
 
+        // Criar inimigos iniciais
         for (i in 0..2) {
             enemies.add(Enemy(context, width, height))
         }
@@ -84,37 +86,47 @@ class GameView : SurfaceView, Runnable {
         boom.x = -300
         boom.y = -300
 
+        // Atualizar estrelas
         for (s in stars) {
             s.update(player.speed)
         }
 
-        for (e in enemies) {
-            e.update(player.speed)
-            if (Rect.intersects(player.detectCollision, e.detectCollision)) {
-                boom.x = e.x
-                boom.y = e.y
-                e.x = -300
+        // Atualizar inimigos e verificar colisões
+        val iterator = enemies.iterator()
+        while (iterator.hasNext()) {
+            val enemy = iterator.next()
+            enemy.update(player.speed)
+            if (Rect.intersects(player.detectCollision, enemy.detectCollision)) {
+                boom.x = enemy.x
+                boom.y = enemy.y
+                iterator.remove() // Remove inimigo em colisão
                 lives -= 1
             }
         }
 
+        // Garantir que há sempre 3 inimigos na lista
+        while (enemies.size < 3) {
+            enemies.add(Enemy(context, width, height))
+        }
+
+        // Atualizar jogador
         player.update()
 
-        // Atualizar o projétil
+        // Atualizar projétil
         if (projectileActive) {
             projectileX += projectileSpeed
             if (projectileX > width) {
                 projectileActive = false
             }
 
-            // Verificar colisões com inimigos
+            // Verificar colisões do projétil com inimigos
             for (enemy in enemies) {
                 if (Rect.intersects(
                         Rect(projectileX, projectileY, projectileX + 20, projectileY + 20),
                         enemy.detectCollision
                     )
                 ) {
-                    enemies.remove(enemy)
+                    enemies.remove(enemy) // Remove inimigo atingido
                     projectileActive = false
                     break
                 }
@@ -139,7 +151,7 @@ class GameView : SurfaceView, Runnable {
             }
             canvas.drawBitmap(boom.bitmap, boom.x.toFloat(), boom.y.toFloat(), paint)
 
-            // Desenhar o projétil
+            // Desenhar projétil
             if (projectileActive) {
                 paint.color = Color.RED
                 canvas.drawRect(
