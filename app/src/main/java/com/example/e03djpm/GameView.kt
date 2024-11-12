@@ -172,16 +172,23 @@ class GameView : SurfaceView, Runnable {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                player.boosting = true
-                // Criar projétil se não houver um ativo
-                if (!projectileActive) {
-                    projectileX = player.x + player.bitmap.width
-                    projectileY = player.y + player.bitmap.height / 2
-                    projectileActive = true
+                if (event.x < width / 2) {
+                    // Lado esquerdo: mover a nave
+                    player.boosting = true
+                } else {
+                    // Lado direito: disparar projétil
+                    if (!projectileActive) {
+                        projectileX = player.x + player.bitmap.width
+                        projectileY = player.y + player.bitmap.height / 2
+                        projectileActive = true
+                    }
                 }
             }
             MotionEvent.ACTION_UP -> {
-                player.boosting = false
+                if (event.x < width / 2) {
+                    // Parar o movimento da nave
+                    player.boosting = false
+                }
             }
         }
         return true
