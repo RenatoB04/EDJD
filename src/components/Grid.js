@@ -1,67 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import './Grid.css';
 
-function Grid({ onMatch }) {
-  const [grid, setGrid] = useState([
-    ['🌱', '☀️', '💧'],
-    ['💧', '🌱', '☀️'],
-    ['☀️', '💧', '🌱'],
-  ]);
+function Grid() {
+  const symbols = ['💎', '🔔', '🍇', '🌟', '🍋', '🔥', '⚡', '🌈'];
+  const gridRows = 6;
+  const gridCols = 5;
+  const [grid, setGrid] = useState([]);
+  const [removingCells, setRemovingCells] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
 
-  const checkMatches = () => {
-    let newGrid = [...grid];
-    let matched = false;
-
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid[row].length - 2; col++) {
-        if (
-          grid[row][col] === grid[row][col + 1] &&
-          grid[row][col] === grid[row][col + 2]
-        ) {
-          matched = true;
-          newGrid[row][col] = '';
-          newGrid[row][col + 1] = '';
-          newGrid[row][col + 2] = '';
-        }
-      }
-    }
-
-    for (let col = 0; col < grid[0].length; col++) {
-      for (let row = 0; row < grid.length - 2; row++) {
-        if (
-          grid[row][col] === grid[row + 1][col] &&
-          grid[row][col] === grid[row + 2][col]
-        ) {
-          matched = true;
-          newGrid[row][col] = '';
-          newGrid[row + 1][col] = '';
-          newGrid[row + 2][col] = '';
-        }
-      }
-    }
-
-    if (matched) {
-      setGrid(newGrid);
-      onMatch();
-    }
-  };
-
-  const fillEmptyCells = () => {
-    let newGrid = [...grid];
-    for (let row = 0; row < newGrid.length; row++) {
-      for (let col = 0; col < newGrid[row].length; col++) {
-        if (newGrid[row][col] === '') {
-          newGrid[row][col] = getRandomElement();
-        }
-      }
-    }
-    setGrid(newGrid);
+  const generateGrid = () => {
+    return Array.from({ length: gridRows }, () =>
+      Array.from({ length: gridCols }, () => getRandomElement())
+    );
   };
 
   const getRandomElement = () => {
-    const elements = ['🌱', '☀️', '💧'];
-    return elements[Math.floor(Math.random() * elements.length)];
+    return symbols[Math.floor(Math.random() * symbols.length)];
+  };
+
+  const findMatches = (row, col, visited = new Set()) => {
+    if (!grid[row] || grid[row][col] === undefined) {
+      return [];
+    }
+
+    const symbol = grid[row][col];
+    const key = `${row},${col}`;
+
+    if (
+      row < 0 ||
+      col < 0 ||
+      row >= gridRows ||
+      col >= gridCols ||
+      visited.has(key) ||
+      grid[row][col] !== symbol
+    ) {
+      return [];
+    }
+
+    visited.add(key);
+
+    return [
+      { row, col },
+      ...findMatches(row - 1, col, visited),
+      ...findMatches(row + 1, col, visited),
+      ...findMatches(row, col - 1, visited),
+      ...findMatches(row, col + 1, visited),
+      ...findMatches(row - 1, col - 1, visited),
+      ...findMatches(row - 1, col + 1, visited),
+      ...findMatches(row + 1, col - 1, visited),
+      ...findMatches(row + 1, col + 1, visited),
+    ];
+  };
+
+  const handleMatch = (matches) => {
+    const newGrid = [...grid];
+    matches.forEach(({ row, col }) => {
+      newGrid[row][col] = '';
+    });
+
+    setRemovingCells(matches);
+    setTimeout(() => {
+      replaceEmptyCells(newGrid, matches);
+      setRemovingCells([]);
+    }, 500);
+  };
+
+  const replaceEmptyCells = (grid, matches) => {
+    matches.forEach(({ row, col }) => {
+      grid[row][col] = getRandomElement();
+    });
+    setGrid(grid);
   };
 
   const handleDragStart = (row, col) => {
@@ -77,13 +86,22 @@ function Grid({ onMatch }) {
     newGrid[row][col] = draggedValue;
 
     setGrid(newGrid);
+
+    const matches = findMatches(row, col);
+    if (matches.length >= 8) {
+      handleMatch(matches);
+    } else {
+      newGrid[row][col] = draggedValue;
+      newGrid[draggedItem.row][draggedItem.col] = newGrid[row][col];
+      setGrid(newGrid);
+    }
+
     setDraggedItem(null);
-    checkMatches();
   };
 
   useEffect(() => {
-    fillEmptyCells();
-  }, [grid]);
+    setGrid(generateGrid());
+  }, []);
 
   return (
     <div className="grid">
@@ -91,7 +109,9 @@ function Grid({ onMatch }) {
         row.map((cell, colIndex) => (
           <div
             key={`${rowIndex}-${colIndex}`}
-            className="grid-cell"
+            className={`grid-cell ${removingCells.some(
+              (item) => item.row === rowIndex && item.col === colIndex
+            ) ? 'removing' : ''}`}
             draggable
             onDragStart={() => handleDragStart(rowIndex, colIndex)}
             onDragOver={(e) => e.preventDefault()}

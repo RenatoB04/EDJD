@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import LevelOne from './LevelOne';
-import './styles/App.css';
+import Grid from './components/Grid';
 
 function App() {
   const [startGame, setStartGame] = useState(false);
@@ -9,11 +8,14 @@ function App() {
     <div className="app-container">
       {!startGame ? (
         <div className="start-screen">
-          <h1>Guardian of Balance</h1>
+          <h1>Jogo: Conecte 6!</h1>
           <button onClick={() => setStartGame(true)}>Começar o Jogo</button>
         </div>
       ) : (
-        <LevelOne />
+        <div className="game-screen">
+          <h1>Jogo: Conecte 6!</h1>
+          <Grid />
+        </div>
       )}
     </div>
   );
