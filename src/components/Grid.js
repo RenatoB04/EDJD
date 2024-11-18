@@ -2,74 +2,129 @@ import React, { useState, useEffect } from 'react';
 import './Grid.css';
 
 function Grid() {
-  const symbols = ['💎', '🔔', '🍇', '🌟', '🍋', '🔥', '⚡', '🌈'];
+  const symbols = ['💎', '🔔', '🍇', '🌟', '🍋', '🔥', '⚡', '🌈', '🎲', '🍀'];
   const gridRows = 6;
   const gridCols = 5;
   const [grid, setGrid] = useState([]);
-  const [removingCells, setRemovingCells] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
+  const [removingCells, setRemovingCells] = useState([]);
 
   const generateGrid = () => {
-    return Array.from({ length: gridRows }, () =>
-      Array.from({ length: gridCols }, () => getRandomElement())
-    );
+    let newGrid;
+    do {
+      newGrid = Array.from({ length: gridRows }, () =>
+        Array.from({ length: gridCols }, () => getRandomElement())
+      );
+    } while (hasInitialMatches(newGrid));
+    return newGrid;
   };
 
   const getRandomElement = () => {
     return symbols[Math.floor(Math.random() * symbols.length)];
   };
 
-  const findMatches = (row, col, visited = new Set()) => {
-    if (!grid[row] || grid[row][col] === undefined) {
-      return [];
+  const hasInitialMatches = (grid) => {
+    for (let row = 0; row < gridRows; row++) {
+      for (let col = 0; col < gridCols; col++) {
+        const matches = findMatchesInDirection(grid, row, col, 'horizontal', 4);
+        const matchesVert = findMatchesInDirection(grid, row, col, 'vertical', 4);
+        if (matches.length >= 4 || matchesVert.length >= 4) {
+          return true;
+        }
+      }
     }
+    return false;
+  };
 
+  const findMatches = () => {
+    const matches = [];
+
+    for (let row = 0; row < gridRows; row++) {
+      for (let col = 0; col < gridCols; col++) {
+        const horizontalMatch = findMatchesInDirection(grid, row, col, 'horizontal', 4);
+        const verticalMatch = findMatchesInDirection(grid, row, col, 'vertical', 4);
+
+        if (horizontalMatch.length >= 4) {
+          matches.push(...horizontalMatch);
+        }
+
+        if (verticalMatch.length >= 4) {
+          matches.push(...verticalMatch);
+        }
+      }
+    }
+    return matches;
+  };
+
+  const findMatchesInDirection = (grid, row, col, direction, minLength) => {
     const symbol = grid[row][col];
-    const key = `${row},${col}`;
+    const cells = [];
+    let r = row;
+    let c = col;
 
-    if (
-      row < 0 ||
-      col < 0 ||
-      row >= gridRows ||
-      col >= gridCols ||
-      visited.has(key) ||
-      grid[row][col] !== symbol
+    while (
+      r >= 0 &&
+      r < gridRows &&
+      c >= 0 &&
+      c < gridCols &&
+      grid[r][c] === symbol
     ) {
-      return [];
+      cells.push({ row: r, col: c });
+      if (direction === 'horizontal') c++;
+      if (direction === 'vertical') r++;
     }
 
-    visited.add(key);
+    return cells.length >= minLength ? cells : [];
+  };
 
-    return [
-      { row, col },
-      ...findMatches(row - 1, col, visited),
-      ...findMatches(row + 1, col, visited),
-      ...findMatches(row, col - 1, visited),
-      ...findMatches(row, col + 1, visited),
-      ...findMatches(row - 1, col - 1, visited),
-      ...findMatches(row - 1, col + 1, visited),
-      ...findMatches(row + 1, col - 1, visited),
-      ...findMatches(row + 1, col + 1, visited),
-    ];
+  const handleSwap = (sourceRow, sourceCol, targetRow, targetCol) => {
+    const newGrid = [...grid];
+    const temp = newGrid[sourceRow][sourceCol];
+    newGrid[sourceRow][sourceCol] = newGrid[targetRow][targetCol];
+    newGrid[targetRow][targetCol] = temp;
+
+    setGrid(newGrid);
+
+    const matches = findMatches();
+
+    if (matches.length > 0) {
+      handleMatch(matches);
+    } else {
+      // Update the grid to reflect the swap even if no match
+      setGrid(newGrid);
+    }
   };
 
   const handleMatch = (matches) => {
     const newGrid = [...grid];
+
     matches.forEach(({ row, col }) => {
       newGrid[row][col] = '';
     });
 
     setRemovingCells(matches);
     setTimeout(() => {
-      replaceEmptyCells(newGrid, matches);
+      dropSymbols(newGrid);
       setRemovingCells([]);
     }, 500);
   };
 
-  const replaceEmptyCells = (grid, matches) => {
-    matches.forEach(({ row, col }) => {
-      grid[row][col] = getRandomElement();
-    });
+  const dropSymbols = (grid) => {
+    for (let col = 0; col < gridCols; col++) {
+      let emptySpaces = 0;
+      for (let row = gridRows - 1; row >= 0; row--) {
+        if (grid[row][col] === '') {
+          emptySpaces++;
+        } else if (emptySpaces > 0) {
+          grid[row + emptySpaces][col] = grid[row][col];
+          grid[row][col] = '';
+        }
+      }
+
+      for (let row = 0; row < emptySpaces; row++) {
+        grid[row][col] = getRandomElement();
+      }
+    }
     setGrid(grid);
   };
 
@@ -77,23 +132,20 @@ function Grid() {
     setDraggedItem({ row, col });
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Prevent default to allow drop
+  };
+
   const handleDrop = (row, col) => {
     if (!draggedItem) return;
 
-    const newGrid = [...grid];
-    const draggedValue = newGrid[draggedItem.row][draggedItem.col];
-    newGrid[draggedItem.row][draggedItem.col] = newGrid[row][col];
-    newGrid[row][col] = draggedValue;
+    const { row: sourceRow, col: sourceCol } = draggedItem;
 
-    setGrid(newGrid);
-
-    const matches = findMatches(row, col);
-    if (matches.length >= 8) {
-      handleMatch(matches);
-    } else {
-      newGrid[row][col] = draggedValue;
-      newGrid[draggedItem.row][draggedItem.col] = newGrid[row][col];
-      setGrid(newGrid);
+    if (
+      (Math.abs(sourceRow - row) === 1 && sourceCol === col) ||
+      (Math.abs(sourceCol - col) === 1 && sourceRow === row)
+    ) {
+      handleSwap(sourceRow, sourceCol, row, col);
     }
 
     setDraggedItem(null);
@@ -114,7 +166,7 @@ function Grid() {
             ) ? 'removing' : ''}`}
             draggable
             onDragStart={() => handleDragStart(rowIndex, colIndex)}
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={handleDragOver}
             onDrop={() => handleDrop(rowIndex, colIndex)}
           >
             {cell}
