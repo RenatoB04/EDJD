@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Grid.css';
 
 function Grid() {
-  const symbols = ['💎', '🔔', '🍇', '🌟', '🍋', '🔥', '⚡', '🌈', '🎲', '🍀'];
+  const symbols = ['🌱', '💧', '🌍', '🌞', '🍃', '♻️', '🌳', '🌾', '🐝', '⚡'];
   const gridRows = 6;
   const gridCols = 5;
   const [grid, setGrid] = useState([]);
@@ -90,7 +90,6 @@ function Grid() {
     if (matches.length > 0) {
       handleMatch(matches);
     } else {
-      // Update the grid to reflect the swap even if no match
       setGrid(newGrid);
     }
   };
@@ -133,7 +132,7 @@ function Grid() {
   };
 
   const handleDragOver = (e) => {
-    e.preventDefault(); // Prevent default to allow drop
+    e.preventDefault();
   };
 
   const handleDrop = (row, col) => {
