@@ -26,7 +26,6 @@ const GameBoard = () => {
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(60);
   const [speed, setSpeed] = useState(2000);
-  const [draggedWaste, setDraggedWaste] = useState(null);
 
   const bins = ["papel", "plástico", "vidro", "orgânico", "metal"];
 
@@ -48,34 +47,26 @@ const GameBoard = () => {
     });
   };
 
-  const handleDragStart = (waste, colIndex) => {
-    setDraggedWaste({ waste, colIndex });
-  };
-
-  const handleDrop = (bin) => {
+  const handleDrop = (waste, bin, colIndex) => {
     const binElement = document.querySelector(`[data-bin="${bin}"]`);
-
-    if (draggedWaste) {
-      const { waste, colIndex } = draggedWaste;
-      if (waste.bin === bin) {
-        setScore((prev) => prev + 10);
-        setTimer((prev) => prev + 3);
-
-        setGrid((prev) => {
-          const newGrid = [...prev];
-          const updatedColumn = [...newGrid[colIndex]];
-          updatedColumn.shift();
-          newGrid[colIndex] = updatedColumn;
-          return newGrid;
-        });
-      } else {
-        setTimer((prev) => Math.max(prev - 10, 0));
-        binElement.classList.add("bin-error");
-        setTimeout(() => {
-          binElement.classList.remove("bin-error");
-        }, 300);
-      }
-      setDraggedWaste(null);
+  
+    if (waste.bin === bin) {
+      setScore((prev) => prev + 10);
+      setTimer((prev) => prev + 3);
+  
+      setGrid((prev) => {
+        const newGrid = [...prev];
+        const updatedColumn = [...newGrid[colIndex]];
+        updatedColumn.shift();
+        newGrid[colIndex] = updatedColumn;
+        return newGrid;
+      });
+    } else {
+      setTimer((prev) => Math.max(prev - 10, 0));
+      binElement.classList.add("bin-error");
+      setTimeout(() => {
+        binElement.classList.remove("bin-error");
+      }, 300);
     }
   };
 
@@ -84,7 +75,6 @@ const GameBoard = () => {
     setScore(0);
     setTimer(60);
     setSpeed(2000);
-    setDraggedWaste(null);
   };
 
   useEffect(() => {
@@ -130,8 +120,12 @@ const GameBoard = () => {
                 key={`${colIndex}-${rowIndex}`}
                 className="waste"
                 draggable
-                onDragStart={() => handleDragStart(waste, colIndex)}
-                onTouchStart={() => handleDragStart(waste, colIndex)}
+                onDragStart={(e) =>
+                  e.dataTransfer.setData(
+                    "waste",
+                    JSON.stringify({ waste, colIndex })
+                  )
+                }
               >
                 {waste.emoji}
               </div>
@@ -147,10 +141,9 @@ const GameBoard = () => {
             data-bin={bin}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
-              e.preventDefault();
-              handleDrop(bin);
+              const droppedData = JSON.parse(e.dataTransfer.getData("waste"));
+              handleDrop(droppedData.waste, bin, droppedData.colIndex);
             }}
-            onTouchEnd={() => handleDrop(bin)}
           >
             {bin}
           </div>
