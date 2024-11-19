@@ -10,39 +10,63 @@ const WASTE_TYPES = [
 ];
 
 const GameBoard = () => {
-  const [fallingWaste, setFallingWaste] = useState([]);
+  const columns = 5; // Número de colunas
+  const rows = 10; // Número máximo de itens em uma coluna
+  const [grid, setGrid] = useState(Array.from({ length: columns }, () => []));
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(60);
-  const [speed, setSpeed] = useState(2000);
+  const [speed, setSpeed] = useState(2000); // Velocidade inicial (ms)
 
   const bins = ["papel", "plástico", "vidro", "orgânico", "metal"];
 
   const generateWaste = () => {
+    const randomColumn = Math.floor(Math.random() * columns);
     const randomWaste =
       WASTE_TYPES[Math.floor(Math.random() * WASTE_TYPES.length)];
-    setFallingWaste((prev) => [
-      ...prev,
-      { ...randomWaste, id: Date.now(), position: 0 },
-    ]);
+
+    setGrid((prev) => {
+      if (prev[randomColumn].length >= rows) {
+        // Fim de jogo se uma coluna atingir o topo
+        alert(`Fim de jogo! Pontuação final: ${score}`);
+        resetGame();
+        return prev;
+      }
+
+      const newGrid = [...prev];
+      newGrid[randomColumn] = [...newGrid[randomColumn], randomWaste];
+      return newGrid;
+    });
   };
 
-  const handleDrop = (waste, bin) => {
+  const handleDrop = (waste, bin, colIndex) => {
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
-      setTimer((prev) => prev + 3);
+      setTimer((prev) => prev + 3); // Aumenta o tempo
     } else {
-      setTimer((prev) => Math.max(prev - 10, 0));
+      setTimer((prev) => Math.max(prev - 10, 0)); // Diminui o tempo
     }
-    setFallingWaste((prev) => prev.filter((item) => item.id !== waste.id));
+
+    // Remove o lixo da coluna
+    setGrid((prev) => {
+      const newGrid = [...prev];
+      newGrid[colIndex] = newGrid[colIndex].filter(
+        (item, index) => index !== prev[colIndex].indexOf(waste)
+      );
+      return newGrid;
+    });
+  };
+
+  const resetGame = () => {
+    setGrid(Array.from({ length: columns }, () => []));
+    setScore(0);
+    setTimer(60);
+    setSpeed(2000);
   };
 
   useEffect(() => {
     if (timer <= 0) {
       alert(`Fim de jogo! Pontuação final: ${score}`);
-      setTimer(60);
-      setScore(0);
-      setSpeed(2000);
-      setFallingWaste([]);
+      resetGame();
     }
   }, [timer]);
 
@@ -57,12 +81,6 @@ const GameBoard = () => {
   useEffect(() => {
     const wasteInterval = setInterval(() => {
       generateWaste();
-      setFallingWaste((prev) =>
-        prev.map((waste) => ({
-          ...waste,
-          position: waste.position + 20,
-        }))
-      );
     }, speed);
 
     return () => clearInterval(wasteInterval);
@@ -70,7 +88,7 @@ const GameBoard = () => {
 
   useEffect(() => {
     if (score > 0 && score % 5 === 0) {
-      setSpeed((prev) => Math.max(prev - 200, 800));
+      setSpeed((prev) => Math.max(prev - 200, 800)); // Aumenta a frequência dos resíduos
     }
   }, [score]);
 
@@ -81,16 +99,23 @@ const GameBoard = () => {
         <p>Tempo: {timer}s</p>
       </div>
       <div className="falling-area">
-        {fallingWaste.map((waste) => (
-          <div
-            key={waste.id}
-            className="waste"
-            style={{ top: `${waste.position}px` }}
-            draggable
-            onDragStart={(e) => e.dataTransfer.setData("waste", JSON.stringify(waste))}
-            onAnimationEnd={() => handleDrop(waste, "nenhum")}
-          >
-            {waste.emoji}
+        {grid.map((col, colIndex) => (
+          <div key={colIndex} className="column">
+            {col.map((waste, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="waste"
+                draggable
+                onDragStart={(e) =>
+                  e.dataTransfer.setData(
+                    "waste",
+                    JSON.stringify({ waste, colIndex })
+                  )
+                }
+              >
+                {waste.emoji}
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -102,8 +127,8 @@ const GameBoard = () => {
             data-bin={bin}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
-              const droppedWaste = JSON.parse(e.dataTransfer.getData("waste"));
-              handleDrop(droppedWaste, bin);
+              const droppedData = JSON.parse(e.dataTransfer.getData("waste"));
+              handleDrop(droppedData.waste, bin, droppedData.colIndex);
             }}
           >
             {bin}
