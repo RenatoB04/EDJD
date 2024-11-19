@@ -16,8 +16,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 800px;
-  height: 600px;
+  width: 90vw;
+  height: 90vh;
+  max-width: 800px;
+  max-height: 650px;
   background-color: #fff;
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -34,7 +36,7 @@ body {
 }
 
 .info p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   margin: 0;
 }
@@ -71,7 +73,7 @@ header button:active {
   justify-content: center;
   align-items: flex-end;
   width: 100%;
-  height: 70%;
+  height: 75%;
   background: #ffffff;
   border-radius: 10px;
   border: 2px solid #ddd;
@@ -92,8 +94,8 @@ header button:active {
 
 .waste {
   margin: 5px;
-  font-size: 2rem;
-  padding: 10px;
+  font-size: 1.5rem;
+  padding: 0.5rem;
   background: #f8f9fa;
   border: 2px solid #ced6e0;
   border-radius: 50%;
@@ -135,6 +137,20 @@ header button:active {
   text-transform: capitalize;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.bin-error {
+  background: #ff6b6b;
+  border-color: #e74c3c;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
 
 .bin:hover {

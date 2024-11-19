@@ -3,15 +3,25 @@ import "../styles/Game.css";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
+  { type: "papel", emoji: "📚", bin: "papel" },
+  { type: "papel", emoji: "🗞️", bin: "papel" },
   { type: "plástico", emoji: "🛍️", bin: "plástico" },
-  { type: "vidro", emoji: "🍾", bin: "vidro" },
+  { type: "plástico", emoji: "🥤", bin: "plástico" },
+  { type: "plástico", emoji: "🧴", bin: "plástico" },
+  { type: "vidro", emoji: "🍶", bin: "vidro" },
+  { type: "vidro", emoji: "🧴", bin: "vidro" },
+  { type: "vidro", emoji: "🧂", bin: "vidro" },
   { type: "orgânico", emoji: "🍎", bin: "orgânico" },
+  { type: "orgânico", emoji: "🍌", bin: "orgânico" },
+  { type: "orgânico", emoji: "🥬", bin: "orgânico" },
   { type: "metal", emoji: "🪙", bin: "metal" },
+  { type: "metal", emoji: "🥫", bin: "metal" },
+  { type: "metal", emoji: "🔩", bin: "metal" },
 ];
 
 const GameBoard = () => {
   const columns = 5;
-  const rows = 10;
+  const rows = 6;
   const [grid, setGrid] = useState(Array.from({ length: columns }, () => []));
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(60);
@@ -25,47 +35,38 @@ const GameBoard = () => {
       WASTE_TYPES[Math.floor(Math.random() * WASTE_TYPES.length)];
 
     setGrid((prev) => {
-      if (prev[randomColumn].length >= rows) {
+      const newGrid = [...prev];
+      if (newGrid[randomColumn].length >= rows) {
         alert(`Fim de jogo! Pontuação final: ${score}`);
         resetGame();
         return prev;
       }
 
-      const newGrid = [...prev];
       newGrid[randomColumn] = [...newGrid[randomColumn], randomWaste];
       return newGrid;
     });
   };
 
   const handleDrop = (waste, bin, colIndex) => {
+    const binElement = document.querySelector(`[data-bin="${bin}"]`);
+  
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
       setTimer((prev) => prev + 3);
-
+  
       setGrid((prev) => {
         const newGrid = [...prev];
         const updatedColumn = [...newGrid[colIndex]];
-        const startIndex = updatedColumn.findIndex(
-          (item) => item.emoji === waste.emoji && item.type === waste.type
-        );
-
-        if (startIndex !== -1) {
-          for (let i = startIndex; i < updatedColumn.length; i++) {
-            if (
-              updatedColumn[i]?.emoji === waste.emoji &&
-              updatedColumn[i]?.type === waste.type
-            ) {
-              updatedColumn[i] = null;
-            } else {
-              break;
-            }
-          }
-          newGrid[colIndex] = updatedColumn.filter((item) => item !== null);
-        }
+        updatedColumn.shift();
+        newGrid[colIndex] = updatedColumn;
         return newGrid;
       });
     } else {
       setTimer((prev) => Math.max(prev - 10, 0));
+      binElement.classList.add("bin-error");
+      setTimeout(() => {
+        binElement.classList.remove("bin-error");
+      }, 300);
     }
   };
 

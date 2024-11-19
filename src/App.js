@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
-import GameBoard from "./components/GameBoard";
+import GameBoard from "./components/Game";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
