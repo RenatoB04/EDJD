@@ -1,27 +1,26 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import "./LoginForm.css";
 
 function LoginForm({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false); // Alternar entre login e registro
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isRegistering) {
-        // Criar uma nova conta
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         onLogin(userCredential.user);
       } else {
-        // Fazer login com conta existente
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         onLogin(userCredential.user);
       }
     } catch (err) {
-      setError(err.message); // Mostra o erro retornado pelo Firebase
+      setError(err.message);
     }
   };
 

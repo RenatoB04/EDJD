@@ -1,7 +1,7 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 80px); /* 5 colunas */
-  grid-template-rows: repeat(6, 80px); /* 6 linhas */
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: repeat(6, 80px);
   gap: 5px;
   justify-content: center;
   margin: 20px auto;

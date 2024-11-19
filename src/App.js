@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
-import Grid from "./components/Grid"; // Jogo principal
+import Grid from "./components/Grid";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
