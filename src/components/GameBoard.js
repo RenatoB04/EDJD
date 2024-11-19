@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Game.css";
+import "../styles/Game.css";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
