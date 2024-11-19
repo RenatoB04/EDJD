@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
-import Grid from './components/Grid';
+import React, { useState } from "react";
+import LoginForm from "./components/LoginForm";
+import Grid from "./components/Grid"; // Jogo principal
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase";
 
 function App() {
-  const [startGame, setStartGame] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (user) => {
+    setUser(user);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
 
   return (
     <div className="app-container">
-      {!startGame ? (
-        <div className="start-screen">
-          <h1>Jogo: Conecte 6!</h1>
-          <button onClick={() => setStartGame(true)}>Começar o Jogo</button>
-        </div>
+      {!user ? (
+        <LoginForm onLogin={handleLogin} />
       ) : (
-        <div className="game-screen">
-          <h1>Jogo: Conecte 6!</h1>
+        <div>
+          <header>
+            <h1>Bem-vindo, {user.email}!</h1>
+            <button onClick={handleLogout}>Logout</button>
+          </header>
           <Grid />
         </div>
       )}
