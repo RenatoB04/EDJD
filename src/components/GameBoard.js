@@ -10,12 +10,12 @@ const WASTE_TYPES = [
 ];
 
 const GameBoard = () => {
-  const columns = 5; // Número de colunas
-  const rows = 10; // Número máximo de itens em uma coluna
+  const columns = 5;
+  const rows = 10;
   const [grid, setGrid] = useState(Array.from({ length: columns }, () => []));
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(60);
-  const [speed, setSpeed] = useState(2000); // Velocidade inicial (ms)
+  const [speed, setSpeed] = useState(2000);
 
   const bins = ["papel", "plástico", "vidro", "orgânico", "metal"];
 
@@ -26,7 +26,6 @@ const GameBoard = () => {
 
     setGrid((prev) => {
       if (prev[randomColumn].length >= rows) {
-        // Fim de jogo se uma coluna atingir o topo
         alert(`Fim de jogo! Pontuação final: ${score}`);
         resetGame();
         return prev;
@@ -41,19 +40,18 @@ const GameBoard = () => {
   const handleDrop = (waste, bin, colIndex) => {
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
-      setTimer((prev) => prev + 3); // Aumenta o tempo
-    } else {
-      setTimer((prev) => Math.max(prev - 10, 0)); // Diminui o tempo
-    }
+      setTimer((prev) => prev + 3);
 
-    // Remove o lixo da coluna
-    setGrid((prev) => {
-      const newGrid = [...prev];
-      newGrid[colIndex] = newGrid[colIndex].filter(
-        (item, index) => index !== prev[colIndex].indexOf(waste)
-      );
-      return newGrid;
-    });
+      setGrid((prev) => {
+        const newGrid = [...prev];
+        newGrid[colIndex] = newGrid[colIndex].filter(
+          (item) => item.emoji !== waste.emoji || item.type !== waste.type
+        );
+        return newGrid;
+      });
+    } else {
+      setTimer((prev) => Math.max(prev - 10, 0));
+    }
   };
 
   const resetGame = () => {
@@ -88,7 +86,7 @@ const GameBoard = () => {
 
   useEffect(() => {
     if (score > 0 && score % 5 === 0) {
-      setSpeed((prev) => Math.max(prev - 200, 800)); // Aumenta a frequência dos resíduos
+      setSpeed((prev) => Math.max(prev - 200, 800));
     }
   }, [score]);
 
@@ -103,7 +101,7 @@ const GameBoard = () => {
           <div key={colIndex} className="column">
             {col.map((waste, rowIndex) => (
               <div
-                key={rowIndex}
+                key={`${colIndex}-${rowIndex}`}
                 className="waste"
                 draggable
                 onDragStart={(e) =>
