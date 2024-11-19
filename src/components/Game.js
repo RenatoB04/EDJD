@@ -3,19 +3,19 @@ import "../styles/Game.css";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
-  { type: "papel", emoji: "📚", bin: "papel" },
-  { type: "papel", emoji: "🗞️", bin: "papel" },
+  { type: "papel", emoji: "📖", bin: "papel" },
+  { type: "papel", emoji: "📜", bin: "papel" },
   { type: "plástico", emoji: "🛍️", bin: "plástico" },
+  { type: "plástico", emoji: "🪣", bin: "plástico" },
   { type: "plástico", emoji: "🥤", bin: "plástico" },
-  { type: "plástico", emoji: "🧴", bin: "plástico" },
-  { type: "vidro", emoji: "🍶", bin: "vidro" },
-  { type: "vidro", emoji: "🧴", bin: "vidro" },
-  { type: "vidro", emoji: "🧂", bin: "vidro" },
+  { type: "vidro", emoji: "🍷", bin: "vidro" },
+  { type: "vidro", emoji: "🥛", bin: "vidro" },
+  { type: "vidro", emoji: "🍾", bin: "vidro" },
   { type: "orgânico", emoji: "🍎", bin: "orgânico" },
   { type: "orgânico", emoji: "🍌", bin: "orgânico" },
   { type: "orgânico", emoji: "🥬", bin: "orgânico" },
   { type: "metal", emoji: "🪙", bin: "metal" },
-  { type: "metal", emoji: "🥫", bin: "metal" },
+  { type: "metal", emoji: "⚙️", bin: "metal" },
   { type: "metal", emoji: "🔩", bin: "metal" },
 ];
 
