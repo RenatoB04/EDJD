@@ -44,9 +44,24 @@ const GameBoard = () => {
 
       setGrid((prev) => {
         const newGrid = [...prev];
-        newGrid[colIndex] = newGrid[colIndex].filter(
-          (item) => item.emoji !== waste.emoji || item.type !== waste.type
+        const updatedColumn = [...newGrid[colIndex]];
+        const startIndex = updatedColumn.findIndex(
+          (item) => item.emoji === waste.emoji && item.type === waste.type
         );
+
+        if (startIndex !== -1) {
+          for (let i = startIndex; i < updatedColumn.length; i++) {
+            if (
+              updatedColumn[i]?.emoji === waste.emoji &&
+              updatedColumn[i]?.type === waste.type
+            ) {
+              updatedColumn[i] = null;
+            } else {
+              break;
+            }
+          }
+          newGrid[colIndex] = updatedColumn.filter((item) => item !== null);
+        }
         return newGrid;
       });
     } else {
