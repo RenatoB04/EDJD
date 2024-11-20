@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Game.css";
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { db } from "../firebase";
+import { auth } from "../firebase";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
@@ -19,6 +22,24 @@ const WASTE_TYPES = [
   { type: "metal", emoji: "🔩", bin: "metal" },
 ];
 
+export const getRanking = async () => {
+  try {
+    const rankingRef = collection(db, "rankings");
+    const q = query(rankingRef, orderBy("highScore", "desc"), limit(10));
+    const querySnapshot = await getDocs(q);
+
+    const ranking = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return ranking;
+  } catch (error) {
+    console.error("Erro ao buscar o ranking:", error);
+    return [];
+  }
+};
+
 const GameBoard = () => {
   const columns = 5;
   const rows = 6;
@@ -26,6 +47,7 @@ const GameBoard = () => {
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(60);
   const [speed, setSpeed] = useState(2000);
+  const [gameOver, setGameOver] = useState(false);
 
   const bins = ["papel", "plástico", "vidro", "orgânico", "metal"];
 
@@ -37,8 +59,7 @@ const GameBoard = () => {
     setGrid((prev) => {
       const newGrid = [...prev];
       if (newGrid[randomColumn].length >= rows) {
-        alert(`Fim de jogo! Pontuação final: ${score}`);
-        resetGame();
+        endGame();
         return prev;
       }
 
@@ -47,13 +68,40 @@ const GameBoard = () => {
     });
   };
 
+  const saveScoreToRanking = async (finalScore) => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.warn("No user logged in. Skipping Firebase save.");
+      return;
+    }
+
+    const userRef = doc(db, "rankings", user.uid);
+    const userDoc = await getDoc(userRef);
+
+    try {
+      if (userDoc.exists()) {
+        const currentHighScore = userDoc.data().highScore || 0;
+
+        if (finalScore > currentHighScore) {
+          await updateDoc(userRef, { highScore: finalScore });
+          console.log("High score updated in Firebase!");
+        }
+      } else {
+        await setDoc(userRef, { name: user.displayName, highScore: finalScore });
+        console.log("New high score saved in Firebase!");
+      }
+    } catch (error) {
+      console.error("Error saving high score to Firestore:", error);
+    }
+  };
+
   const handleDrop = (waste, bin, colIndex) => {
     const binElement = document.querySelector(`[data-bin="${bin}"]`);
-  
+
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
       setTimer((prev) => prev + 3);
-  
+
       setGrid((prev) => {
         const newGrid = [...prev];
         const updatedColumn = [...newGrid[colIndex]];
@@ -70,7 +118,19 @@ const GameBoard = () => {
     }
   };
 
+  const endGame = async () => {
+    if (gameOver) return;
+
+    setGameOver(true);
+
+    setScore((prevScore) => {
+      saveScoreToRanking(prevScore);
+      return prevScore;
+    });
+  };
+
   const resetGame = () => {
+    setGameOver(false);
     setGrid(Array.from({ length: columns }, () => []));
     setScore(0);
     setTimer(60);
@@ -79,8 +139,7 @@ const GameBoard = () => {
 
   useEffect(() => {
     if (timer <= 0) {
-      alert(`Fim de jogo! Pontuação final: ${score}`);
-      resetGame();
+      endGame();
     }
   }, [timer]);
 
@@ -113,41 +172,50 @@ const GameBoard = () => {
         <p>Tempo: {timer}s</p>
       </div>
       <div className="falling-area">
-        {grid.map((col, colIndex) => (
-          <div key={colIndex} className="column">
-            {col.map((waste, rowIndex) => (
-              <div
-                key={`${colIndex}-${rowIndex}`}
-                className="waste"
-                draggable
-                onDragStart={(e) =>
-                  e.dataTransfer.setData(
-                    "waste",
-                    JSON.stringify({ waste, colIndex })
-                  )
-                }
-              >
-                {waste.emoji}
-              </div>
-            ))}
+        {!gameOver ? (
+          grid.map((col, colIndex) => (
+            <div key={colIndex} className="column">
+              {col.map((waste, rowIndex) => (
+                <div
+                  key={`${colIndex}-${rowIndex}`}
+                  className="waste"
+                  draggable
+                  onDragStart={(e) =>
+                    e.dataTransfer.setData(
+                      "waste",
+                      JSON.stringify({ waste, colIndex })
+                    )
+                  }
+                >
+                  {waste.emoji}
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className="game-over">
+            <h2>Fim de Jogo!</h2>
+            <p>Sua pontuação final foi: {score}</p>
+            <button onClick={resetGame}>Reiniciar Jogo</button>
           </div>
-        ))}
+        )}
       </div>
       <div className="bins">
-        {bins.map((bin) => (
-          <div
-            key={bin}
-            className="bin"
-            data-bin={bin}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              const droppedData = JSON.parse(e.dataTransfer.getData("waste"));
-              handleDrop(droppedData.waste, bin, droppedData.colIndex);
-            }}
-          >
-            {bin}
-          </div>
-        ))}
+        {!gameOver &&
+          bins.map((bin) => (
+            <div
+              key={bin}
+              className="bin"
+              data-bin={bin}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const droppedData = JSON.parse(e.dataTransfer.getData("waste"));
+                handleDrop(droppedData.waste, bin, droppedData.colIndex);
+              }}
+            >
+              {bin}
+            </div>
+          ))}
       </div>
     </div>
   );
