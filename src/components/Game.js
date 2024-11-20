@@ -28,12 +28,14 @@ export const getRanking = async () => {
     const q = query(rankingRef, orderBy("highScore", "desc"), limit(10));
     const querySnapshot = await getDocs(q);
 
-    return querySnapshot.docs.map((doc) => ({
+    const ranking = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    return ranking;
   } catch (error) {
-    console.error("Erro a obter ranking:", error);
+    console.error("Erro a encontrar o ranking:", error);
     return [];
   }
 };
@@ -60,6 +62,7 @@ const GameBoard = () => {
         endGame();
         return prev;
       }
+
       newGrid[randomColumn] = [...newGrid[randomColumn], randomWaste];
       return newGrid;
     });
@@ -67,7 +70,10 @@ const GameBoard = () => {
 
   const saveScoreToRanking = async (finalScore) => {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      console.warn("Usuário não logado. A avançar save no Firebase.");
+      return;
+    }
 
     const userRef = doc(db, "rankings", user.uid);
     const userDoc = await getDoc(userRef);
@@ -75,14 +81,17 @@ const GameBoard = () => {
     try {
       if (userDoc.exists()) {
         const currentHighScore = userDoc.data().highScore || 0;
+
         if (finalScore > currentHighScore) {
           await updateDoc(userRef, { highScore: finalScore });
+          console.log("Ranking atualizado no Firebase!");
         }
       } else {
         await setDoc(userRef, { name: user.displayName, highScore: finalScore });
+        console.log("Novo score guardado no Firebase!");
       }
     } catch (error) {
-      console.error("Erro a guardar o ranking para o Firebase:", error);
+      console.error("Erro a guardar score no Firestore:", error);
     }
   };
 
@@ -113,6 +122,7 @@ const GameBoard = () => {
     if (gameOver) return;
 
     setGameOver(true);
+
     setScore((prevScore) => {
       saveScoreToRanking(prevScore);
       return prevScore;
@@ -185,7 +195,7 @@ const GameBoard = () => {
         ) : (
           <div className="game-over">
             <h2>Fim de Jogo!</h2>
-            <p>Pontuação final: {score}</p>
+            <p>Sua pontuação final foi: {score}</p>
             <button onClick={resetGame}>Reiniciar Jogo</button>
           </div>
         )}
