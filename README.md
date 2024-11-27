@@ -2,8 +2,6 @@
 
 # Gestor de Livros
 
-# Gestor de Livros
-
 ## Descrição
 O Gestor de Livros será uma aplicação que permitirá aos utilizadores organizar e acompanhar a sua biblioteca pessoal. A app incluirá funcionalidades para registar livros lidos, em leitura ou na lista de desejos, além de procurar informações automaticamente utilizando a Google Books API. Os dados dos utilizadores e dos livros serão armazenados na cloud utilizando o Firebase, permitindo sincronização entre dispositivos.
 
