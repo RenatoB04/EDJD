@@ -56,11 +56,12 @@ class AddBookActivity : AppCompatActivity() {
     private fun setupRecyclerView(books: List<BookItem>) {
         binding.booksRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.booksRecyclerView.adapter = BooksAdapter(books) { book ->
-            val intent = Intent(this, BookDetailsActivity::class.java)
-            intent.putExtra("title", book.volumeInfo.title)
-            intent.putExtra("author", book.volumeInfo.authors?.joinToString(", "))
-            intent.putExtra("description", book.volumeInfo.description)
-            intent.putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail)
+            val intent = Intent(this, BookDetailsActivity::class.java).apply {
+                putExtra("title", book.volumeInfo.title)
+                putExtra("author", book.volumeInfo.authors?.joinToString(", "))
+                putExtra("description", book.volumeInfo.description)
+                putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail)
+            }
             startActivity(intent)
         }
     }

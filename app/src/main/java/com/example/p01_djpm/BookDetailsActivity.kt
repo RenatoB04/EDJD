@@ -3,6 +3,7 @@ package com.example.p01_djpm
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.p01_djpm.databinding.ActivityBookDetailsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,29 +17,35 @@ class BookDetailsActivity : AppCompatActivity() {
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val title = intent.getStringExtra("title")
-        val author = intent.getStringExtra("author")
-        val description = intent.getStringExtra("description")
-        val thumbnail = intent.getStringExtra("thumbnail")
+        val title = intent.getStringExtra("title") ?: "Sem título"
+        val author = intent.getStringExtra("author") ?: "Autor desconhecido"
+        val description = intent.getStringExtra("description") ?: "Sem descrição disponível"
+        val thumbnail = intent.getStringExtra("thumbnail") ?: ""
 
         binding.bookTitleTextView.text = title
-        binding.bookAuthorTextView.text = author ?: "Autor desconhecido"
-        binding.bookDescriptionTextView.text = description ?: "Sem descrição disponível"
+        binding.bookAuthorTextView.text = author
+        binding.bookDescriptionTextView.text = description
+
+        Glide.with(this)
+            .load(thumbnail)
+            .placeholder(R.drawable.placeholder_image)
+            .error(R.drawable.placeholder_image)
+            .into(binding.bookThumbnailImageView)
 
         binding.readButton.setOnClickListener {
-            saveBookToFirestore(title, author, description, "Lido")
+            saveBookToFirestore(title, author, description, thumbnail, "Lido")
         }
 
         binding.wishlistButton.setOnClickListener {
-            saveBookToFirestore(title, author, description, "Lista de Desejos")
+            saveBookToFirestore(title, author, description, thumbnail, "Lista de Desejos")
         }
 
         binding.readingButton.setOnClickListener {
-            saveBookToFirestore(title, author, description, "Em Leitura")
+            saveBookToFirestore(title, author, description, thumbnail, "Em Leitura")
         }
     }
 
-    private fun saveBookToFirestore(title: String?, author: String?, description: String?, status: String) {
+    private fun saveBookToFirestore(title: String, author: String, description: String, thumbnail: String, status: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
         if (userId == null) {
@@ -50,6 +57,7 @@ class BookDetailsActivity : AppCompatActivity() {
             "title" to title,
             "author" to author,
             "description" to description,
+            "thumbnail" to thumbnail,
             "status" to status,
             "userId" to userId
         )
