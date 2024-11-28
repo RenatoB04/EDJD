@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">P01-DJPM</string>
+    <string name="book_cover">Imagem da capa do livro</string>
 </resources>

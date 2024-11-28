@@ -79,4 +79,5 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.glide)
 }

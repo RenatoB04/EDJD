@@ -1,9 +1,10 @@
 package com.example.p01_djpm
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.p01_djpm.databinding.ItemBookBinding
 
 class BooksAdapter(
@@ -26,6 +27,19 @@ class BooksAdapter(
         fun bind(book: BookItem, onClick: (BookItem) -> Unit) {
             binding.titleTextView.text = book.volumeInfo.title
             binding.authorTextView.text = book.volumeInfo.authors?.joinToString(", ") ?: "Autor desconhecido"
+
+            val thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
+
+            if (!thumbnailUrl.isNullOrEmpty()) {
+                Glide.with(binding.root.context)
+                    .load(thumbnailUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.bookCoverImageView)
+            } else {
+                binding.bookCoverImageView.setImageResource(R.drawable.placeholder_image)
+            }
 
             binding.root.setOnClickListener { onClick(book) }
         }

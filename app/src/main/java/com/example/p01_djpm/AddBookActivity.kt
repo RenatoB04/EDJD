@@ -35,6 +35,12 @@ class AddBookActivity : AppCompatActivity() {
             override fun onResponse(call: Call<BooksResponse>, response: Response<BooksResponse>) {
                 if (response.isSuccessful) {
                     val books = response.body()?.items ?: emptyList()
+
+                    books.forEach { book ->
+                        val thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
+                        android.util.Log.d("BookThumbnail", "Title: ${book.volumeInfo.title}, Thumbnail: $thumbnailUrl")
+                    }
+
                     setupRecyclerView(books)
                 } else {
                     Toast.makeText(this@AddBookActivity, "Erro na pesquisa", Toast.LENGTH_SHORT).show()
