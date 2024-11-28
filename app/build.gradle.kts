@@ -78,4 +78,5 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.constraintlayout)
 }
