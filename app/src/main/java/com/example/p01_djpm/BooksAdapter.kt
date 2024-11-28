@@ -1,7 +1,7 @@
 package com.example.p01_djpm
 
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.p01_djpm.databinding.ItemBookBinding
@@ -23,10 +23,11 @@ class BooksAdapter(
     override fun getItemCount(): Int = books.size
 
     class BookViewHolder(private val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(book: BookItem, onBookClick: (BookItem) -> Unit) {
+        fun bind(book: BookItem, onClick: (BookItem) -> Unit) {
             binding.titleTextView.text = book.volumeInfo.title
             binding.authorTextView.text = book.volumeInfo.authors?.joinToString(", ") ?: "Autor desconhecido"
-            binding.root.setOnClickListener { onBookClick(book) }
+
+            binding.root.setOnClickListener { onClick(book) }
         }
     }
 }

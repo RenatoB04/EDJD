@@ -1,5 +1,6 @@
 package com.example.p01_djpm
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -49,7 +50,12 @@ class AddBookActivity : AppCompatActivity() {
     private fun setupRecyclerView(books: List<BookItem>) {
         binding.booksRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.booksRecyclerView.adapter = BooksAdapter(books) { book ->
-            Toast.makeText(this, "Selecionou: ${book.volumeInfo.title}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, BookDetailsActivity::class.java)
+            intent.putExtra("title", book.volumeInfo.title)
+            intent.putExtra("author", book.volumeInfo.authors?.joinToString(", "))
+            intent.putExtra("description", book.volumeInfo.description)
+            intent.putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail)
+            startActivity(intent)
         }
     }
 }

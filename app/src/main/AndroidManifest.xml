@@ -43,6 +43,11 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.P01DJPM" />
+        <activity
+            android:name=".BookDetailsActivity"
+            android:exported="true"
+            android:label="Detalhes do Livro"
+            android:theme="@style/Theme.P01DJPM" />
 
     </application>
 
