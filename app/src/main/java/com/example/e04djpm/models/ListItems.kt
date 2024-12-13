@@ -1,9 +1,10 @@
 package com.example.e04djpm.models
 
 data class ListItems (
-    var docId : String?,
-    var name : String?,
-    var owners : List<String>?) {
-
-    constructor() : this(null,null,null)
+    var docId: String? = null,
+    var name: String? = null,
+    var owners: List<String>? = null,
+    var checked: Boolean = false
+) {
+    constructor() : this(null, null, null, false)
 }

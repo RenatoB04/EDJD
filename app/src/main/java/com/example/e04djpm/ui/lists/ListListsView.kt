@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,18 +34,19 @@ import androidx.compose.ui.res.painterResource
 fun ListListsView(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()
-){
+) {
 
-    val viewModel : ListListsViewModel = viewModel()
+    val viewModel: ListListsViewModel = viewModel()
     val state = viewModel.state.value
 
-    Box(modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd) {
-
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
         LazyColumn(modifier = modifier.fillMaxSize()) {
             itemsIndexed(
                 items = state.listItemsList
-            ){  index, item ->
+            ) { index, item ->
 
                 Row(
                     modifier = Modifier
@@ -52,9 +54,17 @@ fun ListListsView(
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Checkbox(
+                        checked = item.checked,
+                        onCheckedChange = { isChecked ->
+                            item.docId?.let { viewModel.updateItemStatus(it, isChecked) }
+                        }
+                    )
+
                     Text(
                         modifier = Modifier
                             .weight(1f)
+                            .padding(start = 8.dp)
                             .clickable {
                                 navController.navigate(
                                     Screen.ListItems.route.replace("{listId}", item.docId!!)
@@ -93,14 +103,14 @@ fun ListListsView(
         }
     }
 
-    LaunchedEffect (key1 = true){
+    LaunchedEffect(key1 = true) {
         viewModel.getLists()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ListListViewPreview(){
+fun ListListViewPreview() {
     ShoppingListTheme {
         ListListsView()
     }

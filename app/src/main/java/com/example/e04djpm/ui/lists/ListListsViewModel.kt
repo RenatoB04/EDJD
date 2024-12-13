@@ -54,4 +54,18 @@ class ListListsViewModel : ViewModel() {
                 Log.e(TAG, "Error removing item", e)
             }
     }
+
+    fun updateItemStatus(itemId: String, isChecked: Boolean) {
+        val db = Firebase.firestore
+        db.collection("lists")
+            .document(itemId)
+            .update("checked", isChecked)
+            .addOnSuccessListener {
+                Log.d(TAG, "Item status updated successfully")
+                getLists()
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error updating item status", e)
+            }
+    }
 }

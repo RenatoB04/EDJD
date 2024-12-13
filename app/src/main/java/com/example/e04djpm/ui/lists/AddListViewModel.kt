@@ -10,12 +10,12 @@ import com.example.e04djpm.TAG
 import com.example.e04djpm.models.ListItems
 
 data class AddListState(
-    val name : String = "",
+    val name: String = "",
     val isLoading: Boolean = false,
     val error: String? = null
 )
 
-class AddListViewModel : ViewModel(){
+class AddListViewModel : ViewModel() {
 
     var state = mutableStateOf(AddListState())
         private set
@@ -24,10 +24,8 @@ class AddListViewModel : ViewModel(){
         state.value = state.value.copy(name = name)
     }
 
-    fun addList(){
-
+    fun addList() {
         val db = Firebase.firestore
-
         val auth = Firebase.auth
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
@@ -35,7 +33,8 @@ class AddListViewModel : ViewModel(){
         val listItems = ListItems(
             "",
             state.value.name,
-            arrayListOf(userId?:"")
+            arrayListOf(userId ?: ""),
+            false
         )
 
         db.collection("lists")
@@ -47,5 +46,4 @@ class AddListViewModel : ViewModel(){
                 Log.w(TAG, "Error adding document", e)
             }
     }
-
 }
