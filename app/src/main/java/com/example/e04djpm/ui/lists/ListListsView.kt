@@ -3,6 +3,7 @@ package com.example.e04djpm.ui.lists
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,16 +27,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.e04djpm.R
 import com.example.e04djpm.Screen
 import com.example.e04djpm.ui.theme.ShoppingListTheme
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun ListListsView(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()
-                  ){
+){
 
     val viewModel : ListListsViewModel = viewModel()
     val state = viewModel.state.value
-
 
     Box(modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd) {
@@ -46,17 +46,32 @@ fun ListListsView(
                 items = state.listItemsList
             ){  index, item ->
 
-                Text(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable {
-                            navController.navigate(
-                                Screen.ListItems.route.replace("{listId}", item.docId!!)
-                            )
-                        },
-                    text = item.name?:"")
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                navController.navigate(
+                                    Screen.ListItems.route.replace("{listId}", item.docId!!)
+                                )
+                            },
+                        text = item.name ?: ""
+                    )
 
+                    Text(
+                        text = "🗑️",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                item.docId?.let { viewModel.removeItem(it) }
+                            }
+                    )
+                }
             }
         }
 
@@ -81,7 +96,6 @@ fun ListListsView(
     LaunchedEffect (key1 = true){
         viewModel.getLists()
     }
-
 }
 
 @Preview(showBackground = true)
