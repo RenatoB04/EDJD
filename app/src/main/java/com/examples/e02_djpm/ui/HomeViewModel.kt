@@ -13,6 +13,8 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import org.json.JSONArray
+
 
 data class ArticlesState(
     val articles: ArrayList<Article> = arrayListOf(),
@@ -35,7 +37,7 @@ class HomeViewModel : ViewModel() {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=5b3a3c6e671c49fda093c7546e3ee7ae")
+            .url("https://www.publico.pt/api/list/ultimas")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -52,25 +54,33 @@ class HomeViewModel : ViewModel() {
                 response.use {
                     if (!response.isSuccessful) {
                         Log.e("HomeViewModel", "Unexpected code $response")
-                        throw IOException("Unexpected code $response")
+                        _uiState.value = ArticlesState(
+                            isLoading = false,
+                            error = "Erro na resposta da API: $response"
+                        )
+                        return
                     }
 
                     val articlesResult = arrayListOf<Article>()
                     val result = response.body!!.string()
-                    val jsonResult = JSONObject(result)
-                    val status = jsonResult.getString("status")
+                    val jsonArray = JSONArray(result)
+                    for (index in 0 until jsonArray.length()) {
+                        val articleJson = jsonArray.getJSONObject(index)
 
-                    if (status == "ok") {
-                        val articlesJson = jsonResult.getJSONArray("articles")
-                        for (index in 0 until articlesJson.length()) {
-                            val articleJson = articlesJson.getJSONObject(index)
-                            val article = Article.fromJson(articleJson)
-                            Log.d("HomeViewModel", "Title: ${article.title}, Image: ${article.urlToImage}, Description: ${article.description}")
+                        val title = articleJson.optString("titulo", "Sem título")
+                        val url = articleJson.optString("url", "")
+                        val description = articleJson.optString("descricao", "Sem descrição")
+                        val imageUrl = articleJson.optString("multimediaPrincipal", "")
 
-                            articlesResult.add(article)
-                        }
-                    } else {
-                        Log.e("HomeViewModel", "API returned status: $status")
+                        val article = Article(
+                            title = title,
+                            description = description,
+                            url = url,
+                            urlToImage = imageUrl
+                        )
+
+                        Log.d("HomeViewModel", "Título: $title, Descrição: $description, Imagem: $imageUrl")
+                        articlesResult.add(article)
                     }
 
                     _uiState.value = ArticlesState(

@@ -29,11 +29,11 @@ import java.util.Date
 fun RowArticle(modifier: Modifier = Modifier, article: Article) {
     Row(
         modifier = modifier
-            .padding(8.dp)  // Espaçamento entre os itens
+            .padding(8.dp)
             .fillMaxWidth()
-            .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(8.dp)) // Borda arredondada
+            .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
-            .padding(8.dp) // Padding interno dentro da borda
+            .padding(8.dp)
     ) {
         article.urlToImage?.let {
             AsyncImage(
