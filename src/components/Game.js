@@ -3,6 +3,7 @@ import "../styles/Game.css";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase";
 import { auth } from "../firebase";
+import MessageOverlay from "./MessageOverlay";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
@@ -48,13 +49,14 @@ const GameBoard = () => {
   const [timer, setTimer] = useState(60);
   const [speed, setSpeed] = useState(2000);
   const [gameOver, setGameOver] = useState(false);
+  const [showMessage, setShowMessage] = useState(true);
+  const [messageIndex, setMessageIndex] = useState(0);
 
   const bins = ["papel", "plástico", "vidro", "orgânico", "metal"];
 
   const generateWaste = () => {
     const randomColumn = Math.floor(Math.random() * columns);
-    const randomWaste =
-      WASTE_TYPES[Math.floor(Math.random() * WASTE_TYPES.length)];
+    const randomWaste = WASTE_TYPES[Math.floor(Math.random() * WASTE_TYPES.length)];
 
     setGrid((prev) => {
       const newGrid = [...prev];
@@ -62,7 +64,6 @@ const GameBoard = () => {
         endGame();
         return prev;
       }
-
       newGrid[randomColumn] = [...newGrid[randomColumn], randomWaste];
       return newGrid;
     });
@@ -104,11 +105,13 @@ const GameBoard = () => {
 
       setGrid((prev) => {
         const newGrid = [...prev];
-        const updatedColumn = [...newGrid[colIndex]];
-        updatedColumn.shift();
-        newGrid[colIndex] = updatedColumn;
+        newGrid[colIndex] = newGrid[colIndex].filter((_, index) => index !== 0);
         return newGrid;
       });
+
+      if ((score + 10) % 50 === 0) {
+        setSpeed((prev) => Math.max(prev - 200, 800));
+      }
     } else {
       setTimer((prev) => Math.max(prev - 10, 0));
       binElement.classList.add("bin-error");
@@ -138,35 +141,44 @@ const GameBoard = () => {
   };
 
   useEffect(() => {
-    if (timer <= 0) {
-      endGame();
-    }
-  }, [timer]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
+      setTimer((prev) => Math.max(prev - 1, 0));
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
+    if (timer <= 0) {
+      endGame();
+    }
+  }, [timer]);
+
+  useEffect(() => {
     const wasteInterval = setInterval(() => {
-      generateWaste();
+      if (!gameOver) {
+        generateWaste();
+      }
     }, speed);
 
     return () => clearInterval(wasteInterval);
-  }, [speed]);
+  }, [speed, gameOver]);
 
   useEffect(() => {
-    if (score > 0 && score % 5 === 0) {
-      setSpeed((prev) => Math.max(prev - 200, 800));
-    }
-  }, [score]);
+    const messageInterval = setInterval(() => {
+      setShowMessage(false);
+      setTimeout(() => {
+        setShowMessage(true);
+        setMessageIndex((prev) => (prev + 1) % 20);
+      }, 100);
+    }, 7000);
+
+    return () => clearInterval(messageInterval);
+  }, []);
 
   return (
     <div className="game-board">
+      {showMessage && <MessageOverlay messageIndex={messageIndex} />}
       <div className="info">
         <p>Pontuação: {score}</p>
         <p>Tempo: {timer}s</p>
@@ -181,10 +193,7 @@ const GameBoard = () => {
                   className="waste"
                   draggable
                   onDragStart={(e) =>
-                    e.dataTransfer.setData(
-                      "waste",
-                      JSON.stringify({ waste, colIndex })
-                    )
+                    e.dataTransfer.setData("waste", JSON.stringify({ waste, colIndex }))
                   }
                 >
                   {waste.emoji}

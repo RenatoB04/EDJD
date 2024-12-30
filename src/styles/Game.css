@@ -26,6 +26,7 @@ body {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;  /* Necessário para posicionar mensagens relativas ao tabuleiro */
 }
 
 .info {
@@ -33,6 +34,7 @@ body {
   justify-content: space-between;
   width: 100%;
   padding: 10px;
+  font-size: 1.1rem;
 }
 
 .info p {
@@ -73,10 +75,10 @@ header button:active {
   justify-content: center;
   align-items: flex-end;
   width: 100%;
-  height: 75%;
+  height: 70%;
   background: #ffffff;
   border-radius: 10px;
-  border: 2px solid #ddd;
+  border: 3px solid #ddd;
   overflow: hidden;
 }
 
@@ -89,7 +91,7 @@ header button:active {
   margin: 0 5px;
   background: linear-gradient(to top, #dff9fb, #ffffff);
   border-radius: 5px;
-  border: 1px solid #c8d6e5;
+  border: 2px solid #a3cb38;
 }
 
 .waste {
@@ -101,7 +103,7 @@ header button:active {
   border-radius: 50%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   cursor: grab;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .waste:hover {
@@ -111,13 +113,14 @@ header button:active {
 
 .bins {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
-  height: 10%;
+  height: 12%;
   background: #d1d8e0;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
-  border: 2px solid #c8d6e5;
+  border: 3px solid #c8d6e5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .bin {
@@ -137,6 +140,13 @@ header button:active {
   text-transform: capitalize;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Destaque nos ecopontos ao arrastar */
+.bin.drag-over {
+  background: #10ac84;
+  border-color: #0b6f4f;
+  transform: scale(1.1);
 }
 
 .bin-error {
@@ -188,28 +198,39 @@ header button:active {
   margin: 10px 0;
 }
 
-.game-over button {
-  background: #54a0ff;
+/* Mensagens Educativas no Topo do Tabuleiro */
+.toast {
+  position: absolute;
+  top: 50px;  /* Abaixo da pontuação */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1dd1a1;
   color: white;
-  font-size: 1.2rem;
-  padding: 0.8rem 2rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  margin-top: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  font-size: 1rem;
+  max-width: 500px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeInOut 5s ease-in-out;
 }
 
-.game-over button:hover {
-  background: #2e86de;
-  transform: scale(1.05);
-}
-
-@keyframes fadeIn {
-  from {
+@keyframes fadeInOut {
+  0% {
     opacity: 0;
+    transform: translateY(-10px);
   }
-  to {
+  10% {
     opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
