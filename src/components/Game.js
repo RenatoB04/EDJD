@@ -98,19 +98,19 @@ const GameBoard = () => {
 
   const handleDrop = (waste, bin, colIndex) => {
     const binElement = document.querySelector(`[data-bin="${bin}"]`);
-
+  
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
       setTimer((prev) => prev + 3);
-
+  
       setGrid((prev) => {
         const newGrid = [...prev];
         newGrid[colIndex] = newGrid[colIndex].filter((_, index) => index !== 0);
         return newGrid;
       });
-
+  
       if ((score + 10) % 50 === 0) {
-        setSpeed((prev) => Math.max(prev - 200, 800));
+        setSpeed((prev) => Math.max(prev - 300, 500));
       }
     } else {
       setTimer((prev) => Math.max(prev - 10, 0));
@@ -119,7 +119,7 @@ const GameBoard = () => {
         binElement.classList.remove("bin-error");
       }, 300);
     }
-  };
+  };  
 
   const endGame = async () => {
     if (gameOver) return;
