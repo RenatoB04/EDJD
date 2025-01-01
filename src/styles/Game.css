@@ -26,7 +26,7 @@ body {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   overflow: hidden;
-  position: relative;  /* Necessário para posicionar mensagens relativas ao tabuleiro */
+  position: relative;
 }
 
 .info {
@@ -141,8 +141,31 @@ header button:active {
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
+.bin[data-bin="papel"] {
+  background: #48dbfb;
+  border-color: #0abde3;
+}
 
-/* Destaque nos ecopontos ao arrastar */
+.bin[data-bin="plástico"] {
+  background: #feca57; 
+  border-color: #ff9f43;
+}
+
+.bin[data-bin="vidro"] {
+  background: #20f567;
+  border-color: #09b843;
+}
+
+.bin[data-bin="orgânico"] {
+  background: #a29bfe;
+  border-color: #6c5ce7;
+}
+
+.bin[data-bin="metal"] {
+  background: #ff6b6b;
+  border-color: #ee5253;
+}
+
 .bin.drag-over {
   background: #10ac84;
   border-color: #0b6f4f;
@@ -172,6 +195,7 @@ header button:active {
   transform: scale(0.95);
 }
 
+/* Estilização do botão de reiniciar jogo */
 .game-over {
   display: flex;
   flex-direction: column;
@@ -198,39 +222,24 @@ header button:active {
   margin: 10px 0;
 }
 
-/* Mensagens Educativas no Topo do Tabuleiro */
-.toast {
-  position: absolute;
-  top: 50px;  /* Abaixo da pontuação */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #1dd1a1;
+.game-over button {
+  background: linear-gradient(to right, #2ecc71, #27ae60);
   color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  font-size: 1rem;
-  max-width: 500px;
-  text-align: center;
-  opacity: 0;
-  animation: fadeInOut 5s ease-in-out;
+  font-size: 1.3rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
+.game-over button:hover {
+  background: linear-gradient(to right, #27ae60, #1e8449);
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.game-over button:active {
+  transform: scale(0.95);
 }
