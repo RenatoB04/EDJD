@@ -12,6 +12,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -78,22 +80,45 @@ class BarcodeScannerActivity : AppCompatActivity() {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-            val scanner = BarcodeScanning.getClient()
+
+            val options = BarcodeScannerOptions.Builder()
+                .setBarcodeFormats(
+                    Barcode.FORMAT_EAN_13,
+                    Barcode.FORMAT_UPC_A,
+                    Barcode.FORMAT_QR_CODE,
+                    Barcode.FORMAT_ALL_FORMATS
+                )
+                .build()
+
+            val scanner = BarcodeScanning.getClient(options)
 
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
-                    for (barcode in barcodes) {
-                        barcode.rawValue?.let {
-                            Log.d("Barcode", "Código: $it")
-                            handleBarcode(it)
-                            imageProxy.close()
-                            return@addOnSuccessListener
+                    if (barcodes.isNotEmpty()) {
+                        for (barcode in barcodes) {
+                            barcode.rawValue?.let {
+                                Log.d("Barcode", "Código Detetado: $it")
+                                handleBarcode(it)
+                                imageProxy.close()
+                                return@addOnSuccessListener
+                            }
                         }
+                    } else {
+                        Log.d("Barcode", "Nenhum código detetado.")
+                        runOnUiThread {
+                            Toast.makeText(this, "Nenhum código detetado.", Toast.LENGTH_SHORT).show()
+                        }
+                        imageProxy.close()
                     }
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Falha ao processar código", Toast.LENGTH_SHORT).show()
                     imageProxy.close()
+                }
+                .addOnCompleteListener {
+                    if (it.isSuccessful && it.result.isEmpty()) {
+                        imageProxy.close()
+                    }
                 }
         } else {
             imageProxy.close()
