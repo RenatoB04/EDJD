@@ -23,7 +23,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var previewView: PreviewView
-    private var isProcessing = false
+    private var isScanning = false
 
     @androidx.camera.core.ExperimentalGetImage
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor) { imageProxy ->
-                        processImageProxy(imageProxy)
+                        processImageProxy(imageProxy, cameraProvider)
                     }
                 }
 
@@ -79,8 +79,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
     }
 
     @androidx.camera.core.ExperimentalGetImage
-    private fun processImageProxy(imageProxy: ImageProxy) {
-        if (isProcessing) {
+    private fun processImageProxy(imageProxy: ImageProxy, cameraProvider: ProcessCameraProvider) {
+        if (isScanning) {
             imageProxy.close()
             return
         }
@@ -98,44 +98,36 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
             val scanner = BarcodeScanning.getClient(options)
 
-            isProcessing = true
-
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     if (barcodes.isNotEmpty()) {
                         for (barcode in barcodes) {
                             barcode.rawValue?.let {
                                 Log.d("Barcode", "Código Detetado: $it")
+                                isScanning = true
                                 runOnUiThread {
-                                    handleBarcode(it)
+                                    handleBarcode(it, cameraProvider)
                                 }
                                 return@addOnSuccessListener
                             }
                         }
-                    } else {
-                        Log.d("Barcode", "Nenhum código detetado.")
-                        runOnUiThread {
-                            Toast.makeText(this, "Nenhum código detetado.", Toast.LENGTH_SHORT).show()
-                        }
-                        isProcessing = false
                     }
                 }
                 .addOnFailureListener { e ->
                     Log.e("Barcode", "Falha ao processar código: ${e.message}", e)
                     Toast.makeText(this, "Falha ao processar código", Toast.LENGTH_SHORT).show()
-                    isProcessing = false
                 }
                 .addOnCompleteListener {
                     imageProxy.close()
-                    isProcessing = false
                 }
         } else {
             imageProxy.close()
         }
     }
 
-    private fun handleBarcode(isbn: String) {
-        Log.d("Barcode", "A abrir página de detalhes para ISBN: $isbn")
+    private fun handleBarcode(isbn: String, cameraProvider: ProcessCameraProvider) {
+        cameraProvider.unbindAll()
+        Log.d("Barcode", "Scanner parado após leitura: $isbn")
 
         val intent = Intent(this, AddBookActivity::class.java).apply {
             putExtra("isbn", isbn)
@@ -158,6 +150,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
                 startCamera()
             } else {
                 Toast.makeText(this, "Permissão negada.", Toast.LENGTH_SHORT).show()
+                Log.e("Permissions", "Permissão da câmara negada.")
                 finish()
             }
         }
