@@ -4,8 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.p01_djpm.databinding.ActivityAddBookBinding
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +34,27 @@ class AddBookActivity : AppCompatActivity() {
                 Toast.makeText(this, "Digite um termo de pesquisa", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.scanButton.setOnClickListener {
+            startBarcodeScanner()
+        }
+    }
+
+    private fun startBarcodeScanner() {
+        val intent = Intent(this, BarcodeScannerActivity::class.java)
+        startActivityForResult(intent, BARCODE_SCANNER_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == BARCODE_SCANNER_REQUEST && resultCode == RESULT_OK) {
+            val barcode = data?.getStringExtra("barcode")
+            if (!barcode.isNullOrEmpty()) {
+                searchBooks(barcode)
+            } else {
+                Toast.makeText(this, "Nenhum código encontrado", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun searchBooks(query: String) {
@@ -35,15 +62,9 @@ class AddBookActivity : AppCompatActivity() {
             override fun onResponse(call: Call<BooksResponse>, response: Response<BooksResponse>) {
                 if (response.isSuccessful) {
                     val books = response.body()?.items ?: emptyList()
-
-                    books.forEach { book ->
-                        val thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
-                        android.util.Log.d("BookThumbnail", "Title: ${book.volumeInfo.title}, Thumbnail: $thumbnailUrl")
-                    }
-
                     setupRecyclerView(books)
                 } else {
-                    Toast.makeText(this@AddBookActivity, "Erro na pesquisa", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddBookActivity, "Nenhum livro encontrado.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -64,5 +85,9 @@ class AddBookActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+    }
+
+    companion object {
+        private const val BARCODE_SCANNER_REQUEST = 1001
     }
 }
