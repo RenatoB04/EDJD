@@ -55,6 +55,8 @@
             android:label="Detalhes do Livro"
             android:theme="@style/Theme.P01DJPM" />
 
+        <activity android:name=".BarcodeScannerActivity" />
+
     </application>
 
 </manifest>
