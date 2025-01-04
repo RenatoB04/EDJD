@@ -23,6 +23,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var previewView: PreviewView
+    private var isProcessing = false
 
     @androidx.camera.core.ExperimentalGetImage
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setTargetResolution(android.util.Size(1280, 720))
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor) { imageProxy ->
@@ -71,12 +73,18 @@ class BarcodeScannerActivity : AppCompatActivity() {
                 )
             } catch (exc: Exception) {
                 Log.e("Camera", "Erro ao iniciar a câmara", exc)
+                Toast.makeText(this, "Erro ao iniciar a câmara", Toast.LENGTH_SHORT).show()
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
     @androidx.camera.core.ExperimentalGetImage
     private fun processImageProxy(imageProxy: ImageProxy) {
+        if (isProcessing) {
+            imageProxy.close()
+            return
+        }
+
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
@@ -84,13 +92,13 @@ class BarcodeScannerActivity : AppCompatActivity() {
             val options = BarcodeScannerOptions.Builder()
                 .setBarcodeFormats(
                     Barcode.FORMAT_EAN_13,
-                    Barcode.FORMAT_UPC_A,
-                    Barcode.FORMAT_QR_CODE,
-                    Barcode.FORMAT_ALL_FORMATS
+                    Barcode.FORMAT_UPC_A
                 )
                 .build()
 
             val scanner = BarcodeScanning.getClient(options)
+
+            isProcessing = true
 
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
@@ -98,8 +106,9 @@ class BarcodeScannerActivity : AppCompatActivity() {
                         for (barcode in barcodes) {
                             barcode.rawValue?.let {
                                 Log.d("Barcode", "Código Detetado: $it")
-                                handleBarcode(it)
-                                imageProxy.close()
+                                runOnUiThread {
+                                    handleBarcode(it)
+                                }
                                 return@addOnSuccessListener
                             }
                         }
@@ -108,17 +117,17 @@ class BarcodeScannerActivity : AppCompatActivity() {
                         runOnUiThread {
                             Toast.makeText(this, "Nenhum código detetado.", Toast.LENGTH_SHORT).show()
                         }
-                        imageProxy.close()
+                        isProcessing = false
                     }
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
+                    Log.e("Barcode", "Falha ao processar código: ${e.message}", e)
                     Toast.makeText(this, "Falha ao processar código", Toast.LENGTH_SHORT).show()
-                    imageProxy.close()
+                    isProcessing = false
                 }
                 .addOnCompleteListener {
-                    if (it.isSuccessful && it.result.isEmpty()) {
-                        imageProxy.close()
-                    }
+                    imageProxy.close()
+                    isProcessing = false
                 }
         } else {
             imageProxy.close()
@@ -126,6 +135,8 @@ class BarcodeScannerActivity : AppCompatActivity() {
     }
 
     private fun handleBarcode(isbn: String) {
+        Log.d("Barcode", "A abrir página de detalhes para ISBN: $isbn")
+
         val intent = Intent(this, AddBookActivity::class.java).apply {
             putExtra("isbn", isbn)
         }
