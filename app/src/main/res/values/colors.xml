@@ -7,4 +7,29 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColor">#4A90E2</color>
+    <color name="primaryDarkColor">#4178BE</color>
+    <color name="accentColor">#F5A623</color>
+
+
+    <color name="backgroundColor">#F7F7F7</color>
+    <color name="surfaceColor">#FFFFFF</color>
+    <color name="dividerColor">#DDDDDD</color>
+
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="hintColor">#BDBDBD</color>
+
+    <color name="buttonColor">#4A90E2</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+    <color name="disabledColor">#BDBDBD</color>
+
+    <color name="errorColor">#D32F2F</color>
+    <color name="successColor">#388E3C</color>
+    <color name="infoColor">#0288D1</color>
+
+    <color name="bookmarkColor">#F5A623</color>
+    <color name="highlightColor">#FFEB3B</color>
+
 </resources>
