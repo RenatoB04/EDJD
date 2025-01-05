@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
 import com.example.p01_djpm.databinding.ActivityHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +31,7 @@ class HomeActivity : AppCompatActivity() {
         fetchUserLibrary()
     }
 
+    // Busca os livros do Firestore
     private fun fetchUserLibrary() {
         if (currentUser == null) {
             Toast.makeText(this, "Utilizador não autenticado.", Toast.LENGTH_SHORT).show()
@@ -67,15 +69,48 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(books: List<UserBookItem>) {
-        val adapter = BooksAdapter(books) { book ->
-            val intent = Intent(this, BookDetailsActivity::class.java).apply {
-                putExtra("title", book.volumeInfo.title)
-                putExtra("author", book.volumeInfo.authors?.joinToString(", ") ?: "Desconhecido")
-                putExtra("description", book.volumeInfo.description ?: "Sem descrição")
-                putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail ?: "")
+        val adapter = BooksAdapter(
+            books,
+            { book ->
+                val intent = Intent(this, BookDetailsActivity::class.java).apply {
+                    putExtra("title", book.volumeInfo.title)
+                    putExtra("author", book.volumeInfo.authors?.joinToString(", ") ?: "Desconhecido")
+                    putExtra("description", book.volumeInfo.description ?: "Sem descrição")
+                    putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail ?: "")
+                }
+                startActivity(intent)
+            },
+            { bookId ->
+                confirmDelete(bookId)
             }
-            startActivity(intent)
-        }
+        )
         binding.booksRecyclerView.adapter = adapter
+    }
+
+    private fun confirmDelete(bookId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Remover Livro")
+            .setMessage("Tem a certeza que deseja remover este livro da biblioteca?")
+            .setPositiveButton("Sim") { _, _ ->
+                deleteBook(bookId)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun deleteBook(bookId: String) {
+        db.collection("books").document(bookId)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Livro removido com sucesso.", Toast.LENGTH_SHORT).show()
+                fetchUserLibrary()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    "Erro ao remover o livro: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
 }

@@ -9,7 +9,8 @@ import com.example.p01_djpm.databinding.ItemBookBinding
 
 class BooksAdapter<T>(
     private val books: List<T>,
-    private val onBookClick: (T) -> Unit
+    private val onBookClick: (T) -> Unit,
+    private val onBookLongClick: (String) -> Unit
 ) : RecyclerView.Adapter<BooksAdapter.BookViewHolder<T>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder<T> {
@@ -18,49 +19,51 @@ class BooksAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: BookViewHolder<T>, position: Int) {
-        holder.bind(books[position], onBookClick)
+        holder.bind(books[position], onBookClick, onBookLongClick)
     }
 
     override fun getItemCount(): Int = books.size
 
-    class BookViewHolder<T>(private val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(book: T, onClick: (T) -> Unit) {
+    class BookViewHolder<T>(private val binding: ItemBookBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            book: T,
+            onClick: (T) -> Unit,
+            onLongClick: (String) -> Unit
+        ) {
             if (book is BookItem) {
                 binding.titleTextView.text = book.volumeInfo.title
                 binding.authorTextView.text = book.volumeInfo.authors?.joinToString(", ") ?: "Autor desconhecido"
-                val thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
-
-                if (!thumbnailUrl.isNullOrEmpty()) {
-                    Glide.with(binding.root.context)
-                        .load(thumbnailUrl)
-                        .placeholder(R.drawable.placeholder_image)
-                        .error(R.drawable.placeholder_image)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.bookCoverImageView)
-                } else {
-                    binding.bookCoverImageView.setImageResource(R.drawable.placeholder_image)
-                }
-
+                loadImage(book.volumeInfo.imageLinks?.thumbnail)
             } else if (book is UserBookItem) {
                 binding.titleTextView.text = book.volumeInfo.title
                 binding.authorTextView.text = book.volumeInfo.authors?.joinToString(", ") ?: "Autor desconhecido"
                 binding.statusTextView.text = "Estado: ${book.status}"
+                loadImage(book.volumeInfo.imageLinks?.thumbnail)
 
-                val thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
-
-                if (!thumbnailUrl.isNullOrEmpty()) {
-                    Glide.with(binding.root.context)
-                        .load(thumbnailUrl)
-                        .placeholder(R.drawable.placeholder_image)
-                        .error(R.drawable.placeholder_image)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.bookCoverImageView)
-                } else {
-                    binding.bookCoverImageView.setImageResource(R.drawable.placeholder_image)
+                binding.root.setOnLongClickListener {
+                    onLongClick(book.id)
+                    true
                 }
             }
 
-            binding.root.setOnClickListener { onClick(book) }
+            binding.root.setOnClickListener {
+                onClick(book)
+            }
+        }
+
+        private fun loadImage(thumbnailUrl: String?) {
+            if (!thumbnailUrl.isNullOrEmpty()) {
+                Glide.with(binding.root.context)
+                    .load(thumbnailUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.bookCoverImageView)
+            } else {
+                binding.bookCoverImageView.setImageResource(R.drawable.placeholder_image)
+            }
         }
     }
 }

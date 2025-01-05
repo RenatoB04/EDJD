@@ -115,21 +115,28 @@ class AddBookActivity : AppCompatActivity() {
 
     private fun setupRecyclerView(books: List<BookItem>) {
         binding.booksRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.booksRecyclerView.adapter = BooksAdapter(books) { book ->
-            val intent = Intent(this, BookDetailsActivity::class.java).apply {
-                putExtra("title", book.volumeInfo.title)
-                putExtra("author", book.volumeInfo.authors?.joinToString(", "))
-                putExtra("description", book.volumeInfo.description)
-                putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail)
+        binding.booksRecyclerView.adapter = BooksAdapter(
+            books,
+            onBookClick = { book ->
+                val volumeInfo = book.volumeInfo
+                val intent = Intent(this, BookDetailsActivity::class.java).apply {
+                    putExtra("title", volumeInfo.title ?: "Título Desconhecido")
+                    putExtra("author", volumeInfo.authors?.joinToString(", ") ?: "Autor Desconhecido")
+                    putExtra("description", volumeInfo.description ?: "Sem descrição disponível")
+                    putExtra("thumbnail", volumeInfo.imageLinks?.thumbnail ?: "")
+                }
+                try {
+                    startActivity(intent)
+                    Log.d("AddBookActivity", "Livro selecionado: ${volumeInfo.title ?: "Sem título"}")
+                } catch (e: Exception) {
+                    Log.e("AddBookActivity", "Erro ao abrir detalhes do livro: ${e.message}")
+                    Toast.makeText(this, "Erro ao abrir detalhes do livro", Toast.LENGTH_SHORT).show()
+                }
+            },
+            onBookLongClick = { bookId ->
+                Log.d("AddBookActivity", "Clique longo para remover livro: $bookId")
             }
-            try {
-                startActivity(intent)
-                Log.d("AddBookActivity", "Livro selecionado: ${book.volumeInfo.title}")
-            } catch (e: Exception) {
-                Log.e("AddBookActivity", "Erro ao abrir detalhes do livro: ${e.message}")
-                Toast.makeText(this, "Erro ao abrir detalhes do livro", Toast.LENGTH_SHORT).show()
-            }
-        }
+        )
     }
 
     companion object {
