@@ -68,7 +68,13 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupRecyclerView(books: List<UserBookItem>) {
         val adapter = BooksAdapter(books) { book ->
-            Toast.makeText(this, "Selecionou: ${book.volumeInfo.title}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, BookDetailsActivity::class.java).apply {
+                putExtra("title", book.volumeInfo.title)
+                putExtra("author", book.volumeInfo.authors?.joinToString(", ") ?: "Desconhecido")
+                putExtra("description", book.volumeInfo.description ?: "Sem descrição")
+                putExtra("thumbnail", book.volumeInfo.imageLinks?.thumbnail ?: "")
+            }
+            startActivity(intent)
         }
         binding.booksRecyclerView.adapter = adapter
     }
