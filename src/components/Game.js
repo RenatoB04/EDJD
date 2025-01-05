@@ -140,35 +140,31 @@ const saveScoreToRanking = async (finalScore) => {
 };
 
   
-  const handleDrop = async (waste, bin, colIndex) => {
-    const binElement = document.querySelector(`[data-bin="${bin}"]`);
+const handleDrop = async (waste, bin, colIndex) => {
+  const binElement = document.querySelector(`[data-bin="${bin}"]`);
 
-    if (waste.bin === bin) {
-      setScore((prev) => prev + 10);
-      setTimer((prev) => prev + 3);
+  if (waste.bin === bin) {
+    setScore((prev) => prev + 10);
+    setTimer((prev) => prev + 2);
 
-      setGrid((prev) => {
-        const newGrid = [...prev];
-        newGrid[colIndex] = newGrid[colIndex].filter((_, index) => index !== 0);
-        return newGrid;
-      });
-
-      const globalRef = doc(db, 'globalStats', 'pollutionBar');
-      const globalDoc = await getDoc(globalRef);
-      const globalScore = globalDoc.exists() ? globalDoc.data().score : 0;
-
-      await updateDoc(globalRef, {
-        score: Math.max(globalScore - 10, 0),
-      });
-    } else {
-      setTimer((prev) => Math.max(prev - 10, 0));
-      binElement.classList.add('bin-error');
-      setTimeout(() => {
-        binElement.classList.remove('bin-error');
-      }, 300);
+    if ((score + 10) % 50 === 0) {
+      setSpeed((prev) => Math.max(prev - 300, 500));
     }
-  };
-  
+
+    setGrid((prev) => {
+      const newGrid = [...prev];
+      newGrid[colIndex] = newGrid[colIndex].filter((_, index) => index !== 0);
+      return newGrid;
+    });
+
+  } else {
+    setTimer((prev) => Math.max(prev - 10, 0));
+    binElement.classList.add('bin-error');
+    setTimeout(() => {
+      binElement.classList.remove('bin-error');
+    }, 300);
+  }
+};
 
   const endGame = async () => {
     if (gameOver) return;
