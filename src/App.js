@@ -4,21 +4,25 @@ import GameBoard from "./components/Game";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import { getRanking, getPollutionRanking } from "./components/Game";
+import IntroModal from "./components/IntroModal";
 
 function App() {
   const [user, setUser] = useState(null);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [generalRanking, setGeneralRanking] = useState([]);
   const [pollutionRanking, setPollutionRanking] = useState([]);
+  const [showIntro, setShowIntro] = useState(false);
 
   const handleLogin = (user) => {
     setUser(user);
+    setShowIntro(true);
   };
 
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
     setIsGameRunning(false);
+    setShowIntro(false);
   };
 
   const startGame = () => {
@@ -27,6 +31,10 @@ function App() {
 
   const exitGame = () => {
     setIsGameRunning(false);
+  };
+
+  const closeIntroModal = () => {
+    setShowIntro(false);
   };
 
   useEffect(() => {
@@ -46,6 +54,7 @@ function App() {
         <LoginForm onLogin={handleLogin} />
       ) : (
         <div>
+          {showIntro && <IntroModal onClose={closeIntroModal} />}
           <header>
             <h1>Bem-vindo, {user.displayName}!</h1>
             <button onClick={handleLogout}>Logout</button>
