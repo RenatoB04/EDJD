@@ -1,11 +1,11 @@
-# 🌍 Jogo Interativo - Guardião do Equilíbrio 🌱
+# 🌍 Jogo Interativo - Recycle Rush 🌱
 
 Realizado por:
 - Paulo Bastos 27945
 - Bruno Mesquita 27947
 
 ## 📌 Descrição do Projeto
-**"Guardião do Equilíbrio"** é um jogo interativo desenvolvido com **React** que visa sensibilizar os jogadores sobre a importância da **sustentabilidade ambiental e da reciclagem**.  
+**"Recycle Rush"** é um jogo interativo desenvolvido com **React** que visa sensibilizar os jogadores sobre a importância da **sustentabilidade ambiental e da reciclagem**.  
 Inspirado pelo movimento **Games for Change**, o jogo combina diversão com educação ambiental, promovendo boas práticas de gestão de resíduos.  
 O projeto aborda temas como **poluição, reciclagem e mudanças climáticas**, incentivando os jogadores a contribuir para um planeta mais saudável.  
 
@@ -17,7 +17,7 @@ O objetivo principal é criar uma experiência interativa que:
 - Incentiva boas práticas de reciclagem de forma divertida e competitiva.  
 - Promove a ideia de que **todos podemos contribuir para reduzir a poluição**.  
 
-O jogador assume o papel de um **Guardião do Equilíbrio**, cuja missão é restaurar o planeta através da separação correta de resíduos.  
+O jogador assume o papel de um **Rusher**, cuja missão é restaurar o planeta através da separação correta de resíduos.  
 
 ---
 

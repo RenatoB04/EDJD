@@ -5,10 +5,10 @@ const IntroModal = ({ onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h1>Bem-vindo Guardião do Equilíbrio!</h1>
+        <h1>Bem-vindo Rusher!</h1>
         <p>
   O planeta enfrenta sérios riscos devido ao aumento da poluição e à má gestão de resíduos.  
-  Como Guardião do Equilíbrio, a tua missão é travar o avanço do caos, separando corretamente os resíduos.  
+  No Recycle Rush, a tua missão é travar o avanço do caos, separando corretamente os resíduos.  
   Ao reciclar, estarás a ajudar a reduzir a poluição e a restaurar o equilíbrio ambiental.  
 </p>
 <p>
