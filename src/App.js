@@ -3,12 +3,13 @@ import LoginForm from "./components/LoginForm";
 import GameBoard from "./components/Game";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
-import { getRanking } from "./components/Game";
+import { getRanking, getPollutionRanking } from "./components/Game";
 
 function App() {
   const [user, setUser] = useState(null);
   const [isGameRunning, setIsGameRunning] = useState(false);
-  const [ranking, setRanking] = useState([]);
+  const [generalRanking, setGeneralRanking] = useState([]);
+  const [pollutionRanking, setPollutionRanking] = useState([]);
 
   const handleLogin = (user) => {
     setUser(user);
@@ -29,12 +30,14 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchRanking = async () => {
-      const rankingData = await getRanking();
-      setRanking(rankingData);
+    const fetchRankings = async () => {
+      const generalRankingData = await getRanking();
+      const pollutionRankingData = await getPollutionRanking();
+      setGeneralRanking(generalRankingData);
+      setPollutionRanking(pollutionRankingData);
     };
-  
-    fetchRanking();
+
+    fetchRankings();
   }, []);
 
   return (
@@ -56,11 +59,20 @@ function App() {
             <GameBoard />
           ) : (
             <div>
-              <h2>Ranking</h2>
+              <h2>Ranking Geral de Pontos</h2>
               <ul>
-                {ranking.map((player, index) => (
+                {generalRanking.map((player, index) => (
                   <li key={player.id}>
-                    {index + 1}. {player.name} - {player.highScore}
+                    {index + 1}. {player.name} - {player.highScore} pontos
+                  </li>
+                ))}
+              </ul>
+
+              <h2>Ranking - Contribuição Poluição</h2>
+              <ul>
+                {pollutionRanking.map((player, index) => (
+                  <li key={player.id}>
+                    {index + 1}. {player.name} - {player.contribution} pontos
                   </li>
                 ))}
               </ul>

@@ -195,7 +195,6 @@ header button:active {
   transform: scale(0.95);
 }
 
-/* Estilização do botão de reiniciar jogo */
 .game-over {
   display: flex;
   flex-direction: column;

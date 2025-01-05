@@ -4,13 +4,14 @@ import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, orderBy, li
 import { db } from "../firebase";
 import { auth } from "../firebase";
 import MessageOverlay from "./MessageOverlay";
+import PollutionBar from "./PollutionBar";
 
 const WASTE_TYPES = [
   { type: "papel", emoji: "📄", bin: "papel" },
   { type: "papel", emoji: "📖", bin: "papel" },
   { type: "papel", emoji: "📜", bin: "papel" },
   { type: "plástico", emoji: "🛍️", bin: "plástico" },
-  { type: "plástico", emoji: "🪣", bin: "plástico" },
+  { type: "plástico", emoji: "🧴", bin: "plástico" },
   { type: "plástico", emoji: "🥤", bin: "plástico" },
   { type: "vidro", emoji: "🍷", bin: "vidro" },
   { type: "vidro", emoji: "🥛", bin: "vidro" },
@@ -18,15 +19,15 @@ const WASTE_TYPES = [
   { type: "orgânico", emoji: "🍎", bin: "orgânico" },
   { type: "orgânico", emoji: "🍌", bin: "orgânico" },
   { type: "orgânico", emoji: "🥬", bin: "orgânico" },
-  { type: "metal", emoji: "🪙", bin: "metal" },
+  { type: "metal", emoji: "🔧", bin: "metal" },
   { type: "metal", emoji: "⚙️", bin: "metal" },
   { type: "metal", emoji: "🔩", bin: "metal" },
 ];
 
 export const getRanking = async () => {
   try {
-    const rankingRef = collection(db, "rankings");
-    const q = query(rankingRef, orderBy("highScore", "desc"), limit(10));
+    const rankingRef = collection(db, 'rankings');
+    const q = query(rankingRef, orderBy('highScore', 'desc'), limit(10));
     const querySnapshot = await getDocs(q);
 
     const ranking = querySnapshot.docs.map((doc) => ({
@@ -36,10 +37,29 @@ export const getRanking = async () => {
 
     return ranking;
   } catch (error) {
-    console.error("Erro a encontrar o ranking:", error);
+    console.error('Erro a encontrar o ranking geral:', error);
     return [];
   }
 };
+
+export const getPollutionRanking = async () => {
+  try {
+    const rankingRef = collection(db, 'ranking_pollution');
+    const q = query(rankingRef, orderBy('contribution', 'desc'), limit(10));
+    const querySnapshot = await getDocs(q);
+
+    const ranking = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return ranking;
+  } catch (error) {
+    console.error('Erro a encontrar o ranking de poluição:', error);
+    return [];
+  }
+};
+
 
 const GameBoard = () => {
   const columns = 5;
@@ -69,67 +89,103 @@ const GameBoard = () => {
     });
   };
 
-  const saveScoreToRanking = async (finalScore) => {
-    const user = auth.currentUser;
-    if (!user) {
-      console.warn("Usuário não logado. A avançar save no Firebase.");
-      return;
-    }
-
-    const userRef = doc(db, "rankings", user.uid);
-    const userDoc = await getDoc(userRef);
-
-    try {
-      if (userDoc.exists()) {
-        const currentHighScore = userDoc.data().highScore || 0;
-
-        if (finalScore > currentHighScore) {
-          await updateDoc(userRef, { highScore: finalScore });
-          console.log("Ranking atualizado no Firebase!");
-        }
-      } else {
-        await setDoc(userRef, { name: user.displayName, highScore: finalScore });
-        console.log("Novo score guardado no Firebase!");
-      }
-    } catch (error) {
-      console.error("Erro a guardar score no Firestore:", error);
-    }
-  };
-
-  const handleDrop = (waste, bin, colIndex) => {
-    const binElement = document.querySelector(`[data-bin="${bin}"]`);
   
+const saveScoreToRanking = async (finalScore) => {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log('Nenhum utilizador autenticado.');
+    return;
+  }
+
+  const userRef = doc(db, 'ranking_pollution', user.uid);
+  const globalRef = doc(db, 'globalStats', 'pollutionBar');
+
+  try {
+    const userDoc = await getDoc(userRef);
+    const globalDoc = await getDoc(globalRef);
+
+    let globalScore = globalDoc.exists() ? globalDoc.data().score : 10000;
+    console.log('Poluição antes do jogo:', globalScore);
+
+    if (userDoc.exists()) {
+      await updateDoc(userRef, {
+        contribution: userDoc.data().contribution + finalScore,
+        gamesPlayed: (userDoc.data().gamesPlayed || 0) + 1,
+      });
+      console.log(`Contribuição de ${finalScore} adicionada para:`, user.displayName);
+    } else {
+      await setDoc(userRef, {
+        name: user.displayName,
+        contribution: finalScore,
+        gamesPlayed: 1,
+      });
+      console.log('Novo jogador adicionado:', user.displayName);
+    }
+
+    let newScore = globalScore;
+
+    if (finalScore > 0) {
+      newScore = Math.max(globalScore - finalScore, 0);
+      console.log(`Pontuação de ${finalScore}. Poluição REDUZIDA para:`, newScore);
+    } else {
+      newScore = Math.min(globalScore + 100, 10000);
+      console.log('Nenhum ponto feito. Poluição AUMENTADA para:', newScore);
+    }
+
+    await updateDoc(globalRef, { score: newScore });
+
+  } catch (error) {
+    console.error('Erro ao guardar score:', error);
+  }
+};
+
+  
+  const handleDrop = async (waste, bin, colIndex) => {
+    const binElement = document.querySelector(`[data-bin="${bin}"]`);
+
     if (waste.bin === bin) {
       setScore((prev) => prev + 10);
       setTimer((prev) => prev + 3);
-  
+
       setGrid((prev) => {
         const newGrid = [...prev];
         newGrid[colIndex] = newGrid[colIndex].filter((_, index) => index !== 0);
         return newGrid;
       });
-  
-      if ((score + 10) % 50 === 0) {
-        setSpeed((prev) => Math.max(prev - 300, 500));
-      }
+
+      const globalRef = doc(db, 'globalStats', 'pollutionBar');
+      const globalDoc = await getDoc(globalRef);
+      const globalScore = globalDoc.exists() ? globalDoc.data().score : 0;
+
+      await updateDoc(globalRef, {
+        score: Math.max(globalScore - 10, 0),
+      });
     } else {
       setTimer((prev) => Math.max(prev - 10, 0));
-      binElement.classList.add("bin-error");
+      binElement.classList.add('bin-error');
       setTimeout(() => {
-        binElement.classList.remove("bin-error");
+        binElement.classList.remove('bin-error');
       }, 300);
     }
-  };  
+  };
+  
 
   const endGame = async () => {
     if (gameOver) return;
-
+  
     setGameOver(true);
-
-    setScore((prevScore) => {
-      saveScoreToRanking(prevScore);
-      return prevScore;
+  
+    const finalScore = await new Promise((resolve) => {
+      setScore((prevScore) => {
+        const newScore = prevScore;
+        resolve(newScore);
+        return newScore;
+      });
     });
+  
+    console.log('Score final antes de salvar:', finalScore);
+  
+    await saveScoreToRanking(finalScore);
   };
 
   const resetGame = () => {
@@ -177,57 +233,65 @@ const GameBoard = () => {
   }, []);
 
   return (
-    <div className="game-board">
-      {showMessage && <MessageOverlay messageIndex={messageIndex} />}
-      <div className="info">
-        <p>Pontuação: {score}</p>
-        <p>Tempo: {timer}s</p>
-      </div>
-      <div className="falling-area">
-        {!gameOver ? (
-          grid.map((col, colIndex) => (
-            <div key={colIndex} className="column">
-              {col.map((waste, rowIndex) => (
-                <div
-                  key={`${colIndex}-${rowIndex}`}
-                  className="waste"
-                  draggable
-                  onDragStart={(e) =>
-                    e.dataTransfer.setData("waste", JSON.stringify({ waste, colIndex }))
-                  }
-                >
-                  {waste.emoji}
-                </div>
-              ))}
+    <div className="game-container">
+      <PollutionBar />
+      <div className="game-board">
+        {showMessage && <MessageOverlay messageIndex={messageIndex} />}
+        <div className="info">
+          <p>Pontuação: {score}</p>
+          <p>Tempo: {timer}s</p>
+        </div>
+        <div className="falling-area">
+          {!gameOver ? (
+            grid.map((col, colIndex) => (
+              <div key={colIndex} className="column">
+                {col.map((waste, rowIndex) => (
+                  <div
+                    key={`${colIndex}-${rowIndex}`}
+                    className="waste"
+                    draggable
+                    onDragStart={(e) =>
+                      e.dataTransfer.setData('waste', JSON.stringify({ waste, colIndex }))
+                    }
+                  >
+                    {waste.emoji}
+                  </div>
+                ))}
+              </div>
+            ))
+          ) : (
+            <div className="game-over">
+              <h2>Fim de Jogo!</h2>
+              <p>Sua pontuação final foi: {score}</p>
+              <button onClick={resetGame}>Reiniciar Jogo</button>
             </div>
-          ))
-        ) : (
-          <div className="game-over">
-            <h2>Fim de Jogo!</h2>
-            <p>Sua pontuação final foi: {score}</p>
-            <button onClick={resetGame}>Reiniciar Jogo</button>
-          </div>
-        )}
-      </div>
-      <div className="bins">
-        {!gameOver &&
-          bins.map((bin) => (
-            <div
-              key={bin}
-              className="bin"
-              data-bin={bin}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                const droppedData = JSON.parse(e.dataTransfer.getData("waste"));
-                handleDrop(droppedData.waste, bin, droppedData.colIndex);
-              }}
-            >
-              {bin}
-            </div>
-          ))}
+          )}
+        </div>
+        <div className="bins">
+          {!gameOver &&
+            bins.map((bin) => (
+              <div
+                key={bin}
+                className="bin"
+                data-bin={bin}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  const droppedData = e.dataTransfer.getData("waste");
+                  if (!droppedData) return;
+                  const parsedData = JSON.parse(droppedData);
+                  handleDrop(parsedData.waste, bin, parsedData.colIndex);
+                }}
+              >
+                {bin}
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
-};
+  
+  
+ };
+
 
 export default GameBoard;
