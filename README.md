@@ -1,28 +1,179 @@
-# P01-DJPM
+# Documentação do Projeto - Aplicação de Gestão de Livros com Firebase e Google Books API
 
-# Gestor de Livros
+## Índice
+1. [Estrutura do Projeto](#estrutura-do-projeto)
+2. [Lista de Funcionalidades](#lista-de-funcionalidades)
+3. [Desenhos, Esquemas e Protótipos](#desenhos-esquemas-e-protótipos)
+4. [Modelo de Dados](#modelo-de-dados)
+5. [Implementação do Projeto](#implementação-do-projeto)
+6. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+7. [Dificuldades Encontradas](#dificuldades-encontradas)
+8. [Conclusão](#conclusão)
 
-## Descrição
-O Gestor de Livros será uma aplicação que permitirá aos utilizadores organizar e acompanhar a sua biblioteca pessoal. A app incluirá funcionalidades para registar livros lidos, em leitura ou na lista de desejos, além de procurar informações automaticamente utilizando a Google Books API. Os dados dos utilizadores e dos livros serão armazenados na cloud utilizando o Firebase, permitindo sincronização entre dispositivos.
+---
 
-## Funcionalidades Planeadas
-- **Login e Registo**: Sistema de autenticação integrado com Firebase Authentication para gerir bibliotecas pessoais.
-- **Gestão de Livros**:
-  - Adicionar livros manualmente ou pesquisando na Google Books API.
-  - Categorizar livros como "Lido", "Em Leitura" ou "Lista de Desejos".
-- **Base de Dados na Cloud**: Utilização do Firebase Firestore para armazenar e sincronizar dados.
-- **Visualizações**: Exibição e organização dos livros por categorias.
-- **Funcionalidades Opcionais**:
-  - **Scanner de Código de Barras**: Permitir aos utilizadores adicionar livros através da digitalização do ISBN utilizando a câmara.
-  - **Notificações**: Enviar lembretes para continuar leituras ou outros avisos relevantes.
+## Estrutura do Projeto
+A aplicação está organizada segundo o padrão de arquitetura MVVM (Model-View-ViewModel).  
+Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão por responsabilidades.
 
-## Tecnologias e Arquitetura
-- **Linguagem**: Kotlin.
-- **Arquitetura**: MVVM (Model-View-ViewModel).
-- **Base de Dados**: Firebase Firestore.
-- **Google Books API**: Para procurar informações de livros.
-- **Firebase Authentication**: Para login e registo de utilizadores.
-- **ML Kit Barcode Scanning (opcional)**: Para digitalizar códigos de barras.
+### Estrutura de Diretórios:
 
-## Objetivo
-O objetivo do projeto será criar uma aplicação funcional e prática que permita aos utilizadores organizar e acompanhar os seus livros, enquanto demonstramos domínio de conceitos como manipulação de APIs, utilização de bases de dados na cloud e implementação da arquitetura MVVM.
+P01-DJPM/
+├── activities/
+│   ├── AddBookActivity.kt
+│   ├── BarcodeScannerActivity.kt
+│   ├── BookDetailsActivity.kt
+│   ├── HomeActivity.kt
+│   ├── LoginActivity.kt
+│   └── RegisterActivity.kt
+├── adapters/
+│   └── BooksAdapter.kt
+├── api/
+│   ├── ApiClient.kt
+│   └── GoogleBooksApi.kt
+├── models/
+│   └── UserBookItem.kt
+├── res/
+│   ├── layout/
+│   │   ├── activity_add_book.xml
+│   │   ├── activity_barcode_scanner.xml
+│   │   ├── activity_book_details.xml
+│   │   ├── activity_home.xml
+│   │   ├── activity_login.xml
+│   │   ├── activity_register.xml
+│   │   └── item_book.xml
+│   └── values/
+│       ├── colors.xml
+│       ├── strings.xml
+│       └── themes.xml
+└── AndroidManifest.xml
+
+---
+
+## Lista de Funcionalidades
+### Funcionalidades principais:
+1. **Autenticação Firebase**  
+   - Registo de novos utilizadores  
+   - Login com validação de email e password  
+   - Logout seguro  
+   - Recuperação de password (em desenvolvimento)
+
+2. **Gestão de Livros (Google Books API)**  
+   - Pesquisa de livros pelo título ou autor  
+   - Pesquisa de livros através de ISBN (scan de código de barras)  
+   - Adicionar livros à coleção pessoal do utilizador  
+   - Exibição de detalhes do livro, incluindo capa, descrição e autor  
+
+3. **Persistência de Dados (Firebase Firestore)**  
+   - Armazenamento de livros associados a cada utilizador  
+   - Sincronização automática ao fazer login noutro dispositivo  
+   - Exclusão e edição de livros guardados (em desenvolvimento)  
+
+4. **Interface Gráfica Moderna e Minimalista**  
+   - Design intuitivo com Material Design  
+   - Layout responsivo para diferentes tamanhos de ecrã  
+
+---
+
+## Desenhos, Esquemas e Protótipos
+A aplicação segue um design minimalista, com foco em usabilidade e simplicidade.  
+Os layouts são desenhados utilizando ConstraintLayout, garantindo flexibilidade na disposição dos componentes.
+
+---
+
+## Modelo de Dados
+Os dados são estruturados da seguinte forma:
+
+### Firebase Firestore:
+```json
+{
+  "users": {
+    "user_id_1": {
+      "books": [
+        {
+          "title": "Livro Exemplo",
+          "author": "Autor Exemplo",
+          "isbn": "9781234567897",
+          "thumbnail": "url_da_imagem",
+          "description": "Descrição do livro..."
+        }
+      ]
+    }
+  }
+}
+```
+
+## Objetos no Código:
+
+### UserBookItem.kt (Modelo de Livro)
+```kotlin
+data class UserBookItem(
+    val title: String,
+    val author: String,
+    val isbn: String,
+    val thumbnail: String,
+    val description: String
+)
+```
+
+## Implementação do Projeto
+
+O projeto é implementado em Kotlin e segue uma estrutura modular, onde cada atividade tem uma responsabilidade específica.
+
+### Principais Componentes:
+
+- **LoginActivity**  
+  Permite a autenticação do utilizador.  
+  Se a autenticação for bem-sucedida, redireciona para a HomeActivity.
+
+- **AddBookActivity**  
+  Permite pesquisar livros manualmente ou através de código de barras (ISBN).
+
+- **BarcodeScannerActivity**  
+  Utiliza a câmara para ler códigos de barras (ISBN) de livros.
+
+- **BookDetailsActivity**  
+  Exibe informações detalhadas do livro selecionado.
+
+---
+
+## Tecnologias Utilizadas
+
+- **Linguagem de Programação**:  
+  Kotlin (Android SDK)
+
+- **Frameworks e Bibliotecas**:  
+  - Firebase (Auth, Firestore)  
+  - Google Books API (Retrofit)  
+  - ML Kit (Barcode Scanning)  
+  - Glide (Carregamento de imagens)  
+  - CameraX (Utilização da câmara)  
+  - ConstraintLayout (UI flexível e responsiva)
+
+- **Gerenciador de Dependências**:  
+  Gradle (Kotlin DSL)
+
+---
+
+## Dificuldades Encontradas
+
+- **Scanner de Código de Barras**  
+  Inicialmente, o scanner de ISBN detetava múltiplas leituras, causando repetição de buscas.  
+  A solução implementada foi evitar chamadas repetidas, fechando o ImageProxy assim que um ISBN válido fosse encontrado.
+
+- **Pesquisa por ISBN**  
+  A API do Google Books nem sempre retorna resultados ao usar "isbn:978...".  
+  A correção passou por enviar diretamente o número do ISBN sem prefixos.
+
+- **Interface e Design**  
+  A implementação de um design moderno causou erros de compilação devido a incompatibilidade com componentes antigos.  
+  Foi necessário garantir a compatibilidade com bibliotecas do Material Design 3.
+
+---
+
+## Conclusão
+
+A aplicação de gestão de livros proporciona uma experiência intuitiva e moderna para utilizadores que pretendem guardar e consultar livros através do Google Books API.  
+A integração com Firebase oferece uma forma segura de autenticação e armazenamento persistente.
+
+O projeto reflete um equilíbrio entre simplicidade de uso e funcionalidades avançadas, com potencial para futuras melhorias, como integração com redes sociais para partilha de livros e recomendações personalizadas.
