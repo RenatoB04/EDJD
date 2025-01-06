@@ -134,6 +134,33 @@ Abaixo poderemos visualizar o fluxo de navegação na App
 - Na **HomeActivity**, o utilizador pode fazer logout, voltando para a tela de login.  
 - Ao fazer login noutro dispositivo, todos os livros previamente guardados aparecem sincronizados.  
 
+```
+[LoginActivity] 
+      |
+      |  (Se não tem conta)
+      v
+[RegisterActivity] -----> [HomeActivity]
+      |                         |
+      |                         |  
+      |                         |---> [AddBookActivity] 
+      |                         |         |
+      |                         |         |----> [BookDetailsActivity]
+      |                         |
+      |                         |---> [BarcodeScannerActivity]
+      |                                    |
+      |                                    |----> [AddBookActivity]  
+      |                                    |         |
+      |                                    |         |----> [BookDetailsActivity]
+      |                                    |
+      |                                    |----> Voltar para HomeActivity
+      |
+      |  (Se já tem conta)
+      v
+[HomeActivity]
+      |
+      |---> Logout ----> [LoginActivity] 
+```
+
 ---
 
 ## Modelo de Dados
