@@ -17,37 +17,37 @@ A aplicação está organizada segundo o padrão de arquitetura MVVM (Model-View
 Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão por responsabilidades.
 
 ### Estrutura de Diretórios:
-
-P01-DJPM/
-├── activities/
-│   ├── AddBookActivity.kt
-│   ├── BarcodeScannerActivity.kt
-│   ├── BookDetailsActivity.kt
-│   ├── HomeActivity.kt
-│   ├── LoginActivity.kt
-│   └── RegisterActivity.kt
-├── adapters/
-│   └── BooksAdapter.kt
-├── api/
-│   ├── ApiClient.kt
-│   └── GoogleBooksApi.kt
-├── models/
-│   └── UserBookItem.kt
-├── res/
-│   ├── layout/
-│   │   ├── activity_add_book.xml
-│   │   ├── activity_barcode_scanner.xml
-│   │   ├── activity_book_details.xml
-│   │   ├── activity_home.xml
-│   │   ├── activity_login.xml
-│   │   ├── activity_register.xml
-│   │   └── item_book.xml
-│   └── values/
-│       ├── colors.xml
-│       ├── strings.xml
-│       └── themes.xml
-└── AndroidManifest.xml
-
+```
+📁 P01-DJPM  
+│   ├── 📁 activities  
+│   │   ├── AddBookActivity.kt          # Atividade para adicionar livros  
+│   │   ├── BarcodeScannerActivity.kt   # Atividade para escanear códigos de barras  
+│   │   ├── BookDetailsActivity.kt      # Atividade para exibir detalhes do livro  
+│   │   ├── HomeActivity.kt             # Tela inicial da aplicação  
+│   │   ├── LoginActivity.kt            # Atividade de login  
+│   │   └── RegisterActivity.kt         # Atividade de registro de novos usuários  
+│   ├── 📁 adapters  
+│   │   └── BooksAdapter.kt             # Adaptador para a lista de livros  
+│   ├── 📁 api  
+│   │   ├── ApiClient.kt                # Cliente da API para comunicação com o servidor  
+│   │   └── GoogleBooksApi.kt           # API para interação com o Google Books  
+│   ├── 📁 models  
+│   │   └── UserBookItem.kt             # Modelo de dados para livros do usuário  
+│   ├── 📁 res  
+│   │   ├── 📁 layout  
+│   │   │   ├── activity_add_book.xml           # Layout para adicionar livro  
+│   │   │   ├── activity_barcode_scanner.xml    # Layout para escaneamento de código de barras  
+│   │   │   ├── activity_book_details.xml       # Layout para detalhes do livro  
+│   │   │   ├── activity_home.xml              # Layout para a tela inicial  
+│   │   │   ├── activity_login.xml             # Layout para login  
+│   │   │   ├── activity_register.xml          # Layout para registro  
+│   │   │   └── item_book.xml                  # Layout para item de livro na lista  
+│   │   └── 📁 values  
+│   │       ├── colors.xml                    # Definição de cores  
+│   │       ├── strings.xml                   # Definições de strings  
+│   │       └── themes.xml                    # Definições de temas  
+└── AndroidManifest.xml                       # Manifesto da aplicação Android  
+```
 ---
 
 ## Lista de Funcionalidades
