@@ -19,34 +19,35 @@ Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão p
 ### Estrutura de Diretórios:
 ```
 📁 P01-DJPM  
-│   ├── 📁 activities  
+│   ├── 📁 activities
 │   │   ├── AddBookActivity.kt          # Atividade para adicionar livros  
-│   │   ├── BarcodeScannerActivity.kt   # Atividade para escanear códigos de barras  
+│   │   ├── BarcodeScannerActivity.kt   # Atividade para scanear códigos de barras  
 │   │   ├── BookDetailsActivity.kt      # Atividade para exibir detalhes do livro  
 │   │   ├── HomeActivity.kt             # Tela inicial da aplicação  
 │   │   ├── LoginActivity.kt            # Atividade de login  
-│   │   └── RegisterActivity.kt         # Atividade de registro de novos usuários  
-│   ├── 📁 adapters  
+│   │   └── RegisterActivity.kt         # Atividade de registo de novos utilizadores  
+│   ├── 📁 adapters 
 │   │   └── BooksAdapter.kt             # Adaptador para a lista de livros  
 │   ├── 📁 api  
 │   │   ├── ApiClient.kt                # Cliente da API para comunicação com o servidor  
 │   │   └── GoogleBooksApi.kt           # API para interação com o Google Books  
-│   ├── 📁 models  
-│   │   └── UserBookItem.kt             # Modelo de dados para livros do usuário  
-│   ├── 📁 res  
+│   ├── 📁 models 
+│   │   └── UserBookItem.kt             # Modelo de dados para livros do utilizador  
+│   ├── 📁 resources 
 │   │   ├── 📁 layout  
 │   │   │   ├── activity_add_book.xml           # Layout para adicionar livro  
 │   │   │   ├── activity_barcode_scanner.xml    # Layout para escaneamento de código de barras  
 │   │   │   ├── activity_book_details.xml       # Layout para detalhes do livro  
 │   │   │   ├── activity_home.xml              # Layout para a tela inicial  
 │   │   │   ├── activity_login.xml             # Layout para login  
-│   │   │   ├── activity_register.xml          # Layout para registro  
+│   │   │   ├── activity_register.xml          # Layout para registo  
 │   │   │   └── item_book.xml                  # Layout para item de livro na lista  
-│   │   └── 📁 values  
+│   │   └── 📁 values
 │   │       ├── colors.xml                    # Definição de cores  
 │   │       ├── strings.xml                   # Definições de strings  
 │   │       └── themes.xml                    # Definições de temas  
 └── AndroidManifest.xml                       # Manifesto da aplicação Android  
+
 ```
 ---
 
@@ -56,7 +57,7 @@ Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão p
    - Registo de novos utilizadores  
    - Login com validação de email e password  
    - Logout seguro  
-   - Recuperação de password (em desenvolvimento)
+   - Recuperação de password (através do Firebase)
 
 2. **Gestão de Livros (Google Books API)**  
    - Pesquisa de livros pelo título ou autor  
@@ -67,7 +68,7 @@ Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão p
 3. **Persistência de Dados (Firebase Firestore)**  
    - Armazenamento de livros associados a cada utilizador  
    - Sincronização automática ao fazer login noutro dispositivo  
-   - Exclusão e edição de livros guardados (em desenvolvimento)  
+   - Exclusão e edição de livros guardados 
 
 4. **Interface Gráfica Moderna e Minimalista**  
    - Design intuitivo com Material Design  
