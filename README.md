@@ -80,6 +80,60 @@ Os ficheiros estão distribuídos em diferentes pacotes, refletindo a divisão p
 A aplicação segue um design minimalista, com foco em usabilidade e simplicidade.  
 Os layouts são desenhados utilizando ConstraintLayout, garantindo flexibilidade na disposição dos componentes.
 
+Abaixo poderemos visualizar o fluxo de navegação na App
+
+### 1. Abertura da Aplicação (Tela de Login)  
+- O utilizador é recebido com a tela de **LoginActivity**.  
+- Se já tiver uma conta:  
+  - Insere email e password e clica em **Login**.  
+  - Se as credenciais estiverem corretas, é redirecionado para a **HomeActivity**.  
+- Se não tiver conta:  
+  - Clica no link **"Não tem conta? Registe-se"**, que o leva para a **RegisterActivity**.  
+
+---
+
+### 2. Registo de Utilizador (Tela de Registo)  
+- O utilizador preenche o formulário de registo (email e password) na **RegisterActivity**.  
+- Ao clicar em **Registar**, o sistema cria a conta através do Firebase.  
+- Após o registo bem-sucedido, o utilizador é redirecionado para a **HomeActivity** automaticamente.  
+
+---
+
+### 3. HomeActivity (Tela Principal)  
+- A tela principal apresenta uma barra de pesquisa para encontrar livros manualmente ou por autor/título.  
+- Duas opções principais:  
+  - **Pesquisar manualmente**: O utilizador insere um título ou autor no campo de pesquisa.  
+  - **Scanear código de barras (ISBN)**: Ao clicar no botão de scan, a aplicação abre a **BarcodeScannerActivity**.  
+
+---
+
+### 4. Escaneamento de Código de Barras  
+- Na **BarcodeScannerActivity**, a câmara é ativada para ler códigos de barras de livros (ISBN).  
+- Quando um ISBN é detetado:  
+  - A aplicação pesquisa automaticamente o livro na Google Books API.  
+  - Se o livro for encontrado, o utilizador é redirecionado para a **AddBookActivity** para visualizar o resultado.  
+
+---
+
+### 5. Adicionar Livro (AddBookActivity)  
+- Os resultados da pesquisa são apresentados numa lista.  
+- Ao clicar num livro, a aplicação abre a tela de detalhes (**BookDetailsActivity**).  
+- O utilizador pode:  
+  - **Adicionar o livro à biblioteca pessoal**.  
+  - **Voltar para a HomeActivity** para continuar a pesquisa.  
+
+---
+
+### 6. Visualização de Detalhes (BookDetailsActivity)  
+- O utilizador vê a capa, título, autor, descrição e ISBN do livro selecionado.  
+- Pode escolher adicionar o livro à coleção, que é guardada na Firestore.  
+
+---
+
+### 7. Logout e Sincronização  
+- Na **HomeActivity**, o utilizador pode fazer logout, voltando para a tela de login.  
+- Ao fazer login noutro dispositivo, todos os livros previamente guardados aparecem sincronizados.  
+
 ---
 
 ## Modelo de Dados
