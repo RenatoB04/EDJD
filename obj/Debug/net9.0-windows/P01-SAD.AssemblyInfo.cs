@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("P01-SAD")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bec447dda05d1a15e6cc68d170cf2a5779dbf9f8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67edf402105a01b51ba22eaa17e542800f01b828")]
 [assembly: System.Reflection.AssemblyProductAttribute("P01-SAD")]
 [assembly: System.Reflection.AssemblyTitleAttribute("P01-SAD")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
