@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Data;
 
 namespace P01_SAD
 {
@@ -105,6 +106,59 @@ namespace P01_SAD
             else
             {
                 MessageBox.Show("Por favor, selecione um cliente para editar.");
+            }
+        }
+
+        private void btnPesquisar_Click(object sender, EventArgs e)
+        {
+            string nif = txtNIFPesquisar.Text.Trim();
+            if (string.IsNullOrEmpty(nif))
+            {
+                MessageBox.Show("Por favor, insira um NIF para pesquisar.", "Erro");
+                return;
+            }
+
+            PesquisarCliente(nif);
+        }
+
+        private void PesquisarCliente(string nif)
+        {
+            string connectionString = "Server=LEGION;Database=P01-SAD;Trusted_Connection=True;";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand cmd = new SqlCommand("PesquisarCliente", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@NIF", nif);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    System.Data.DataTable dataTable = new System.Data.DataTable();
+                    adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        DataRow row = dataTable.Rows[0];
+                        string detalhes = $"NIF: {row["NIF"]}\n" +
+                                          $"Nome: {row["NomeCliente"]}\n" +
+                                          $"Código Postal: {row["CodigoPostal"]}\n" +
+                                          $"Email: {row["Email"]}\n" +
+                                          $"Telefones: {row["Telefones"]}\n" +
+                                          $"Matrículas: {row["Matriculas"]}";
+                        MessageBox.Show(detalhes, "Detalhes do Cliente");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cliente não encontrado.", "Erro");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao pesquisar cliente: " + ex.Message);
             }
         }
     }
