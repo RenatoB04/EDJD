@@ -6,6 +6,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnAbrirInserir;
         private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Button btnEditar;
 
         protected override void Dispose(bool disposing)
         {
@@ -23,6 +24,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnAbrirInserir = new System.Windows.Forms.Button();
             this.btnEliminar = new System.Windows.Forms.Button();
+            this.btnEditar = new System.Windows.Forms.Button();
 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
@@ -47,6 +49,12 @@
             this.btnEliminar.Text = "Eliminar Cliente";
             this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             this.Controls.Add(this.btnEliminar);
+
+            this.btnEditar.Location = new System.Drawing.Point(350, 380);
+            this.btnEditar.Size = new System.Drawing.Size(150, 30);
+            this.btnEditar.Text = "Editar Cliente";
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
+            this.Controls.Add(this.btnEditar);
 
             this.Load += new System.EventHandler(this.Form1_Load);
 

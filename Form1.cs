@@ -92,5 +92,20 @@ namespace P01_SAD
                 MessageBox.Show("Por favor, selecione um cliente para eliminar.");
             }
         }
+
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                string nif = dataGridView1.SelectedRows[0].Cells["NIF"].Value.ToString();
+                FormEditar formEditar = new FormEditar(nif);
+                formEditar.ShowDialog();
+                AtualizarDados();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecione um cliente para editar.");
+            }
+        }
     }
 }
