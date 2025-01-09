@@ -2,6 +2,8 @@
 
 Realizado por:
 - Paulo Bastos 27945
+- Luã Mariano 19735
+- Bruno Mesquita 27947
 
 Este projeto foi desenvolvido para UC de Sistemas de Armazenamento de Dados e inclui a introdução, atualização, pesquisa e eliminação de informações, com a utilização de **SQL Server** e **C#** utilizando a biblioteca **Windows Forms** para a interface gráfica. A aplicação permite manipular dados de clientes, contactos e matrículas.
 
