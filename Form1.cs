@@ -19,7 +19,16 @@ namespace P01_SAD
         private void AtualizarDados()
         {
             string connectionString = "Server=LEGION;Database=P01-SAD;Trusted_Connection=True;";
-            string query = "SELECT * FROM cliente";
+            string query = @"
+                SELECT c.NIF, 
+                       c.Nome AS NomeCliente, 
+                       c.cp AS CodigoPostal, 
+                       ISNULL(email.numero_c, 'Sem Email') AS Email, 
+                       STRING_AGG(telefone.numero_c, ', ') WITHIN GROUP (ORDER BY telefone.numero_c) AS Telefones
+                FROM cliente c
+                LEFT JOIN contacto email ON c.NIF = email.NIF AND email.tipo_contacto_id = 2
+                LEFT JOIN contacto telefone ON c.NIF = telefone.NIF AND telefone.tipo_contacto_id = 1
+                GROUP BY c.NIF, c.Nome, c.cp, email.numero_c;";
 
             try
             {
@@ -52,17 +61,24 @@ namespace P01_SAD
             {
                 string nif = dataGridView1.SelectedRows[0].Cells["NIF"].Value.ToString();
                 string connectionString = "Server=LEGION;Database=P01-SAD;Trusted_Connection=True;";
-                string query = "DELETE FROM cliente WHERE NIF = @NIF";
 
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-                        SqlCommand cmd = new SqlCommand(query, connection);
-                        cmd.Parameters.AddWithValue("@NIF", nif);
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Cliente eliminado com sucesso!");
+
+                        string deleteContactosQuery = "DELETE FROM contacto WHERE NIF = @NIF";
+                        SqlCommand deleteContactosCmd = new SqlCommand(deleteContactosQuery, connection);
+                        deleteContactosCmd.Parameters.AddWithValue("@NIF", nif);
+                        deleteContactosCmd.ExecuteNonQuery();
+
+                        string deleteClienteQuery = "DELETE FROM cliente WHERE NIF = @NIF";
+                        SqlCommand deleteClienteCmd = new SqlCommand(deleteClienteQuery, connection);
+                        deleteClienteCmd.Parameters.AddWithValue("@NIF", nif);
+                        deleteClienteCmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Cliente e contactos eliminados com sucesso!");
                         AtualizarDados();
                     }
                 }
