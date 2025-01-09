@@ -7,6 +7,8 @@ partial class Form1
     /// </summary>
     private System.ComponentModel.IContainer components = null;
 
+    private System.Windows.Forms.DataGridView dataGridView1;
+
     /// <summary>
     ///  Clean up any resources being used.
     /// </summary>
@@ -29,9 +31,18 @@ partial class Form1
     private void InitializeComponent()
     {
         this.components = new System.ComponentModel.Container();
+        this.dataGridView1 = new System.Windows.Forms.DataGridView();
+
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.ClientSize = new System.Drawing.Size(800, 450);
-        this.Text = "Form1";
+        this.Text = "Gestão de Clientes";
+
+        this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+        this.dataGridView1.Size = new System.Drawing.Size(760, 350);
+        this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+        this.Controls.Add(this.dataGridView1);
+
         this.Load += new System.EventHandler(this.Form1_Load);
     }
 

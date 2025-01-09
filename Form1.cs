@@ -14,11 +14,23 @@ namespace P01_SAD
         private void Form1_Load(object sender, EventArgs e)
         {
             string connectionString = "Server=LEGION;Database=P01-SAD;Trusted_Connection=True;";
-            
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string query = "SELECT * FROM cliente";
+
+            try
             {
-                connection.Open();
-                MessageBox.Show("Connection successful!");
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                    System.Data.DataTable dataTable = new System.Data.DataTable();
+                    adapter.Fill(dataTable);
+
+                    dataGridView1.DataSource = dataTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados: " + ex.Message);
             }
         }
     }
