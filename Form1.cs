@@ -13,6 +13,11 @@ namespace P01_SAD
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            AtualizarDados();
+        }
+
+        private void AtualizarDados()
+        {
             string connectionString = "Server=LEGION;Database=P01-SAD;Trusted_Connection=True;";
             string query = "SELECT * FROM cliente";
 
@@ -32,6 +37,13 @@ namespace P01_SAD
             {
                 MessageBox.Show("Erro ao carregar dados: " + ex.Message);
             }
+        }
+
+        private void btnAbrirInserir_Click(object sender, EventArgs e)
+        {
+            FormInserir formInserir = new FormInserir();
+            formInserir.ShowDialog();
+            AtualizarDados();
         }
     }
 }

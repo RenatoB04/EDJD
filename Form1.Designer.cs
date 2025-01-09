@@ -1,50 +1,50 @@
-﻿namespace P01_SAD;
-
-partial class Form1
+﻿namespace P01_SAD
 {
-    /// <summary>
-    ///  Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    private System.Windows.Forms.DataGridView dataGridView1;
-
-    /// <summary>
-    ///  Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Form1
     {
-        if (disposing && (components != null))
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button btnAbrirInserir;
+
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.btnAbrirInserir = new System.Windows.Forms.Button();
+
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Text = "Gestão de Clientes";
+
+            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView1.Size = new System.Drawing.Size(760, 350);
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.ReadOnly = true;
+            this.Controls.Add(this.dataGridView1);
+
+            this.btnAbrirInserir.Location = new System.Drawing.Point(12, 380);
+            this.btnAbrirInserir.Size = new System.Drawing.Size(150, 30);
+            this.btnAbrirInserir.Text = "Novo Cliente";
+            this.btnAbrirInserir.Click += new System.EventHandler(this.btnAbrirInserir_Click);
+            this.Controls.Add(this.btnAbrirInserir);
+
+            this.Load += new System.EventHandler(this.Form1_Load);
+
+            this.ResumeLayout(false);
+        }
+
+        #endregion
     }
-
-    #region Windows Form Designer generated code
-
-    /// <summary>
-    ///  Required method for Designer support - do not modify
-    ///  the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
-        this.components = new System.ComponentModel.Container();
-        this.dataGridView1 = new System.Windows.Forms.DataGridView();
-
-        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(800, 450);
-        this.Text = "Gestão de Clientes";
-
-        this.dataGridView1.Location = new System.Drawing.Point(12, 12);
-        this.dataGridView1.Size = new System.Drawing.Size(760, 350);
-        this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-        this.Controls.Add(this.dataGridView1);
-
-        this.Load += new System.EventHandler(this.Form1_Load);
-    }
-
-    #endregion
 }
