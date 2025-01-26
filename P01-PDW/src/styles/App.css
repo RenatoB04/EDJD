@@ -1,0 +1,44 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #e8f5e9;
+  font-family: Arial, sans-serif;
+}
+
+.start-screen {
+  text-align: center;
+}
+
+.start-screen h1 {
+  font-size: 3rem;
+  color: #388e3c;
+}
+
+.start-screen button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-screen button:hover {
+  background-color: #2e7d32;
+}
+
+.game-screen {
+  text-align: center;
+}
+
+.game-screen h1 {
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #388e3c;
+}
