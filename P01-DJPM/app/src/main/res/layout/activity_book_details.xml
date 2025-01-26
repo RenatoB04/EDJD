@@ -1,0 +1,78 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/bookThumbnailImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/bookTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Título do Livro"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/bookAuthorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Autor"
+            android:textSize="16sp"
+            android:textColor="?attr/colorSecondary"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/bookDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição do Livro"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:layout_marginBottom="24dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/readButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marcar como Lido"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wishlistButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adicionar à Lista de Desejos"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/readingButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marcar como Em Leitura"
+            style="?attr/materialButtonOutlinedStyle" />
+    </LinearLayout>
+</ScrollView>
