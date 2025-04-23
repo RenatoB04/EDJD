@@ -633,3 +633,47 @@ events:
       Running the CXX compiler's linker: "C:/msys64/mingw64/x86_64-w64-mingw32/bin/ld.exe" "-v"
       GNU ld (GNU Binutils) 2.44
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/msys64/mingw64/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/msys64/mingw64/share/cmake/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "C:/msys64/mingw64/share/cmake/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "C:/msys64/mingw64/share/cmake/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "C:/msys64/mingw64/share/cmake/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "C:/msys64/mingw64/lib/cmake/glfw3/glfw3Config.cmake:2 (find_dependency)"
+      - "CMakeLists.txt:11 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs"
+      binary: "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs'
+        
+        Run Build Command(s): C:/msys64/mingw64/bin/cmake.exe -E env VERBOSE=1 C:/msys64/mingw64/bin/mingw32-make.exe -f Makefile cmTC_90b38/fast
+        mingw32-make[1]: Entering directory 'C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs'
+        C:/msys64/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_90b38.dir\\build.make CMakeFiles/cmTC_90b38.dir/build
+        mingw32-make[2]: Entering directory 'C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs'
+        Building C object CMakeFiles/cmTC_90b38.dir/src.c.obj
+        C:\\msys64\\mingw64\\bin\\gcc.exe -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles\\cmTC_90b38.dir\\src.c.obj -c C:\\Users\\Acer\\Desktop\\Source\\P01-P3D\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-4oyibs\\src.c
+        Linking C executable cmTC_90b38.exe
+        C:\\msys64\\mingw64\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_90b38.dir\\link.txt --verbose=1
+        C:\\msys64\\mingw64\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_90b38.dir/objects.a
+        C:\\msys64\\mingw64\\bin\\ar.exe qc CMakeFiles\\cmTC_90b38.dir/objects.a @CMakeFiles\\cmTC_90b38.dir\\objects1.rsp
+        C:\\msys64\\mingw64\\bin\\gcc.exe -Wl,--whole-archive CMakeFiles\\cmTC_90b38.dir/objects.a -Wl,--no-whole-archive -o cmTC_90b38.exe -Wl,--out-implib,libcmTC_90b38.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_90b38.dir\\linkLibs.rsp
+        mingw32-make[2]: Leaving directory 'C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs'
+        mingw32-make[1]: Leaving directory 'C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4oyibs'
+        
+      exitCode: 0
+...

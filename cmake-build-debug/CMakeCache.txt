@@ -233,11 +233,25 @@ CMAKE_STRIP:FILEPATH=C:/msys64/mingw64/bin/strip.exe
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 
+CMAKE_TOOLCHAIN_FILE:STRING=C:/Users/Acer/vcpkg/scripts/buildsystems/vcpkg.cmake
+
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+
+//The directory containing a CMake configuration file for GLEW.
+GLEW_DIR:PATH=C:/msys64/mingw64/lib/cmake/glew
+
+//Path to a library.
+GLEW_LIBRARY_DEBUG:FILEPATH=GLEW_LIBRARY_DEBUG-NOTFOUND
+
+//OpenGL library for win32
+OPENGL_gl_LIBRARY:STRING=opengl32
+
+//GLU library for win32
+OPENGL_glu_LIBRARY:STRING=glu32
 
 //Value Computed by CMake
 P01_P3D_BINARY_DIR:STATIC=C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug
@@ -247,6 +261,12 @@ P01_P3D_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 P01_P3D_SOURCE_DIR:STATIC=C:/Users/Acer/Desktop/Source/P01-P3D
+
+//The directory containing a CMake configuration file for glfw3.
+glfw3_DIR:PATH=C:/msys64/mingw64/lib/cmake/glfw3
+
+//The directory containing a CMake configuration file for glm.
+glm_DIR:PATH=C:/msys64/mingw64/share/glm
 
 
 ########################
@@ -331,6 +351,8 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=C:/Users/Acer/Desktop/Source/P01-P3D
@@ -405,6 +427,18 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_TAPI-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding GLEW
+FIND_PACKAGE_MESSAGE_DETAILS_GLEW:INTERNAL=[C:/msys64/mingw64/lib/cmake/glew/glew-config.cmake][v()]
+//Details about finding OpenGL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenGL:INTERNAL=[opengl32][c ][v()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+//ADVANCED property for variable: GLEW_LIBRARY_DEBUG
+GLEW_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENGL_gl_LIBRARY
+OPENGL_gl_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENGL_glu_LIBRARY
+OPENGL_glu_LIBRARY-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //linker supports push/pop state
