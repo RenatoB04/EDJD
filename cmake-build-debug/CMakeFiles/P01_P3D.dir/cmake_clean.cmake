@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/P01_P3D.dir/src/main.cpp.obj"
   "CMakeFiles/P01_P3D.dir/src/main.cpp.obj.d"
+  "CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj"
+  "CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj.d"
+  "CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj"
+  "CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj.d"
   "P01_P3D.exe"
   "P01_P3D.exe.manifest"
   "P01_P3D.pdb"

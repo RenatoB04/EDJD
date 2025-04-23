@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_TOOLCHAIN_FILE "C:/Users/Acer/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 
-add_executable(P01_P3D src/main.cpp)
+add_executable(P01_P3D src/main.cpp
+        src/renderer.cpp
+        include/renderer.hpp
+        src/shader_utils.cpp
+        include/shader_utils.hpp)
+
+target_include_directories(P01_P3D PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)

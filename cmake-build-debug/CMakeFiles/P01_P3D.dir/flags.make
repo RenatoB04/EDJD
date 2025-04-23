@@ -4,7 +4,7 @@
 # compile CXX with C:/msys64/mingw64/bin/g++.exe
 CXX_DEFINES = -DGLFW_DLL
 
-CXX_INCLUDES = 
+CXX_INCLUDES = @CMakeFiles/P01_P3D.dir/includes_CXX.rsp
 
 CXX_FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
 
