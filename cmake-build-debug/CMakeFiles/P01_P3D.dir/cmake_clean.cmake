@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/P01_P3D.dir/src/camera.cpp.obj"
+  "CMakeFiles/P01_P3D.dir/src/camera.cpp.obj.d"
   "CMakeFiles/P01_P3D.dir/src/main.cpp.obj"
   "CMakeFiles/P01_P3D.dir/src/main.cpp.obj.d"
   "CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj"
