@@ -34,6 +34,18 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
         activeCamera->pitch = -89.0f;
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    if (!activeCamera)
+        return;
+
+    activeCamera->radius -= static_cast<float>(yoffset) * 0.5f;
+
+    if (activeCamera->radius < 2.0f)
+        activeCamera->radius = 2.0f;
+    if (activeCamera->radius > 20.0f)
+        activeCamera->radius = 20.0f;
+}
+
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     if (!activeCamera)
         return;
