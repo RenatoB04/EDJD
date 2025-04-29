@@ -13,12 +13,36 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
         -1.0f,  0.5f, -2.0f,  0.0f, 0.0f, 1.0f,
          1.0f,  0.5f, -2.0f,  0.0f, 0.0f, 1.0f,
          1.0f,  0.5f,  2.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f,  0.5f,  2.0f,  0.0f, 0.0f, 1.0f
+        -1.0f,  0.5f,  2.0f,  0.0f, 0.0f, 1.0f,
+
+        -1.0f, -0.5f, 2.0f,   1.0f, 0.0f, 0.0f,
+         1.0f, -0.5f, 2.0f,   1.0f, 0.0f, 0.0f,
+         1.0f,  0.5f, 2.0f,   1.0f, 0.0f, 0.0f,
+        -1.0f,  0.5f, 2.0f,   1.0f, 0.0f, 0.0f,
+
+        -1.0f, -0.5f, -2.0f,  1.0f, 1.0f, 0.0f,
+         1.0f, -0.5f, -2.0f,  1.0f, 1.0f, 0.0f,
+         1.0f,  0.5f, -2.0f,  1.0f, 1.0f, 0.0f,
+        -1.0f,  0.5f, -2.0f,  1.0f, 1.0f, 0.0f,
+
+        -1.0f, -0.5f, -2.0f,  1.0f, 0.0f, 1.0f,
+        -1.0f, -0.5f,  2.0f,  1.0f, 0.0f, 1.0f,
+        -1.0f,  0.5f,  2.0f,  1.0f, 0.0f, 1.0f,
+        -1.0f,  0.5f, -2.0f,  1.0f, 0.0f, 1.0f,
+
+         1.0f, -0.5f, -2.0f,  0.0f, 1.0f, 1.0f,
+         1.0f, -0.5f,  2.0f,  0.0f, 1.0f, 1.0f,
+         1.0f,  0.5f,  2.0f,  0.0f, 1.0f, 1.0f,
+         1.0f,  0.5f, -2.0f,  0.0f, 1.0f, 1.0f
     };
 
     unsigned int indices[] = {
         0, 1, 2, 2, 3, 0,
-        4, 5, 6, 6, 7, 4
+        4, 5, 6, 6, 7, 4,
+        8, 9, 10, 10, 11, 8,
+        12, 13, 14, 14, 15, 12,
+        16, 17, 18, 18, 19, 16,
+        20, 21, 22, 22, 23, 20
     };
 
     glGenVertexArrays(1, &vao);
@@ -42,7 +66,7 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
 
 void drawMesa(GLuint shaderProgram, GLuint vao) {
     glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view  = glm::lookAt(glm::vec3(0.0f, 1.5f, 4.0f), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    glm::mat4 view  = glm::lookAt(glm::vec3(0.0f, 1.5f, 4.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.0f);
 
     glUseProgram(shaderProgram);
@@ -56,5 +80,5 @@ void drawMesa(GLuint shaderProgram, GLuint vao) {
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
