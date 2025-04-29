@@ -17,6 +17,7 @@ private:
     GLuint vboNormals;
     GLuint vboTexCoords;
     GLuint textureID;
+    GLuint indexCount;
 
     void loadOBJ(const std::string& path);
     void loadMTL(const std::string& path);

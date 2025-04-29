@@ -39,7 +39,7 @@ int main() {
     GLuint vao, vbo, ebo;
     setupMesa(vao, vbo, ebo);
 
-    Model mesaModel("assets/objects/mesa.obj");
+    Model ballModel("assets/objects/Ball1.obj");
 
     setActiveCamera(&camera);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -61,6 +61,8 @@ int main() {
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
         drawMesa(shaderProgram, vao, view, projection);
+
+        ballModel.draw(shaderProgram);
 
         int miniWidth = width / 4;
         int miniHeight = height / 4;
