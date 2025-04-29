@@ -183,6 +183,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\P01_P3D.dir\build.make CMakeFiles/P01_P3D.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/model.obj: src/model.cpp.obj
+.PHONY : src/model.obj
+
+# target to build an object file
+src/model.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\P01_P3D.dir\build.make CMakeFiles/P01_P3D.dir/src/model.cpp.obj
+.PHONY : src/model.cpp.obj
+
+src/model.i: src/model.cpp.i
+.PHONY : src/model.i
+
+# target to preprocess a source file
+src/model.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\P01_P3D.dir\build.make CMakeFiles/P01_P3D.dir/src/model.cpp.i
+.PHONY : src/model.cpp.i
+
+src/model.s: src/model.cpp.s
+.PHONY : src/model.s
+
+# target to generate assembly for a file
+src/model.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\P01_P3D.dir\build.make CMakeFiles/P01_P3D.dir/src/model.cpp.s
+.PHONY : src/model.cpp.s
+
 src/renderer.obj: src/renderer.cpp.obj
 .PHONY : src/renderer.obj
 
@@ -247,6 +271,9 @@ help:
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/model.obj
+	@echo ... src/model.i
+	@echo ... src/model.s
 	@echo ... src/renderer.obj
 	@echo ... src/renderer.i
 	@echo ... src/renderer.s

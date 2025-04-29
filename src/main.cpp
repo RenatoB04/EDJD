@@ -7,6 +7,7 @@
 #include "shader_utils.hpp"
 #include "renderer.hpp"
 #include "camera.hpp"
+#include "model.hpp"
 
 Camera camera;
 
@@ -34,8 +35,11 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     GLuint shaderProgram = createShaderProgram("assets/shaders/shader.vert", "assets/shaders/shader.frag");
+
     GLuint vao, vbo, ebo;
     setupMesa(vao, vbo, ebo);
+
+    Model mesaModel("assets/objects/mesa.obj");
 
     setActiveCamera(&camera);
     glfwSetCursorPosCallback(window, mouse_callback);

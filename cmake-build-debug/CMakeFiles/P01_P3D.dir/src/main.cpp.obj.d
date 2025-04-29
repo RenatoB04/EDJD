@@ -361,4 +361,5 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/detail/type_half.inl \
  C:/msys64/mingw64/include/glm/integer.hpp \
  C:/msys64/mingw64/include/glm/detail/func_integer.inl \
- C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp
+ C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp \
+ C:/Users/Acer/Desktop/Source/P01-P3D/include/model.hpp
