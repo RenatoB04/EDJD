@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "shader_utils.hpp"
 #include "renderer.hpp"
@@ -42,25 +43,34 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
 
     while (!glfwWindowShouldClose(window)) {
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
 
-        glm::mat4 model = glm::mat4(1.0f);
+        glViewport(0, 0, width, height);
+
         glm::mat4 view = camera.getViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
-        GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
-        GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
-        GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
+        drawMesa(shaderProgram, vao, view, projection);
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        int miniWidth = width / 4;
+        int miniHeight = height / 4;
+        glViewport(width - miniWidth - 10, height - miniHeight - 10, miniWidth, miniHeight);
 
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glm::mat4 miniView = glm::lookAt(
+            glm::vec3(0.0f, 5.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f)
+        );
+
+        glm::mat4 miniProjection = glm::ortho(-3.0f, 3.0f, -3.0f, 3.0f, 0.1f, 100.0f);
+
+        drawMesa(shaderProgram, vao, miniView, miniProjection);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

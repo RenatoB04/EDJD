@@ -350,7 +350,6 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/gtc/type_ptr.inl \
  C:/Users/Acer/Desktop/Source/P01-P3D/include/shader_utils.hpp \
  C:/Users/Acer/Desktop/Source/P01-P3D/include/renderer.hpp \
- C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp \
  C:/msys64/mingw64/include/glm/glm.hpp \
  C:/msys64/mingw64/include/c++/14.2.0/climits \
  C:/msys64/mingw64/include/c++/14.2.0/cfloat \
@@ -361,4 +360,5 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/detail/type_half.hpp \
  C:/msys64/mingw64/include/glm/detail/type_half.inl \
  C:/msys64/mingw64/include/glm/integer.hpp \
- C:/msys64/mingw64/include/glm/detail/func_integer.inl
+ C:/msys64/mingw64/include/glm/detail/func_integer.inl \
+ C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp

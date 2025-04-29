@@ -64,10 +64,8 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
     glEnableVertexAttribArray(1);
 }
 
-void drawMesa(GLuint shaderProgram, GLuint vao) {
+void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection) {
     glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view  = glm::lookAt(glm::vec3(0.0f, 1.5f, 4.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.0f);
 
     glUseProgram(shaderProgram);
 
