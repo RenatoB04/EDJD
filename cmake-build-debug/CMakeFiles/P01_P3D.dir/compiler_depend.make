@@ -603,6 +603,7 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/sr
 
 CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/model.cpp \
   C:/Users/Acer/Desktop/Source/P01-P3D/include/model.hpp \
+  C:/Users/Acer/Desktop/Source/P01-P3D/include/stb_image.h \
   C:/msys64/mingw64/include/GL/gl.h \
   C:/msys64/mingw64/include/GL/glew.h \
   C:/msys64/mingw64/include/GL/glu.h \
@@ -611,6 +612,7 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/s
   C:/msys64/mingw64/include/_mingw_off_t.h \
   C:/msys64/mingw64/include/_mingw_secapi.h \
   C:/msys64/mingw64/include/_mingw_stat64.h \
+  C:/msys64/mingw64/include/_mingw_stdarg.h \
   C:/msys64/mingw64/include/_timeval.h \
   C:/msys64/mingw64/include/assert.h \
   C:/msys64/mingw64/include/c++/14.2.0/backward/binders.h \
@@ -714,6 +716,7 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/s
   C:/msys64/mingw64/include/c++/14.2.0/iostream \
   C:/msys64/mingw64/include/c++/14.2.0/istream \
   C:/msys64/mingw64/include/c++/14.2.0/limits \
+  C:/msys64/mingw64/include/c++/14.2.0/math.h \
   C:/msys64/mingw64/include/c++/14.2.0/new \
   C:/msys64/mingw64/include/c++/14.2.0/numbers \
   C:/msys64/mingw64/include/c++/14.2.0/ostream \
@@ -961,6 +964,7 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/s
   C:/msys64/mingw64/include/sec_api/sys/timeb_s.h \
   C:/msys64/mingw64/include/sec_api/wchar_s.h \
   C:/msys64/mingw64/include/signal.h \
+  C:/msys64/mingw64/include/stdarg.h \
   C:/msys64/mingw64/include/stddef.h \
   C:/msys64/mingw64/include/stdint.h \
   C:/msys64/mingw64/include/stdio.h \
@@ -973,12 +977,16 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/s
   C:/msys64/mingw64/include/vadefs.h \
   C:/msys64/mingw64/include/wchar.h \
   C:/msys64/mingw64/include/wctype.h \
+  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/emmintrin.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/float.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/limits.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mm_malloc.h \
+  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mmintrin.h \
+  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdarg.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stddef.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdint.h \
-  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/syslimits.h
+  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/syslimits.h \
+  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xmmintrin.h
 
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/renderer.cpp \
   C:/Users/Acer/Desktop/Source/P01-P3D/include/renderer.hpp \
@@ -1420,6 +1428,10 @@ CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: C:/Users/Acer/Desktop/Source/P0
 
 C:/Users/Acer/Desktop/Source/P01-P3D/src/renderer.cpp:
 
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdarg.h:
+
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/emmintrin.h:
+
 C:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h:
 
 C:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h:
@@ -1427,6 +1439,8 @@ C:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h:
 C:/msys64/mingw64/include/c++/14.2.0/vector:
 
 C:/msys64/mingw64/include/c++/14.2.0/fstream:
+
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xmmintrin.h:
 
 C:/msys64/mingw64/include/c++/14.2.0/bits/stl_vector.h:
 
@@ -1445,6 +1459,8 @@ C:/msys64/mingw64/include/wchar.h:
 C:/msys64/mingw64/include/time.h:
 
 C:/msys64/mingw64/include/sys/types.h:
+
+C:/msys64/mingw64/include/_mingw_stdarg.h:
 
 C:/msys64/mingw64/include/swprintf.inl:
 
@@ -1830,6 +1846,8 @@ C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/float.h:
 
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mmintrin.h:
+
 C:/msys64/mingw64/include/glm/ext/vector_bool1_precision.hpp:
 
 C:/msys64/mingw64/include/_mingw_stat64.h:
@@ -1843,6 +1861,8 @@ C:/msys64/mingw64/include/_mingw.h:
 C:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++config.h:
 
 C:/msys64/mingw64/include/glm/ext/vector_uint2.hpp:
+
+C:/msys64/mingw64/include/stdarg.h:
 
 C:/msys64/mingw64/include/glm/ext/quaternion_relational.hpp:
 
@@ -1918,6 +1938,8 @@ C:/msys64/mingw64/include/glm/mat2x3.hpp:
 
 C:/msys64/mingw64/include/glm/detail/type_vec4.hpp:
 
+C:/Users/Acer/Desktop/Source/P01-P3D/include/stb_image.h:
+
 C:/msys64/mingw64/include/signal.h:
 
 C:/msys64/mingw64/include/pthread_signal.h:
@@ -1973,6 +1995,8 @@ C:/msys64/mingw64/include/glm/ext/matrix_float3x3_precision.hpp:
 C:/msys64/mingw64/include/glm/ext/matrix_float4x2.hpp:
 
 C:/msys64/mingw64/include/glm/gtc/matrix_transform.inl:
+
+C:/msys64/mingw64/include/c++/14.2.0/math.h:
 
 C:/msys64/mingw64/include/glm/ext/matrix_float4x2_precision.hpp:
 

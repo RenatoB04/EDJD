@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -13,7 +16,18 @@ Model::Model(const std::string& objPath)
 {
     std::cout << "[Model] Criado modelo com caminho: " << objPath << std::endl;
 
+    size_t lastSlash = objPath.find_last_of("/\\");
+    directory = (lastSlash != std::string::npos) ? objPath.substr(0, lastSlash + 1) : "";
+
     loadOBJ(objPath);
+
+    if (!materialFile.empty()) {
+        loadMTL(materialFile);
+    }
+
+    if (!textureFile.empty()) {
+        loadTexture(textureFile);
+    }
 }
 
 Model::~Model()
@@ -31,6 +45,13 @@ void Model::draw(GLuint shaderProgram) const
 {
     if (vao) {
         glUseProgram(shaderProgram);
+
+        if (textureID) {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+        }
+
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, indexCount);
         glBindVertexArray(0);
@@ -60,7 +81,12 @@ void Model::loadOBJ(const std::string& path)
         std::string prefix;
         iss >> prefix;
 
-        if (prefix == "v") {
+        if (prefix == "mtllib") {
+            std::string mtlName;
+            iss >> mtlName;
+            materialFile = directory + mtlName;
+        }
+        else if (prefix == "v") {
             glm::vec3 position;
             iss >> position.x >> position.y >> position.z;
             temp_positions.push_back(position);
@@ -89,9 +115,7 @@ void Model::loadOBJ(const std::string& path)
     }
 
     file.close();
-
     indexCount = static_cast<GLuint>(final_positions.size());
-
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -117,4 +141,57 @@ void Model::loadOBJ(const std::string& path)
     glBindVertexArray(0);
 
     std::cout << "[Model] OBJ carregado para GPU: " << indexCount << " vertices." << std::endl;
+}
+
+void Model::loadMTL(const std::string& path)
+{
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cerr << "[Model] Erro ao abrir ficheiro MTL: " << path << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string prefix;
+        iss >> prefix;
+
+        if (prefix == "map_Kd") {
+            std::string textureName;
+            iss >> textureName;
+            textureFile = directory + textureName;
+            break;
+        }
+    }
+
+    file.close();
+}
+
+void Model::loadTexture(const std::string& texturePath)
+{
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
+
+    if (!data) {
+        std::cerr << "[Model] Erro ao carregar textura: " << texturePath << std::endl;
+        return;
+    }
+
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    GLenum format = nrChannels == 3 ? GL_RGB : GL_RGBA;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    std::cout << "[Model] Textura carregada: " << texturePath << std::endl;
 }

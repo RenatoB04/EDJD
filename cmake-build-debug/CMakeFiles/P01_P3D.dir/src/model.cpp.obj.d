@@ -165,8 +165,13 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: \
  C:/msys64/mingw64/include/c++/14.2.0/bits/stl_vector.h \
  C:/msys64/mingw64/include/c++/14.2.0/bits/stl_bvector.h \
  C:/msys64/mingw64/include/c++/14.2.0/bits/vector.tcc \
- C:/msys64/mingw64/include/glm/glm.hpp \
- C:/msys64/mingw64/include/glm/detail/_fixes.hpp \
+ C:/Users/Acer/Desktop/Source/P01-P3D/include/stb_image.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdarg.h \
+ C:/msys64/mingw64/include/stdarg.h \
+ C:/msys64/mingw64/include/_mingw_stdarg.h \
+ C:/msys64/mingw64/include/string.h \
+ C:/msys64/mingw64/include/sec_api/string_s.h \
+ C:/msys64/mingw64/include/c++/14.2.0/math.h \
  C:/msys64/mingw64/include/c++/14.2.0/cmath \
  C:/msys64/mingw64/include/math.h \
  C:/msys64/mingw64/include/c++/14.2.0/bits/specfun.h \
@@ -183,9 +188,14 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: \
  C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_hermite.tcc \
  C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_laguerre.tcc \
  C:/msys64/mingw64/include/c++/14.2.0/tr1/riemann_zeta.tcc \
+ C:/msys64/mingw64/include/assert.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/emmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xmmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mmintrin.h \
+ C:/msys64/mingw64/include/glm/glm.hpp \
+ C:/msys64/mingw64/include/glm/detail/_fixes.hpp \
  C:/msys64/mingw64/include/glm/detail/setup.hpp \
  C:/msys64/mingw64/include/c++/14.2.0/cassert \
- C:/msys64/mingw64/include/assert.h \
  C:/msys64/mingw64/include/glm/simd/platform.h \
  C:/msys64/mingw64/include/c++/14.2.0/cstdint \
  C:/msys64/mingw64/include/c++/14.2.0/climits \
@@ -371,6 +381,4 @@ CMakeFiles/P01_P3D.dir/src/model.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/vector_uint1.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_uint1_sized.hpp \
  C:/msys64/mingw64/include/c++/14.2.0/cstring \
- C:/msys64/mingw64/include/string.h \
- C:/msys64/mingw64/include/sec_api/string_s.h \
  C:/msys64/mingw64/include/glm/gtc/type_ptr.inl
