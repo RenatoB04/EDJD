@@ -64,8 +64,8 @@ int main() {
         drawMesa(shaderProgram, vao, view, projection);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f)); // ligeiramente acima da mesa
-        model = glm::scale(model, glm::vec3(0.3f)); // bola pequena
+        model = glm::translate(model, glm::vec3(0.0f, 0.6f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.3f));
 
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
