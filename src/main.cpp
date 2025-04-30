@@ -1,6 +1,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
+#include <memory>
+#include <string>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -39,7 +42,25 @@ int main() {
     GLuint vao, vbo, ebo;
     setupMesa(vao, vbo, ebo);
 
-    Model ballModel("assets/objects/Ball1.obj");
+    std::vector<std::unique_ptr<Model>> balls;
+    for (int i = 1; i <= 15; ++i) {
+        balls.push_back(std::make_unique<Model>("assets/objects/Ball" + std::to_string(i) + ".obj"));
+    }
+
+    std::vector<glm::vec3> positions;
+    float spacing = 0.65f;
+    float height = 0.6f;
+
+    int ballIndex = 0;
+    for (int row = 0; row < 5; ++row) {
+        float z = row * spacing;
+        float xOffset = -row * spacing * 0.5f;
+        for (int col = 0; col <= row && ballIndex < 15; ++col) {
+            float x = xOffset + col * spacing;
+            positions.emplace_back(glm::vec3(x, height, z));
+            ballIndex++;
+        }
+    }
 
     setActiveCamera(&camera);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -63,20 +84,21 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, 0);
         drawMesa(shaderProgram, vao, view, projection);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.6f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.3f));
-
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
-        ballModel.draw(shaderProgram);
+
+        for (size_t i = 0; i < balls.size(); ++i) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, positions[i]);
+            model = glm::scale(model, glm::vec3(0.3f));
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            balls[i]->draw(shaderProgram);
+        }
 
         int miniWidth = width / 4;
         int miniHeight = height / 4;
