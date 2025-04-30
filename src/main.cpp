@@ -49,7 +49,7 @@ int main() {
 
     std::vector<glm::vec3> positions;
     float spacing = 0.65f;
-    float height = 0.6f;
+    float height = 1.2f;
 
     int ballIndex = 0;
     for (int row = 0; row < 5; ++row) {
