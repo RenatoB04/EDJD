@@ -110,6 +110,33 @@ void Model::Install() {
     std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vértices." << std::endl;
 }
 
+void Model::BindAttributes(GLuint shaderProgram) {
+    glBindVertexArray(vao);
+
+    GLint posLoc = glGetAttribLocation(shaderProgram, "aPos");
+    if (posLoc >= 0) {
+        glEnableVertexAttribArray(posLoc);
+        glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
+        glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
+
+    GLint normLoc = glGetAttribLocation(shaderProgram, "aNormal");
+    if (normLoc >= 0) {
+        glEnableVertexAttribArray(normLoc);
+        glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
+        glVertexAttribPointer(normLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
+
+    GLint texLoc = glGetAttribLocation(shaderProgram, "aTexCoord");
+    if (texLoc >= 0) {
+        glEnableVertexAttribArray(texLoc);
+        glBindBuffer(GL_ARRAY_BUFFER, vboTexCoords);
+        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
+
+    glBindVertexArray(0);
+}
+
 void Model::Render(const glm::vec3& position, const glm::vec3& orientation, GLuint shaderProgram) const {
     if (!vao) return;
 

@@ -16,6 +16,8 @@ namespace RendererLib {
         void Install();
         void Render(const glm::vec3& position, const glm::vec3& orientation, GLuint shaderProgram) const;
 
+        void BindAttributes(GLuint shaderProgram);
+
     private:
         GLuint vao;
         GLuint vboVertices;
