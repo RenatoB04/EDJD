@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 struct Camera {
-    float yaw   = -90.0f;
-    float pitch = 0.0f;
-    float radius = 4.0f;
+    float yaw   = 120.0f;
+    float pitch = 30.0f;
+    float radius = 15.0f;
     float sensitivity = 0.1f;
 
     double lastX = 0.0;
