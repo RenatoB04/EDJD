@@ -66,5 +66,5 @@ void main()
     }
 
     vec4 baseColor = useTexture ? texture(texture1, TexCoord) : vec4(0.0, 0.3, 0.0, 1.0);
-    FragColor = vec4(result, 1.0) * baseColor;
+    FragColor = vec4(result * 2, 1.0) * baseColor;
 }

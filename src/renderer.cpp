@@ -74,8 +74,8 @@ void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm
     glUniform1i(glGetUniformLocation(shaderProgram, "useSpot"), lights.useSpot);
     glUniform3f(glGetUniformLocation(shaderProgram, "spotLightPosition"), 0.0f, 3.0f, 3.0f);
     glUniform3f(glGetUniformLocation(shaderProgram, "spotLightDirection"), 0.0f, -1.0f, -1.0f);
-    glUniform1f(glGetUniformLocation(shaderProgram, "spotCutOff"), glm::cos(glm::radians(12.5f)));
-    glUniform1f(glGetUniformLocation(shaderProgram, "spotOuterCutOff"), glm::cos(glm::radians(17.5f)));
+    glUniform1f(glGetUniformLocation(shaderProgram, "spotCutOff"), glm::cos(glm::radians(20.0f)));
+    glUniform1f(glGetUniformLocation(shaderProgram, "spotOuterCutOff"), glm::cos(glm::radians(30.0f)));
     glUniform3f(glGetUniformLocation(shaderProgram, "spotLightColor"), 1.0f, 1.0f, 0.8f);
 
     glBindVertexArray(vao);
