@@ -1,6 +1,6 @@
 CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: \
- C:\Users\Acer\Desktop\Source\P01-P3D\src\camera.cpp \
- C:/Users/Acer/Desktop/Source/P01-P3D/include/camera.hpp \
+ C:\Users\Legion\Documents\Source\P01-P3D\src\camera.cpp \
+ C:/Users/Legion/Documents/Source/P01-P3D/include/camera.hpp \
  C:/msys64/mingw64/include/GLFW/glfw3.h \
  C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stddef.h \
  C:/msys64/mingw64/include/stddef.h C:/msys64/mingw64/include/crtdefs.h \

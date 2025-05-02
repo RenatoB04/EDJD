@@ -12,4 +12,4 @@ struct LightState {
 
 void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo);
 
-void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection, const LightState& lights);
+void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection, const LightState& lights, bool noLightingMode);

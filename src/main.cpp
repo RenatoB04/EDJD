@@ -17,6 +17,8 @@ using RendererLib::Model;
 Camera camera;
 LightState lightState;
 
+bool noLightingMode = false;
+
 void processInput(GLFWwindow* window) {
     static bool keyStates[4] = {};
 
@@ -50,6 +52,14 @@ void processInput(GLFWwindow* window) {
         keyStates[3] = true;
     } else if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) {
         keyStates[3] = false;
+    }
+    static bool key5 = false;
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && !key5) {
+        noLightingMode = !noLightingMode;
+        std::cout << "[Modo Sem Iluminacao] " << (noLightingMode ? "OFF " : "OFF") << std::endl;
+        key5 = true;
+    } else if (glfwGetKey(window, GLFW_KEY_5) == GLFW_RELEASE) {
+        key5 = false;
     }
 }
 
@@ -126,7 +136,7 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, view, projection, lightState);
+        drawMesa(shaderProgram, vao, view, projection, lightState, noLightingMode);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
@@ -149,7 +159,7 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, miniView, miniProjection, lightState);
+        drawMesa(shaderProgram, vao, miniView, miniProjection, lightState, noLightingMode);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {

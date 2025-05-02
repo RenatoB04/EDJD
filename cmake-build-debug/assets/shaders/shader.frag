@@ -1,5 +1,7 @@
 #version 330 core
 
+uniform bool noLighting;
+
 in vec2 TexCoord;
 in vec3 FragPos;
 in vec3 Normal;
@@ -34,6 +36,11 @@ void main()
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 result = vec3(0.0);
+
+    if (noLighting) {
+        FragColor = useTexture ? texture(texture1, TexCoord) : vec4(0.0, 0.4, 0.0, 1.0);
+        return;
+    }
 
     if (useAmbient) {
         result += ambientColor;

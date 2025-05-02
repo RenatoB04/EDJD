@@ -44,7 +44,7 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
     glEnableVertexAttribArray(1);
 }
 
-void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection, const LightState& lights) {
+void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection, const LightState& lights, bool noLightingMode) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(4.0f, 3.0f, 5.0f));
 
@@ -59,6 +59,8 @@ void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), 0.0f, 2.0f, 5.0f);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "noLighting"), noLightingMode);
 
     glUniform1i(glGetUniformLocation(shaderProgram, "useAmbient"), lights.useAmbient);
     glUniform3f(glGetUniformLocation(shaderProgram, "ambientColor"), 0.2f, 0.2f, 0.2f);

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug"
+			"value" : "c:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -559,7 +559,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -643,7 +643,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D"
+			"value" : "C:/Users/Legion/Documents/Source/P01-P3D"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1259,7 +1259,7 @@
 				}
 			],
 			"type" : "STRING",
-			"value" : "C:/Users/Acer/vcpkg/scripts/buildsystems/vcpkg.cmake"
+			"value" : "C:/Users/Legion/vcpkg/scripts/buildsystems/vcpkg.cmake"
 		},
 		{
 			"name" : "CMAKE_VERBOSE_MAKEFILE",
@@ -1383,7 +1383,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug"
+			"value" : "C:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug"
 		},
 		{
 			"name" : "P01_P3D_IS_TOP_LEVEL",
@@ -1407,7 +1407,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D"
+			"value" : "C:/Users/Legion/Documents/Source/P01-P3D"
 		},
 		{
 			"name" : "_CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED",
@@ -1456,18 +1456,6 @@
 			],
 			"type" : "PATH",
 			"value" : "C:/msys64/mingw64/lib/cmake/glfw3"
-		},
-		{
-			"name" : "glm_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for glm."
-				}
-			],
-			"type" : "PATH",
-			"value" : "C:/msys64/mingw64/share/glm"
 		}
 	],
 	"kind" : "cache",
