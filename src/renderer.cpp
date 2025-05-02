@@ -17,17 +17,11 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
     };
 
     unsigned int indices[] = {
-
         0, 1, 2, 2, 3, 0,
-
         4, 5, 6, 6, 7, 4,
-
         3, 2, 6, 6, 7, 3,
-
         0, 1, 5, 5, 4, 0,
-
         0, 3, 7, 7, 4, 0,
-
         1, 2, 6, 6, 5, 1
     };
 
@@ -50,9 +44,8 @@ void setupMesa(GLuint &vao, GLuint &vbo, GLuint &ebo) {
     glEnableVertexAttribArray(1);
 }
 
-void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection) {
+void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm::mat4& projection, const LightState& lights) {
     glm::mat4 model = glm::mat4(1.0f);
-
     model = glm::scale(model, glm::vec3(4.0f, 3.0f, 5.0f));
 
     glUseProgram(shaderProgram);
@@ -64,6 +57,26 @@ void drawMesa(GLuint shaderProgram, GLuint vao, const glm::mat4& view, const glm
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), 0.0f, 2.0f, 5.0f);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "useAmbient"), lights.useAmbient);
+    glUniform3f(glGetUniformLocation(shaderProgram, "ambientColor"), 0.2f, 0.2f, 0.2f);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "useDirectional"), lights.useDirectional);
+    glUniform3f(glGetUniformLocation(shaderProgram, "dirLightDirection"), -1.0f, -1.0f, -1.0f);
+    glUniform3f(glGetUniformLocation(shaderProgram, "dirLightColor"), 0.8f, 0.8f, 0.8f);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "usePoint"), lights.usePoint);
+    glUniform3f(glGetUniformLocation(shaderProgram, "pointLightPosition"), 0.0f, 3.0f, 0.0f);
+    glUniform3f(glGetUniformLocation(shaderProgram, "pointLightColor"), 1.0f, 1.0f, 1.0f);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "useSpot"), lights.useSpot);
+    glUniform3f(glGetUniformLocation(shaderProgram, "spotLightPosition"), 0.0f, 3.0f, 3.0f);
+    glUniform3f(glGetUniformLocation(shaderProgram, "spotLightDirection"), 0.0f, -1.0f, -1.0f);
+    glUniform1f(glGetUniformLocation(shaderProgram, "spotCutOff"), glm::cos(glm::radians(12.5f)));
+    glUniform1f(glGetUniformLocation(shaderProgram, "spotOuterCutOff"), glm::cos(glm::radians(17.5f)));
+    glUniform3f(glGetUniformLocation(shaderProgram, "spotLightColor"), 1.0f, 1.0f, 0.8f);
 
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

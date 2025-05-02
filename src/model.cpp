@@ -107,7 +107,7 @@ void Model::Install() {
 
     glBindVertexArray(0);
 
-    std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vértices." << std::endl;
+    std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vertices." << std::endl;
 }
 
 void Model::BindAttributes(GLuint shaderProgram) {

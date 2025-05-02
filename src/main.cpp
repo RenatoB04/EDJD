@@ -15,6 +15,43 @@
 using RendererLib::Model;
 
 Camera camera;
+LightState lightState;
+
+void processInput(GLFWwindow* window) {
+    static bool keyStates[4] = {};
+
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !keyStates[0]) {
+        lightState.useAmbient = !lightState.useAmbient;
+        std::cout << "[Luz Ambiente] " << (lightState.useAmbient ? "ON" : "OFF") << std::endl;
+        keyStates[0] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
+        keyStates[0] = false;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && !keyStates[1]) {
+        lightState.useDirectional = !lightState.useDirectional;
+        std::cout << "[Luz Direcional] " << (lightState.useDirectional ? "ON" : "OFF") << std::endl;
+        keyStates[1] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
+        keyStates[1] = false;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && !keyStates[2]) {
+        lightState.usePoint = !lightState.usePoint;
+        std::cout << "[Luz Pontual] " << (lightState.usePoint ? "ON" : "OFF") << std::endl;
+        keyStates[2] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) {
+        keyStates[2] = false;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && !keyStates[3]) {
+        lightState.useSpot = !lightState.useSpot;
+        std::cout << "[Luz Conica] " << (lightState.useSpot ? "ON" : "OFF") << std::endl;
+        keyStates[3] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) {
+        keyStates[3] = false;
+    }
+}
 
 int main() {
     if (!glfwInit()) {
@@ -73,6 +110,8 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
 
     while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
 
@@ -87,7 +126,7 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, view, projection);
+        drawMesa(shaderProgram, vao, view, projection, lightState);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
@@ -110,7 +149,7 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, miniView, miniProjection);
+        drawMesa(shaderProgram, vao, miniView, miniProjection, lightState);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
