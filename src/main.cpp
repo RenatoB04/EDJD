@@ -100,21 +100,34 @@ int main() {
             balls[i]->draw(shaderProgram);
         }
 
-        int miniWidth = width / 4;
         int miniHeight = height / 4;
+        int miniWidth = (int)(miniHeight * (8.0f / 20.0f));
+
         glViewport(width - miniWidth - 10, height - miniHeight - 10, miniWidth, miniHeight);
 
+        glm::mat4 miniProjection = glm::ortho(-4.0f, 4.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+
         glm::mat4 miniView = glm::lookAt(
-            glm::vec3(0.0f, 5.0f, 0.0f),
+            glm::vec3(0.0f, 10.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -1.0f)
         );
 
-        glm::mat4 miniProjection = glm::ortho(-3.0f, 3.0f, -3.0f, 3.0f, 0.1f, 100.0f);
-
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
         drawMesa(shaderProgram, vao, miniView, miniProjection);
+
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(miniView));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(miniProjection));
+        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
+
+        for (size_t i = 0; i < balls.size(); ++i) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, positions[i]);
+            model = glm::scale(model, glm::vec3(0.3f));
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            balls[i]->draw(shaderProgram);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
