@@ -15,9 +15,15 @@
 using RendererLib::Model;
 
 Camera camera;
-LightState lightState;
 
-bool noLightingMode = false;
+LightState lightState = {
+    false,
+    false,
+    false,
+    false
+};
+
+bool noLightingMode = true;
 
 void processInput(GLFWwindow* window) {
     static bool keyStates[4] = {};
@@ -56,7 +62,7 @@ void processInput(GLFWwindow* window) {
     static bool key5 = false;
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && !key5) {
         noLightingMode = !noLightingMode;
-        std::cout << "[Modo Sem Iluminacao] " << (noLightingMode ? "OFF " : "OFF") << std::endl;
+        std::cout << "[Modo Sem Iluminacao] " << (noLightingMode ? "ON " : "OFF") << std::endl;
         key5 = true;
     } else if (glfwGetKey(window, GLFW_KEY_5) == GLFW_RELEASE) {
         key5 = false;
