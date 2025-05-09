@@ -140,14 +140,14 @@ int main() {
 
             if (std::abs(positions[0].x) > 6.5f || std::abs(positions[0].z) > 10.0f) {
                 bolaEmMovimento = false;
-                std::cout << "[Parou] Bola atingiu os limites da mesa.\n";
+                std::cout << "[STOP] Bola atingiu os limites da mesa.\n";
             }
 
             for (size_t i = 1; i < positions.size(); ++i) {
                 float dist = glm::distance(positions[0], positions[i]);
                 if (dist < 0.6f) {
                     bolaEmMovimento = false;
-                    std::cout << "[Parou] Bola atingiu outra bola.\n";
+                    std::cout << "[STOP] Bola atingiu outra bola.\n";
                     break;
                 }
             }
@@ -171,7 +171,7 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
-            glm::vec3 rotation = (i == 0) ? glm::vec3(0.0f, bolaRotacao, 0.0f) : glm::vec3(0.0f);
+            glm::vec3 rotation = (i == 0) ? glm::vec3(bolaRotacao, 0.0f, 0.0f) : glm::vec3(0.0f);
             balls[i]->Render(positions[i], rotation, shaderProgram);
         }
 
