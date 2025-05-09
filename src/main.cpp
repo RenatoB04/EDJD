@@ -16,57 +16,56 @@ using RendererLib::Model;
 
 Camera camera;
 
-LightState lightState = {
-    false,
-    false,
-    false,
-    false
-};
-
+LightState lightState = { false, false, false, false };
 bool noLightingMode = true;
 
+bool bolaEmMovimento = false;
+glm::vec3 bolaVelocidade = glm::vec3(0.0f);
+float bolaRotacao = 0.0f;
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 void processInput(GLFWwindow* window) {
-    static bool keyStates[4] = {};
+    static bool keyStates[6] = {};
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !keyStates[0]) {
         lightState.useAmbient = !lightState.useAmbient;
         std::cout << "[Luz Ambiente] " << (lightState.useAmbient ? "ON" : "OFF") << std::endl;
         keyStates[0] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
-        keyStates[0] = false;
-    }
+    } else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) keyStates[0] = false;
 
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && !keyStates[1]) {
         lightState.useDirectional = !lightState.useDirectional;
         std::cout << "[Luz Direcional] " << (lightState.useDirectional ? "ON" : "OFF") << std::endl;
         keyStates[1] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
-        keyStates[1] = false;
-    }
+    } else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) keyStates[1] = false;
 
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && !keyStates[2]) {
         lightState.usePoint = !lightState.usePoint;
         std::cout << "[Luz Pontual] " << (lightState.usePoint ? "ON" : "OFF") << std::endl;
         keyStates[2] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) {
-        keyStates[2] = false;
-    }
+    } else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) keyStates[2] = false;
 
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && !keyStates[3]) {
         lightState.useSpot = !lightState.useSpot;
-        std::cout << "[Luz Conica] " << (lightState.useSpot ? "ON" : "OFF") << std::endl;
+        std::cout << "[Luz Cónica] " << (lightState.useSpot ? "ON" : "OFF") << std::endl;
         keyStates[3] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) {
-        keyStates[3] = false;
-    }
-    static bool key5 = false;
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && !key5) {
+    } else if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) keyStates[3] = false;
+
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && !keyStates[4]) {
         noLightingMode = !noLightingMode;
-        std::cout << "[Modo Sem Iluminacao] " << (noLightingMode ? "ON " : "OFF") << std::endl;
-        key5 = true;
-    } else if (glfwGetKey(window, GLFW_KEY_5) == GLFW_RELEASE) {
-        key5 = false;
-    }
+        std::cout << "[Modo Sem Iluminação] " << (noLightingMode ? "ON" : "OFF") << std::endl;
+        keyStates[4] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_5) == GLFW_RELEASE) keyStates[4] = false;
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !keyStates[5]) {
+        if (!bolaEmMovimento) {
+            bolaEmMovimento = true;
+            bolaVelocidade = glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f)) * 2.0f;
+        }
+        keyStates[5] = true;
+    } else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) keyStates[5] = false;
 }
 
 int main() {
@@ -105,20 +104,23 @@ int main() {
         balls.push_back(std::move(ball));
     }
 
-    std::vector<glm::vec3> positions;
-    float spacing = 0.65f;
-    float height = 1.2f;
-
-    int ballIndex = 0;
-    for (int row = 0; row < 5; ++row) {
-        float z = row * spacing;
-        float xOffset = -row * spacing * 0.5f;
-        for (int col = 0; col <= row && ballIndex < 15; ++col) {
-            float x = xOffset + col * spacing;
-            positions.emplace_back(glm::vec3(x, height, z));
-            ballIndex++;
-        }
-    }
+    std::vector<glm::vec3> positions = {
+        { -2.0f, 1.2f, -8.0f },
+        {  0.0f, 1.2f, -7.0f },
+        {  2.0f, 1.2f, -6.0f },
+        { -3.0f, 1.2f, -5.0f },
+        {  3.0f, 1.2f, -4.0f },
+        { -2.5f, 1.2f, -3.0f },
+        {  0.0f, 1.2f, -2.0f },
+        {  2.5f, 1.2f, -1.0f },
+        { -3.5f, 1.2f,  0.0f },
+        {  3.5f, 1.2f,  1.0f },
+        { -2.0f, 1.2f,  2.0f },
+        {  0.0f, 1.2f,  3.0f },
+        {  2.0f, 1.2f,  4.0f },
+        { -1.0f, 1.2f,  5.0f },
+        {  1.0f, 1.2f,  6.0f }
+    };
 
     setActiveCamera(&camera);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -126,7 +128,30 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
 
     while (!glfwWindowShouldClose(window)) {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         processInput(window);
+
+        if (bolaEmMovimento) {
+            positions[0] += bolaVelocidade * deltaTime;
+            bolaRotacao += 2.0f * deltaTime;
+
+            if (std::abs(positions[0].x) > 6.5f || std::abs(positions[0].z) > 10.0f) {
+                bolaEmMovimento = false;
+                std::cout << "[Parou] Bola atingiu os limites da mesa.\n";
+            }
+
+            for (size_t i = 1; i < positions.size(); ++i) {
+                float dist = glm::distance(positions[0], positions[i]);
+                if (dist < 0.6f) {
+                    bolaEmMovimento = false;
+                    std::cout << "[Parou] Bola atingiu outra bola.\n";
+                    break;
+                }
+            }
+        }
 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
@@ -138,7 +163,7 @@ int main() {
         glViewport(0, 0, width, height);
 
         glm::mat4 view = camera.getViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -146,7 +171,8 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
-            balls[i]->Render(positions[i], glm::vec3(0.0f), shaderProgram);
+            glm::vec3 rotation = (i == 0) ? glm::vec3(0.0f, bolaRotacao, 0.0f) : glm::vec3(0.0f);
+            balls[i]->Render(positions[i], rotation, shaderProgram);
         }
 
         int miniHeight = height / 4;
@@ -154,11 +180,7 @@ int main() {
         glViewport(width - miniWidth - 10, height - miniHeight - 10, miniWidth, miniHeight);
 
         glm::mat4 miniProjection = glm::ortho(-4.0f, 4.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-        glm::mat4 miniView = glm::lookAt(
-            glm::vec3(0.0f, 10.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, -1.0f)
-        );
+        glm::mat4 miniView = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(miniView));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(miniProjection));
@@ -169,7 +191,8 @@ int main() {
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
-            balls[i]->Render(positions[i], glm::vec3(0.0f), shaderProgram);
+            glm::vec3 rotation = (i == 0) ? glm::vec3(0.0f, bolaRotacao, 0.0f) : glm::vec3(0.0f);
+            balls[i]->Render(positions[i], rotation, shaderProgram);
         }
 
         glfwSwapBuffers(window);

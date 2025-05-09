@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug"
+			"value" : "c:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -559,7 +559,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -643,7 +643,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/Legion/Documents/Source/P01-P3D"
+			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1383,7 +1383,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Legion/Documents/Source/P01-P3D/cmake-build-debug"
+			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D/cmake-build-debug"
 		},
 		{
 			"name" : "P01_P3D_IS_TOP_LEVEL",
@@ -1407,7 +1407,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Legion/Documents/Source/P01-P3D"
+			"value" : "C:/Users/Acer/Desktop/Source/P01-P3D"
 		},
 		{
 			"name" : "_CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED",

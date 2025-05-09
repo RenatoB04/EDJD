@@ -1,6 +1,6 @@
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: \
- C:\Users\Legion\Documents\Source\P01-P3D\src\renderer.cpp \
- C:/Users/Legion/Documents/Source/P01-P3D/include/renderer.hpp \
+ C:\Users\Acer\Desktop\Source\P01-P3D\src\renderer.cpp \
+ C:/Users/Acer/Desktop/Source/P01-P3D/include/renderer.hpp \
  C:/msys64/mingw64/include/GL/glew.h C:/msys64/mingw64/include/inttypes.h \
  C:/msys64/mingw64/include/crtdefs.h C:/msys64/mingw64/include/corecrt.h \
  C:/msys64/mingw64/include/_mingw.h \

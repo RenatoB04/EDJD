@@ -3,7 +3,7 @@ project(P01_P3D)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_TOOLCHAIN_FILE "C:/Users/Legion/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+set(CMAKE_TOOLCHAIN_FILE "C:/Users/Acer/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 
 add_executable(P01_P3D src/main.cpp
         src/renderer.cpp

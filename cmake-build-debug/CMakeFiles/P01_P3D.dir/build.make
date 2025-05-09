@@ -52,10 +52,10 @@ RM = C:\msys64\mingw64\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Legion\Documents\Source\P01-P3D
+CMAKE_SOURCE_DIR = C:\Users\Acer\Desktop\Source\P01-P3D
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/P01_P3D.dir/depend.make
@@ -73,78 +73,78 @@ CMakeFiles/P01_P3D.dir/codegen:
 
 CMakeFiles/P01_P3D.dir/src/main.cpp.obj: CMakeFiles/P01_P3D.dir/flags.make
 CMakeFiles/P01_P3D.dir/src/main.cpp.obj: CMakeFiles/P01_P3D.dir/includes_CXX.rsp
-CMakeFiles/P01_P3D.dir/src/main.cpp.obj: C:/Users/Legion/Documents/Source/P01-P3D/src/main.cpp
+CMakeFiles/P01_P3D.dir/src/main.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/main.cpp
 CMakeFiles/P01_P3D.dir/src/main.cpp.obj: CMakeFiles/P01_P3D.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/P01_P3D.dir/src/main.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/main.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\main.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\main.cpp.obj -c C:\Users\Legion\Documents\Source\P01-P3D\src\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/P01_P3D.dir/src/main.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/main.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\main.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\main.cpp.obj -c C:\Users\Acer\Desktop\Source\P01-P3D\src\main.cpp
 
 CMakeFiles/P01_P3D.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/P01_P3D.dir/src/main.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Legion\Documents\Source\P01-P3D\src\main.cpp > CMakeFiles\P01_P3D.dir\src\main.cpp.i
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Acer\Desktop\Source\P01-P3D\src\main.cpp > CMakeFiles\P01_P3D.dir\src\main.cpp.i
 
 CMakeFiles/P01_P3D.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/P01_P3D.dir/src/main.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Legion\Documents\Source\P01-P3D\src\main.cpp -o CMakeFiles\P01_P3D.dir\src\main.cpp.s
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Acer\Desktop\Source\P01-P3D\src\main.cpp -o CMakeFiles\P01_P3D.dir\src\main.cpp.s
 
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: CMakeFiles/P01_P3D.dir/flags.make
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: CMakeFiles/P01_P3D.dir/includes_CXX.rsp
-CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: C:/Users/Legion/Documents/Source/P01-P3D/src/renderer.cpp
+CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/renderer.cpp
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj: CMakeFiles/P01_P3D.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\renderer.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\renderer.cpp.obj -c C:\Users\Legion\Documents\Source\P01-P3D\src\renderer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/renderer.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\renderer.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\renderer.cpp.obj -c C:\Users\Acer\Desktop\Source\P01-P3D\src\renderer.cpp
 
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/P01_P3D.dir/src/renderer.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Legion\Documents\Source\P01-P3D\src\renderer.cpp > CMakeFiles\P01_P3D.dir\src\renderer.cpp.i
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Acer\Desktop\Source\P01-P3D\src\renderer.cpp > CMakeFiles\P01_P3D.dir\src\renderer.cpp.i
 
 CMakeFiles/P01_P3D.dir/src/renderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/P01_P3D.dir/src/renderer.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Legion\Documents\Source\P01-P3D\src\renderer.cpp -o CMakeFiles\P01_P3D.dir\src\renderer.cpp.s
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Acer\Desktop\Source\P01-P3D\src\renderer.cpp -o CMakeFiles\P01_P3D.dir\src\renderer.cpp.s
 
 CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: CMakeFiles/P01_P3D.dir/flags.make
 CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: CMakeFiles/P01_P3D.dir/includes_CXX.rsp
-CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: C:/Users/Legion/Documents/Source/P01-P3D/src/shader_utils.cpp
+CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/shader_utils.cpp
 CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj: CMakeFiles/P01_P3D.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.obj -c C:\Users\Legion\Documents\Source\P01-P3D\src\shader_utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.obj -c C:\Users\Acer\Desktop\Source\P01-P3D\src\shader_utils.cpp
 
 CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Legion\Documents\Source\P01-P3D\src\shader_utils.cpp > CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.i
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Acer\Desktop\Source\P01-P3D\src\shader_utils.cpp > CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.i
 
 CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/P01_P3D.dir/src/shader_utils.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Legion\Documents\Source\P01-P3D\src\shader_utils.cpp -o CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.s
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Acer\Desktop\Source\P01-P3D\src\shader_utils.cpp -o CMakeFiles\P01_P3D.dir\src\shader_utils.cpp.s
 
 CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: CMakeFiles/P01_P3D.dir/flags.make
 CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: CMakeFiles/P01_P3D.dir/includes_CXX.rsp
-CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: C:/Users/Legion/Documents/Source/P01-P3D/src/camera.cpp
+CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/camera.cpp
 CMakeFiles/P01_P3D.dir/src/camera.cpp.obj: CMakeFiles/P01_P3D.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/P01_P3D.dir/src/camera.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/camera.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\camera.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\camera.cpp.obj -c C:\Users\Legion\Documents\Source\P01-P3D\src\camera.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/P01_P3D.dir/src/camera.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/camera.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\camera.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\camera.cpp.obj -c C:\Users\Acer\Desktop\Source\P01-P3D\src\camera.cpp
 
 CMakeFiles/P01_P3D.dir/src/camera.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/P01_P3D.dir/src/camera.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Legion\Documents\Source\P01-P3D\src\camera.cpp > CMakeFiles\P01_P3D.dir\src\camera.cpp.i
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Acer\Desktop\Source\P01-P3D\src\camera.cpp > CMakeFiles\P01_P3D.dir\src\camera.cpp.i
 
 CMakeFiles/P01_P3D.dir/src/camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/P01_P3D.dir/src/camera.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Legion\Documents\Source\P01-P3D\src\camera.cpp -o CMakeFiles\P01_P3D.dir\src\camera.cpp.s
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Acer\Desktop\Source\P01-P3D\src\camera.cpp -o CMakeFiles\P01_P3D.dir\src\camera.cpp.s
 
 CMakeFiles/P01_P3D.dir/src/model.cpp.obj: CMakeFiles/P01_P3D.dir/flags.make
 CMakeFiles/P01_P3D.dir/src/model.cpp.obj: CMakeFiles/P01_P3D.dir/includes_CXX.rsp
-CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Legion/Documents/Source/P01-P3D/src/model.cpp
+CMakeFiles/P01_P3D.dir/src/model.cpp.obj: C:/Users/Acer/Desktop/Source/P01-P3D/src/model.cpp
 CMakeFiles/P01_P3D.dir/src/model.cpp.obj: CMakeFiles/P01_P3D.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/P01_P3D.dir/src/model.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/model.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\model.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\model.cpp.obj -c C:\Users\Legion\Documents\Source\P01-P3D\src\model.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/P01_P3D.dir/src/model.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/P01_P3D.dir/src/model.cpp.obj -MF CMakeFiles\P01_P3D.dir\src\model.cpp.obj.d -o CMakeFiles\P01_P3D.dir\src\model.cpp.obj -c C:\Users\Acer\Desktop\Source\P01-P3D\src\model.cpp
 
 CMakeFiles/P01_P3D.dir/src/model.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/P01_P3D.dir/src/model.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Legion\Documents\Source\P01-P3D\src\model.cpp > CMakeFiles\P01_P3D.dir\src\model.cpp.i
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Acer\Desktop\Source\P01-P3D\src\model.cpp > CMakeFiles\P01_P3D.dir\src\model.cpp.i
 
 CMakeFiles/P01_P3D.dir/src/model.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/P01_P3D.dir/src/model.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Legion\Documents\Source\P01-P3D\src\model.cpp -o CMakeFiles\P01_P3D.dir\src\model.cpp.s
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Acer\Desktop\Source\P01-P3D\src\model.cpp -o CMakeFiles\P01_P3D.dir\src\model.cpp.s
 
 # Object files for target P01_P3D
 P01_P3D_OBJECTS = \
@@ -168,7 +168,7 @@ P01_P3D.exe: C:/msys64/mingw64/lib/libglew32.dll.a
 P01_P3D.exe: CMakeFiles/P01_P3D.dir/linkLibs.rsp
 P01_P3D.exe: CMakeFiles/P01_P3D.dir/objects1.rsp
 P01_P3D.exe: CMakeFiles/P01_P3D.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable P01_P3D.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable P01_P3D.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\P01_P3D.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -180,6 +180,6 @@ CMakeFiles/P01_P3D.dir/clean:
 .PHONY : CMakeFiles/P01_P3D.dir/clean
 
 CMakeFiles/P01_P3D.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\Legion\Documents\Source\P01-P3D C:\Users\Legion\Documents\Source\P01-P3D C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug C:\Users\Legion\Documents\Source\P01-P3D\cmake-build-debug\CMakeFiles\P01_P3D.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\Acer\Desktop\Source\P01-P3D C:\Users\Acer\Desktop\Source\P01-P3D C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug C:\Users\Acer\Desktop\Source\P01-P3D\cmake-build-debug\CMakeFiles\P01_P3D.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/P01_P3D.dir/depend
 
