@@ -27,6 +27,24 @@ Substitui o caminho pelo que corresponde à tua instalação local.
 
 ---
 
+## Dependências
+
+O projeto utiliza as seguintes bibliotecas externas:
+
+- **[GLEW](https://glew.sourceforge.net/):** OpenGL Extension Wrangler Library, para carregar extensões OpenGL.
+- **[GLFW](https://www.glfw.org/):** Biblioteca para criação de janelas e gestão de eventos.
+- **[GLM](https://glm.g-truc.net/):** Biblioteca de matemática para OpenGL.
+- **[stb_image.h](https://github.com/nothings/stb):** Biblioteca para carregamento de imagens/texturas em diversos formatos.
+
+---
+
+## Licenças
+
+- **GLEW, GLFW, GLM:** Veja as licenças originais nos respetivos sites.
+- **stb_image.h:** Domínio público / MIT License
+
+---
+
 ## 🔧 Teclas de controlo
 
 | Tecla    | Função                                                           |
@@ -64,7 +82,7 @@ Este projeto cumpre os requisitos dos **Passos 1 a 4** do enunciado:
   * `Model::Load()` → lê `.obj` e `.mtl`, carrega textura
   * `Model::Install()` → envia vértices, normais, UVs para GPU
   * `Model::Render(pos, orient)` → desenha com transformação
-* Suporte a `.obj`, `.mtl`, e texturas com `stb_image`
+* Suporte a `.obj`, `.mtl`, e texturas com **stb_image**
 * 15 bolas carregadas e posicionadas numa disposição definida
 
 ---
@@ -87,7 +105,7 @@ Este projeto cumpre os requisitos dos **Passos 1 a 4** do enunciado:
 
 * Ao premir **Espaço**:
 
-  * A bola `balls[0]` move-se e roda
+  * A bola `balls` move-se e roda
   * Deteta colisões com outras bolas (distância)
   * Para se tocar em outra bola ou sair dos limites
 * Movimento é baseado em **deltaTime** para fluidez
