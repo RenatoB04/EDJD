@@ -12,8 +12,10 @@
 
 namespace RendererLib {
 
+    // Construtor: inicializa todos os identificadores como zero
     Model::Model() : vao(0), vboVertices(0), vboNormals(0), vboTexCoords(0), textureID(0), indexCount(0) {}
 
+    // Destrutor: liberta recursos da GPU
     Model::~Model() {
         if (vboVertices) glDeleteBuffers(1, &vboVertices);
         if (vboNormals)  glDeleteBuffers(1, &vboNormals);
@@ -23,6 +25,7 @@ namespace RendererLib {
         std::cout << "[Model] Recursos libertados.\n";
     }
 
+    // Carrega um ficheiro OBJ (geometria do modelo)
     bool Model::Load(const std::string& objPath) {
         std::ifstream file(objPath);
         if (!file) {
@@ -30,6 +33,7 @@ namespace RendererLib {
             return false;
         }
 
+        // Diretório onde está o ficheiro, usado para localizar o MTL ou textura
         directory = objPath.substr(0, objPath.find_last_of("/\\") + 1);
 
         std::string line;
@@ -38,6 +42,7 @@ namespace RendererLib {
             std::string prefix;
             iss >> prefix;
 
+            // Processa diferentes tipos de linha no OBJ
             if (prefix == "mtllib") {
                 std::string mtlName; iss >> mtlName;
                 materialFile = directory + mtlName;
@@ -51,6 +56,7 @@ namespace RendererLib {
                 glm::vec2 uv; iss >> uv.x >> uv.y;
                 temp_texcoords.push_back(uv);
             } else if (prefix == "f") {
+                // Faces com índice de posição, texcoord e normal
                 for (int i = 0; i < 3; ++i) {
                     unsigned v, t, n; char sep;
                     iss >> v >> sep >> t >> sep >> n;
@@ -63,30 +69,35 @@ namespace RendererLib {
 
         file.close();
 
+        // Carrega material e textura, se existirem
         if (!materialFile.empty()) loadMTL(materialFile);
         if (!textureFile.empty())  loadTexture(textureFile);
 
         return true;
     }
 
+    // Envia os dados do modelo para a GPU e configura os atributos
     void Model::Install() {
         indexCount = static_cast<GLuint>(positions.size());
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
+        // Vértices
         glGenBuffers(1, &vboVertices);
         glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
         glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec3), positions.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(0);
 
+        // Normais
         glGenBuffers(1, &vboNormals);
         glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
         glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(1);
 
+        // Coordenadas de textura
         glGenBuffers(1, &vboTexCoords);
         glBindBuffer(GL_ARRAY_BUFFER, vboTexCoords);
         glBufferData(GL_ARRAY_BUFFER, texcoords.size() * sizeof(glm::vec2), texcoords.data(), GL_STATIC_DRAW);
@@ -95,9 +106,10 @@ namespace RendererLib {
 
         glBindVertexArray(0);
 
-        std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vértices.\n";
+        std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vertices.\n";
     }
 
+    // Liga atributos personalizados do shader aos VBOs do modelo
     void Model::BindAttributes(GLuint shaderProgram) {
         glBindVertexArray(vao);
 
@@ -117,16 +129,17 @@ namespace RendererLib {
         glBindVertexArray(0);
     }
 
+    // Renderiza o modelo na posição e rotação indicadas
     void Model::Render(const glm::vec3& pos, const glm::vec3& rot, GLuint shader, float ang) const {
         if (!vao) return;
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, ang,         glm::vec3(0, 1, 0));
-        model = glm::translate(model, pos);
-        model = glm::rotate(model, rot.y,       glm::vec3(0, 1, 0));
-        model = glm::rotate(model, rot.x,       glm::vec3(1, 0, 0));
-        model = glm::rotate(model, rot.z,       glm::vec3(0, 0, 1));
-        model = glm::scale(model, glm::vec3(0.3f));
+        model = glm::rotate(model, ang,         glm::vec3(0, 1, 0));  // rotação animada
+        model = glm::translate(model, pos);                          // posição
+        model = glm::rotate(model, rot.y,       glm::vec3(0, 1, 0));  // rotação Y
+        model = glm::rotate(model, rot.x,       glm::vec3(1, 0, 0));  // rotação X
+        model = glm::rotate(model, rot.z,       glm::vec3(0, 0, 1));  // rotação Z
+        model = glm::scale(model, glm::vec3(0.3f));                  // escala fixa
 
         glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
@@ -141,6 +154,7 @@ namespace RendererLib {
         glBindVertexArray(0);
     }
 
+    // Lê ficheiro .mtl e extrai a textura, se especificada
     void Model::loadMTL(const std::string& path) {
         std::ifstream file(path);
         if (!file) {
@@ -158,13 +172,14 @@ namespace RendererLib {
                 std::string texName;
                 iss >> texName;
                 textureFile = directory + texName;
-                break;
+                break; // Só usa a primeira textura difusa encontrada
             }
         }
 
         file.close();
     }
 
+    // Carrega a textura do ficheiro e configura-a no OpenGL
     void Model::loadTexture(const std::string& texPath) {
         int w, h, ch;
         stbi_set_flip_vertically_on_load(true);
