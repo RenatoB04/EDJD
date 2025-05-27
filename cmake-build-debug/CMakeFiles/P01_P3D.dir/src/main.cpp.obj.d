@@ -176,33 +176,39 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/c++/14.2.0/bits/ranges_algobase.h \
  C:/msys64/mingw64/include/c++/14.2.0/pstl/glue_memory_defs.h \
  C:/msys64/mingw64/include/c++/14.2.0/pstl/execution_defs.h \
- C:/msys64/mingw64/include/glm/gtc/type_ptr.hpp \
- C:/msys64/mingw64/include/glm/gtc/quaternion.hpp \
- C:/msys64/mingw64/include/glm/gtc/constants.hpp \
- C:/msys64/mingw64/include/glm/ext/scalar_constants.hpp \
+ C:/msys64/mingw64/include/glm/glm.hpp \
+ C:/msys64/mingw64/include/glm/detail/_fixes.hpp \
+ C:/msys64/mingw64/include/c++/14.2.0/cmath \
+ C:/msys64/mingw64/include/math.h \
+ C:/msys64/mingw64/include/c++/14.2.0/bits/specfun.h \
+ C:/msys64/mingw64/include/c++/14.2.0/limits \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/gamma.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/special_function_util.h \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/bessel_function.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/beta_function.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/ell_integral.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/exp_integral.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/hypergeometric.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/legendre_function.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/modified_bessel_func.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_hermite.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_laguerre.tcc \
+ C:/msys64/mingw64/include/c++/14.2.0/tr1/riemann_zeta.tcc \
  C:/msys64/mingw64/include/glm/detail/setup.hpp \
  C:/msys64/mingw64/include/c++/14.2.0/cassert \
  C:/msys64/mingw64/include/assert.h \
  C:/msys64/mingw64/include/glm/simd/platform.h \
- C:/msys64/mingw64/include/glm/ext/scalar_constants.inl \
- C:/msys64/mingw64/include/c++/14.2.0/limits \
- C:/msys64/mingw64/include/glm/gtc/constants.inl \
- C:/msys64/mingw64/include/glm/gtc/matrix_transform.hpp \
- C:/msys64/mingw64/include/glm/mat4x4.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_double4x4.hpp \
- C:/msys64/mingw64/include/glm/detail/type_mat4x4.hpp \
- C:/msys64/mingw64/include/glm/detail/type_vec4.hpp \
+ C:/msys64/mingw64/include/c++/14.2.0/climits \
+ C:/msys64/mingw64/include/c++/14.2.0/cfloat \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/float.h \
+ C:/msys64/mingw64/include/float.h C:/msys64/mingw64/include/glm/fwd.hpp \
  C:/msys64/mingw64/include/glm/detail/qualifier.hpp \
- C:/msys64/mingw64/include/glm/detail/setup.hpp \
- C:/msys64/mingw64/include/glm/detail/type_vec4.inl \
- C:/msys64/mingw64/include/glm/detail/compute_vector_relational.hpp \
- C:/msys64/mingw64/include/glm/detail/type_mat4x4.inl \
- C:/msys64/mingw64/include/glm/matrix.hpp \
  C:/msys64/mingw64/include/glm/detail/setup.hpp \
  C:/msys64/mingw64/include/glm/vec2.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_bool2.hpp \
  C:/msys64/mingw64/include/glm/detail/type_vec2.hpp \
  C:/msys64/mingw64/include/glm/detail/type_vec2.inl \
+ C:/msys64/mingw64/include/glm/detail/compute_vector_relational.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_bool2_precision.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_float2.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_float2_precision.hpp \
@@ -211,6 +217,7 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/vector_int2.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_int2_sized.hpp \
  C:/msys64/mingw64/include/glm/ext/scalar_int_sized.hpp \
+ C:/msys64/mingw64/include/glm/detail/setup.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_uint2.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_uint2_sized.hpp \
  C:/msys64/mingw64/include/glm/ext/scalar_uint_sized.hpp \
@@ -229,6 +236,8 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/vector_uint3_sized.hpp \
  C:/msys64/mingw64/include/glm/vec4.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_bool4.hpp \
+ C:/msys64/mingw64/include/glm/detail/type_vec4.hpp \
+ C:/msys64/mingw64/include/glm/detail/type_vec4.inl \
  C:/msys64/mingw64/include/glm/ext/vector_bool4_precision.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_float4.hpp \
  C:/msys64/mingw64/include/glm/ext/vector_float4_precision.hpp \
@@ -242,9 +251,7 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/matrix_double2x2.hpp \
  C:/msys64/mingw64/include/glm/detail/type_mat2x2.hpp \
  C:/msys64/mingw64/include/glm/detail/type_mat2x2.inl \
- C:/msys64/mingw64/include/glm/ext/matrix_double2x2_precision.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_float2x2.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_float2x2_precision.hpp \
+ C:/msys64/mingw64/include/glm/matrix.hpp \
  C:/msys64/mingw64/include/glm/mat2x3.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_double2x3.hpp \
  C:/msys64/mingw64/include/glm/detail/type_mat2x3.hpp \
@@ -294,41 +301,45 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/matrix_double4x3_precision.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_float4x3.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_float4x3_precision.hpp \
+ C:/msys64/mingw64/include/glm/mat4x4.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_double4x4.hpp \
+ C:/msys64/mingw64/include/glm/detail/type_mat4x4.hpp \
+ C:/msys64/mingw64/include/glm/detail/type_mat4x4.inl \
+ C:/msys64/mingw64/include/glm/ext/matrix_double4x4_precision.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_float4x4.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_float4x4_precision.hpp \
  C:/msys64/mingw64/include/glm/detail/func_matrix.inl \
  C:/msys64/mingw64/include/glm/geometric.hpp \
  C:/msys64/mingw64/include/glm/detail/func_geometric.inl \
  C:/msys64/mingw64/include/glm/exponential.hpp \
  C:/msys64/mingw64/include/glm/detail/type_vec1.hpp \
  C:/msys64/mingw64/include/glm/detail/type_vec1.inl \
- C:/msys64/mingw64/include/c++/14.2.0/cmath \
- C:/msys64/mingw64/include/math.h \
- C:/msys64/mingw64/include/c++/14.2.0/bits/specfun.h \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/gamma.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/special_function_util.h \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/bessel_function.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/beta_function.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/ell_integral.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/exp_integral.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/hypergeometric.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/legendre_function.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/modified_bessel_func.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_hermite.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/poly_laguerre.tcc \
- C:/msys64/mingw64/include/c++/14.2.0/tr1/riemann_zeta.tcc \
  C:/msys64/mingw64/include/glm/detail/func_exponential.inl \
  C:/msys64/mingw64/include/glm/vector_relational.hpp \
  C:/msys64/mingw64/include/glm/detail/func_vector_relational.inl \
  C:/msys64/mingw64/include/glm/detail/_vectorize.hpp \
  C:/msys64/mingw64/include/glm/common.hpp \
- C:/msys64/mingw64/include/glm/detail/_fixes.hpp \
  C:/msys64/mingw64/include/glm/detail/func_common.inl \
  C:/msys64/mingw64/include/glm/detail/compute_common.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_double4x4_precision.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_float4x4.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_float4x4_precision.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_projection.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_double2x2_precision.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_float2x2.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_float2x2_precision.hpp \
  C:/msys64/mingw64/include/glm/trigonometric.hpp \
  C:/msys64/mingw64/include/glm/detail/func_trigonometric.inl \
+ C:/msys64/mingw64/include/glm/packing.hpp \
+ C:/msys64/mingw64/include/glm/detail/func_packing.inl \
+ C:/msys64/mingw64/include/glm/detail/type_half.hpp \
+ C:/msys64/mingw64/include/glm/detail/type_half.inl \
+ C:/msys64/mingw64/include/glm/integer.hpp \
+ C:/msys64/mingw64/include/glm/detail/func_integer.inl \
+ C:/msys64/mingw64/include/glm/gtc/type_ptr.hpp \
+ C:/msys64/mingw64/include/glm/gtc/quaternion.hpp \
+ C:/msys64/mingw64/include/glm/gtc/constants.hpp \
+ C:/msys64/mingw64/include/glm/ext/scalar_constants.hpp \
+ C:/msys64/mingw64/include/glm/ext/scalar_constants.inl \
+ C:/msys64/mingw64/include/glm/gtc/constants.inl \
+ C:/msys64/mingw64/include/glm/gtc/matrix_transform.hpp \
+ C:/msys64/mingw64/include/glm/ext/matrix_projection.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_projection.inl \
  C:/msys64/mingw64/include/glm/ext/matrix_clip_space.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_clip_space.inl \
@@ -373,17 +384,6 @@ CMakeFiles/P01_P3D.dir/src/main.cpp.obj: \
  C:/msys64/mingw64/include/string.h \
  C:/msys64/mingw64/include/sec_api/string_s.h \
  C:/msys64/mingw64/include/glm/gtc/type_ptr.inl \
- C:/msys64/mingw64/include/glm/glm.hpp \
- C:/msys64/mingw64/include/c++/14.2.0/climits \
- C:/msys64/mingw64/include/c++/14.2.0/cfloat \
- C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/float.h \
- C:/msys64/mingw64/include/float.h C:/msys64/mingw64/include/glm/fwd.hpp \
- C:/msys64/mingw64/include/glm/packing.hpp \
- C:/msys64/mingw64/include/glm/detail/func_packing.inl \
- C:/msys64/mingw64/include/glm/detail/type_half.hpp \
- C:/msys64/mingw64/include/glm/detail/type_half.inl \
- C:/msys64/mingw64/include/glm/integer.hpp \
- C:/msys64/mingw64/include/glm/detail/func_integer.inl \
  C:/Users/Legion/Documents/Source/P01-P3D/include/shader_utils.hpp \
  C:/Users/Legion/Documents/Source/P01-P3D/include/renderer.hpp \
  C:/Users/Legion/Documents/Source/P01-P3D/include/camera.hpp \

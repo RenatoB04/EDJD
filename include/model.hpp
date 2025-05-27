@@ -14,31 +14,19 @@ namespace RendererLib {
 
         bool Load(const std::string& objPath);
         void Install();
-        void Render(const glm::vec3& position, const glm::vec3& orientation, GLuint shaderProgram, float anguloCena) const;
-        void BindAttributes(GLuint shaderProgram);
+        void Render(const glm::vec3& position, const glm::vec3& orientation, GLuint shader, float angulo) const;
+        void BindAttributes(GLuint shader);
 
     private:
-        GLuint vao;
-        GLuint vboVertices;
-        GLuint vboNormals;
-        GLuint vboTexCoords;
-        GLuint textureID;
-        GLuint indexCount;
+        GLuint vao = 0, vboVertices = 0, vboNormals = 0, vboTexCoords = 0, textureID = 0, indexCount = 0;
 
-        std::string directory;
-        std::string materialFile;
-        std::string textureFile;
+        std::string directory, materialFile, textureFile;
 
-        std::vector<glm::vec3> temp_positions;
-        std::vector<glm::vec3> temp_normals;
-        std::vector<glm::vec2> temp_texcoords;
-
-        std::vector<glm::vec3> positions;
-        std::vector<glm::vec3> normals;
-        std::vector<glm::vec2> texcoords;
+        std::vector<glm::vec3> temp_positions, temp_normals, positions, normals;
+        std::vector<glm::vec2> temp_texcoords, texcoords;
 
         void loadMTL(const std::string& path);
-        void loadTexture(const std::string& texturePath);
+        void loadTexture(const std::string& path);
     };
 
-} // namespace RendererLib
+}

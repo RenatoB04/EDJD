@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
 
 #include "shader_utils.hpp"
 #include "renderer.hpp"
@@ -16,201 +16,153 @@
 using RendererLib::Model;
 
 Camera camera;
-LightState lightState = { false, false, false, false };
-bool noLightingMode = true;
-bool bolaEmMovimento = false;
-glm::vec3 bolaVelocidade = glm::vec3(0.0f);
-float bolaRotacao = 0.0f;
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+LightState luz = { false, false, false, false };
+bool semLuz = true, aRodar = false, bolaMove = false;
+glm::vec3 bolaVel = glm::vec3(0.0f);
+float bolaRot = 0.0f, deltaTime = 0.0f, lastFrame = 0.0f, angulo = 0.0f;
 
-float anguloCena = 0.0f;
-bool aRodar = false;
-
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-        if (action == GLFW_PRESS) aRodar = true;
-        else if (action == GLFW_RELEASE) aRodar = false;
-    }
+void mouse_button_callback(GLFWwindow*, int btn, int action, int) {
+    if (btn == GLFW_MOUSE_BUTTON_RIGHT) aRodar = (action == GLFW_PRESS);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+void mouse_callback(GLFWwindow*, double xpos, double) {
     static double lastX = xpos;
-    float xoffset = xpos - lastX;
+    if (aRodar) angulo += (xpos - lastX) * 0.01f;
     lastX = xpos;
-
-    if (aRodar) {
-        anguloCena += xoffset * 0.01f;
-    }
 }
 
-void processInput(GLFWwindow* window) {
-    static bool keyStates[6] = {};
+void processInput(GLFWwindow* w) {
+    static bool keys[6] = {};
 
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !keyStates[0]) {
-        lightState.useAmbient = !lightState.useAmbient;
-        std::cout << "[Luz Ambiente] " << (lightState.useAmbient ? "ON" : "OFF") << std::endl;
-        keyStates[0] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) keyStates[0] = false;
+    auto toggle = [&](int key, int i, bool& val, const char* nome) {
+        if (glfwGetKey(w, key) == GLFW_PRESS && !keys[i]) {
+            val = !val;
+            std::cout << nome << (val ? " ON" : " OFF") << '\n';
+            keys[i] = true;
+        } else if (glfwGetKey(w, key) == GLFW_RELEASE) keys[i] = false;
+    };
 
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && !keyStates[1]) {
-        lightState.useDirectional = !lightState.useDirectional;
-        std::cout << "[Luz Direcional] " << (lightState.useDirectional ? "ON" : "OFF") << std::endl;
-        keyStates[1] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) keyStates[1] = false;
+    toggle(GLFW_KEY_1, 0, luz.useAmbient, "[Ambiente]");
+    toggle(GLFW_KEY_2, 1, luz.useDirectional, "[Direcional]");
+    toggle(GLFW_KEY_3, 2, luz.usePoint, "[Pontual]");
+    toggle(GLFW_KEY_4, 3, luz.useSpot, "[Cónica]");
+    toggle(GLFW_KEY_5, 4, semLuz, "[Sem Luz]");
 
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && !keyStates[2]) {
-        lightState.usePoint = !lightState.usePoint;
-        std::cout << "[Luz Pontual] " << (lightState.usePoint ? "ON" : "OFF") << std::endl;
-        keyStates[2] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) keyStates[2] = false;
-
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && !keyStates[3]) {
-        lightState.useSpot = !lightState.useSpot;
-        std::cout << "[Luz Cónica] " << (lightState.useSpot ? "ON" : "OFF") << std::endl;
-        keyStates[3] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) keyStates[3] = false;
-
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && !keyStates[4]) {
-        noLightingMode = !noLightingMode;
-        std::cout << "[Modo Sem Iluminação] " << (noLightingMode ? "ON" : "OFF") << std::endl;
-        keyStates[4] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_5) == GLFW_RELEASE) keyStates[4] = false;
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !keyStates[5]) {
-        if (!bolaEmMovimento) {
-            bolaEmMovimento = true;
-            bolaVelocidade = glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f)) * 2.0f;
+    if (glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_PRESS && !keys[5]) {
+        if (!bolaMove) {
+            bolaMove = true;
+            bolaVel = glm::normalize(glm::vec3(0, 0, 1)) * 2.0f;
         }
-        keyStates[5] = true;
-    } else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) keyStates[5] = false;
+        keys[5] = true;
+    } else if (glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_RELEASE) keys[5] = false;
 }
 
 int main() {
-    if (!glfwInit()) {
-        std::cerr << "Erro ao inicializar GLFW\n";
-        return -1;
-    }
+    if (!glfwInit()) return std::cerr << "Erro GLFW\n", -1;
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "P01-P3D", nullptr, nullptr);
-    if (!window) {
-        std::cerr << "Erro ao criar janela GLFW\n";
-        glfwTerminate();
-        return -1;
-    }
+    GLFWwindow* win = glfwCreateWindow(800, 600, "P01-P3D", nullptr, nullptr);
+    if (!win) return std::cerr << "Erro janela GLFW\n", glfwTerminate(), -1;
 
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(win);
     glewExperimental = true;
+    if (glewInit() != GLEW_OK) return std::cerr << "Erro GLEW\n", -1;
 
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Erro ao inicializar GLEW\n";
-        return -1;
-    }
-
-glfwSetScrollCallback(window, scroll_callback);
-setActiveCamera(&camera);
+    glfwSetScrollCallback(win, scroll_callback);
+    glfwSetCursorPosCallback(win, mouse_callback);
+    glfwSetMouseButtonCallback(win, mouse_button_callback);
+    setActiveCamera(&camera);
 
     glEnable(GL_DEPTH_TEST);
-    GLuint shaderProgram = createShaderProgram("assets/shaders/shader.vert", "assets/shaders/shader.frag");
+    GLuint shader = createShaderProgram("assets/shaders/shader.vert", "assets/shaders/shader.frag");
 
     GLuint vao, vbo, ebo;
     setupMesa(vao, vbo, ebo);
 
-    std::vector<std::unique_ptr<Model>> balls;
+    std::vector<std::unique_ptr<Model>> bolas;
     for (int i = 1; i <= 15; ++i) {
-        auto ball = std::make_unique<Model>();
-        ball->Load("assets/objects/Ball" + std::to_string(i) + ".obj");
-        ball->Install();
-        balls.push_back(std::move(ball));
+        auto b = std::make_unique<Model>();
+        b->Load("assets/objects/Ball" + std::to_string(i) + ".obj");
+        b->Install();
+        bolas.push_back(std::move(b));
     }
 
-    std::vector<glm::vec3> positions = {
-        { -2.0f, 1.2f, -8.0f }, {  0.0f, 1.2f, -7.0f }, {  2.0f, 1.2f, -6.0f },
-        { -3.0f, 1.2f, -5.0f }, {  3.0f, 1.2f, -4.0f }, { -2.5f, 1.2f, -3.0f },
-        {  0.0f, 1.2f, -2.0f }, {  2.5f, 1.2f, -1.0f }, { -3.5f, 1.2f,  0.0f },
-        {  3.5f, 1.2f,  1.0f }, { -2.0f, 1.2f,  2.0f }, {  0.0f, 1.2f,  3.0f },
-        {  2.0f, 1.2f,  4.0f }, { -1.0f, 1.2f,  5.0f }, {  1.0f, 1.2f,  6.0f }
+    std::vector<glm::vec3> pos = {
+        {-2,1.2f,-8}, {0,1.2f,-7}, {2,1.2f,-6}, {-3,1.2f,-5}, {3,1.2f,-4},
+        {-2.5f,1.2f,-3}, {0,1.2f,-2}, {2.5f,1.2f,-1}, {-3.5f,1.2f,0}, {3.5f,1.2f,1},
+        {-2,1.2f,2}, {0,1.2f,3}, {2,1.2f,4}, {-1,1.2f,5}, {1,1.2f,6}
     };
 
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    while (!glfwWindowShouldClose(win)) {
+        float now = glfwGetTime();
+        deltaTime = now - lastFrame;
+        lastFrame = now;
 
-    while (!glfwWindowShouldClose(window)) {
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        processInput(win);
 
-        processInput(window);
+        if (bolaMove) {
+            pos[0] += bolaVel * deltaTime;
+            bolaRot += 2.0f * deltaTime;
 
-        if (bolaEmMovimento) {
-            positions[0] += bolaVelocidade * deltaTime;
-            bolaRotacao += 2.0f * deltaTime;
-
-            if (std::abs(positions[0].x) > 6.5f || std::abs(positions[0].z) > 10.0f) {
-                bolaEmMovimento = false;
-                std::cout << "[STOP] Bola atingiu os limites da mesa.\n";
+            if (std::abs(pos[0].x) > 6.5f || std::abs(pos[0].z) > 10.0f) {
+                bolaMove = false;
+                std::cout << "[STOP] Fora da mesa\n";
             }
 
-            for (size_t i = 1; i < positions.size(); ++i) {
-                float dist = glm::distance(positions[0], positions[i]);
-                if (dist < 0.6f) {
-                    bolaEmMovimento = false;
-                    std::cout << "[STOP] Bola atingiu outra bola.\n";
+            for (size_t i = 1; i < pos.size(); ++i) {
+                if (glm::distance(pos[0], pos[i]) < 0.6f) {
+                    bolaMove = false;
+                    std::cout << "[STOP] Colisão\n";
                     break;
                 }
             }
         }
 
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-
+        int w, h;
+        glfwGetFramebufferSize(win, &w, &h);
+        glViewport(0, 0, w, h);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(shaderProgram);
-        glViewport(0, 0, width, height);
+        glUseProgram(shader);
 
         glm::vec3 eye(
             camera.radius * sin(glm::radians(camera.yaw)),
             camera.radius * sin(glm::radians(camera.pitch)),
             camera.radius * cos(glm::radians(camera.yaw))
         );
-        glm::mat4 view = glm::lookAt(eye, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+        glm::mat4 view = glm::lookAt(eye, glm::vec3(0), glm::vec3(0, 1, 0));
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)w / h, 0.1f, 100.0f);
 
-        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
+        glUniform1i(glGetUniformLocation(shader, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, view, projection, lightState, noLightingMode, anguloCena);
+        drawMesa(shader, vao, view, proj, luz, semLuz, angulo);
 
-        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
-        for (size_t i = 0; i < balls.size(); ++i) {
-            glm::vec3 rotation = (i == 0) ? glm::vec3(bolaRotacao, 0.0f, 0.0f) : glm::vec3(0.0f);
-            balls[i]->Render(positions[i], rotation, shaderProgram, anguloCena);
+        glUniform1i(glGetUniformLocation(shader, "useTexture"), true);
+        for (size_t i = 0; i < bolas.size(); ++i) {
+            glm::vec3 rot = (i == 0) ? glm::vec3(bolaRot, 0, 0) : glm::vec3(0);
+            bolas[i]->Render(pos[i], rot, shader, angulo);
         }
 
-        int miniHeight = height / 4;
-        int miniWidth = static_cast<int>(miniHeight * (8.0f / 20.0f));
-        glViewport(width - miniWidth - 10, height - miniHeight - 10, miniWidth, miniHeight);
+        int miniH = h / 4;
+        int miniW = static_cast<int>(miniH * 8.0f / 20.0f);
+        glViewport(w - miniW - 10, h - miniH - 10, miniW, miniH);
 
-        glm::mat4 miniProjection = glm::ortho(-4.0f, 4.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-        glm::mat4 miniView = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+        glm::mat4 projMini = glm::ortho(-4.0f, 4.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+        glm::mat4 viewMini = glm::lookAt(glm::vec3(0, 10, 0), glm::vec3(0), glm::vec3(0, 0, -1));
 
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(miniView));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(miniProjection));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(viewMini));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projMini));
 
-        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
+        glUniform1i(glGetUniformLocation(shader, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        LightState luzesOff = { false, false, false, false };
-        drawMesa(shaderProgram, vao, miniView, miniProjection, luzesOff, true, 0.0f);
+        drawMesa(shader, vao, viewMini, projMini, { false, false, false, false }, true, 0);
 
-        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
-        for (size_t i = 0; i < balls.size(); ++i) {
-            glm::vec3 rotation = (i == 0) ? glm::vec3(0.0f, bolaRotacao, 0.0f) : glm::vec3(0.0f);
-            balls[i]->Render(positions[i], rotation, shaderProgram, 0.0f);
+        glUniform1i(glGetUniformLocation(shader, "useTexture"), true);
+        for (size_t i = 0; i < bolas.size(); ++i) {
+            glm::vec3 rot = (i == 0) ? glm::vec3(0, bolaRot, 0) : glm::vec3(0);
+            bolas[i]->Render(pos[i], rot, shader, 0);
         }
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(win);
         glfwPollEvents();
     }
 

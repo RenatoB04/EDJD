@@ -4,9 +4,7 @@
 
 class Camera {
 public:
-    float pitch = 30.0f;
-    float yaw = 120.0f;
-    float radius = 15.0f;
+    float pitch = 30.0f, yaw = 120.0f, radius = 15.0f;
 
     glm::mat4 getViewMatrix() const;
 };

@@ -3,81 +3,59 @@
 #include <sstream>
 #include <iostream>
 
-// Função para carregar o código fonte de um shader a partir de um ficheiro
-std::string loadShaderSource(const char* filepath) {
-    std::ifstream file(filepath);
+std::string loadShaderSource(const char* path) {
+    std::ifstream file(path);
     if (!file) {
-        std::cerr << "Erro ao abrir shader: " << filepath << "\n";
-        return ""; // Retorna string vazia em caso de erro
+        std::cerr << "Erro ao abrir shader: " << path << '\n';
+        return "";
     }
-
-    // Lê todo o conteúdo do ficheiro para uma string
     std::stringstream buffer;
     buffer << file.rdbuf();
-    return buffer.str(); // Retorna o código fonte do shader
+    return buffer.str();
 }
 
-// Função para compilar um shader do tipo especificado (vertex, fragment, etc)
 GLuint compileShader(GLenum type, const char* source) {
-    // Cria um identificador de shader
     GLuint shader = glCreateShader(type);
-
-    // Associa o código fonte ao shader
     glShaderSource(shader, 1, &source, nullptr);
-
-    // Compila o shader
     glCompileShader(shader);
 
-    // Verifica se a compilação foi bem sucedida
-    GLint success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cerr << "Erro ao compilar shader: " << infoLog << std::endl;
+    GLint ok;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
+    if (!ok) {
+        char log[512];
+        glGetShaderInfoLog(shader, 512, nullptr, log);
+        std::cerr << "Erro ao compilar shader: " << log << '\n';
     }
 
-    return shader; // Retorna o identificador do shader compilado
+    return shader;
 }
 
-// Função para criar um programa de shader a partir de ficheiros de vertex e fragment shader
-GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
-    // Carrega o código fonte dos shaders
-    std::string vertexCode = loadShaderSource(vertexPath);
-    std::string fragmentCode = loadShaderSource(fragmentPath);
-
-    // Verifica se os shaders foram carregados corretamente
-    if (vertexCode.empty() || fragmentCode.empty()) {
+GLuint createShaderProgram(const char* vertPath, const char* fragPath) {
+    std::string vert = loadShaderSource(vertPath);
+    std::string frag = loadShaderSource(fragPath);
+    if (vert.empty() || frag.empty()) {
         std::cerr << "Erro: Shader vazio ou caminho incorreto.\n";
-        return 0; // Retorna 0 em caso de erro
+        return 0;
     }
 
-    // Compila os shaders
-    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexCode.c_str());
-    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentCode.c_str());
+    GLuint vs = compileShader(GL_VERTEX_SHADER, vert.c_str());
+    GLuint fs = compileShader(GL_FRAGMENT_SHADER, frag.c_str());
 
-    // Cria um programa de shader
-    GLuint shaderProgram = glCreateProgram();
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+    glLinkProgram(program);
 
-    // Associa os shaders ao programa
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-
-    // Liga o programa (link)
-    glLinkProgram(shaderProgram);
-
-    // Verifica se a ligação foi bem sucedida
-    GLint success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cerr << "Erro ao ligar programa shader: " << infoLog << std::endl;
+    GLint ok;
+    glGetProgramiv(program, GL_LINK_STATUS, &ok);
+    if (!ok) {
+        char log[512];
+        glGetProgramInfoLog(program, 512, nullptr, log);
+        std::cerr << "Erro ao ligar programa shader: " << log << '\n';
     }
 
-    // Apaga os shaders individuais, pois já estão incorporados no programa
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
 
-    return shaderProgram; // Retorna o identificador do programa de shader
+    return program;
 }

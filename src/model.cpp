@@ -12,27 +12,25 @@
 
 namespace RendererLib {
 
-    Model::Model()
-        : vao(0), vboVertices(0), vboNormals(0), vboTexCoords(0), textureID(0), indexCount(0) {}
+    Model::Model() : vao(0), vboVertices(0), vboNormals(0), vboTexCoords(0), textureID(0), indexCount(0) {}
 
     Model::~Model() {
         if (vboVertices) glDeleteBuffers(1, &vboVertices);
-        if (vboNormals) glDeleteBuffers(1, &vboNormals);
+        if (vboNormals)  glDeleteBuffers(1, &vboNormals);
         if (vboTexCoords) glDeleteBuffers(1, &vboTexCoords);
-        if (vao) glDeleteVertexArrays(1, &vao);
-        if (textureID) glDeleteTextures(1, &textureID);
+        if (vao)         glDeleteVertexArrays(1, &vao);
+        if (textureID)   glDeleteTextures(1, &textureID);
         std::cout << "[Model] Recursos libertados.\n";
     }
 
     bool Model::Load(const std::string& objPath) {
         std::ifstream file(objPath);
-        if (!file.is_open()) {
-            std::cerr << "[Model] Erro ao abrir ficheiro OBJ: " << objPath << std::endl;
+        if (!file) {
+            std::cerr << "[Model] Erro ao abrir OBJ: " << objPath << '\n';
             return false;
         }
 
-        size_t lastSlash = objPath.find_last_of("/\\");
-        directory = (lastSlash != std::string::npos) ? objPath.substr(0, lastSlash + 1) : "";
+        directory = objPath.substr(0, objPath.find_last_of("/\\") + 1);
 
         std::string line;
         while (std::getline(file, line)) {
@@ -41,30 +39,24 @@ namespace RendererLib {
             iss >> prefix;
 
             if (prefix == "mtllib") {
-                std::string mtlName;
-                iss >> mtlName;
+                std::string mtlName; iss >> mtlName;
                 materialFile = directory + mtlName;
             } else if (prefix == "v") {
-                glm::vec3 pos;
-                iss >> pos.x >> pos.y >> pos.z;
+                glm::vec3 pos; iss >> pos.x >> pos.y >> pos.z;
                 temp_positions.push_back(pos);
             } else if (prefix == "vn") {
-                glm::vec3 normal;
-                iss >> normal.x >> normal.y >> normal.z;
-                temp_normals.push_back(normal);
+                glm::vec3 n; iss >> n.x >> n.y >> n.z;
+                temp_normals.push_back(n);
             } else if (prefix == "vt") {
-                glm::vec2 tex;
-                iss >> tex.x >> tex.y;
-                temp_texcoords.push_back(tex);
+                glm::vec2 uv; iss >> uv.x >> uv.y;
+                temp_texcoords.push_back(uv);
             } else if (prefix == "f") {
-                unsigned int vIdx[3], tIdx[3], nIdx[3];
-                char slash;
-
                 for (int i = 0; i < 3; ++i) {
-                    iss >> vIdx[i] >> slash >> tIdx[i] >> slash >> nIdx[i];
-                    positions.push_back(temp_positions[vIdx[i] - 1]);
-                    texcoords.push_back(temp_texcoords[tIdx[i] - 1]);
-                    normals.push_back(temp_normals[nIdx[i] - 1]);
+                    unsigned v, t, n; char sep;
+                    iss >> v >> sep >> t >> sep >> n;
+                    positions.push_back(temp_positions[v - 1]);
+                    texcoords.push_back(temp_texcoords[t - 1]);
+                    normals.push_back(temp_normals[n - 1]);
                 }
             }
         }
@@ -72,7 +64,7 @@ namespace RendererLib {
         file.close();
 
         if (!materialFile.empty()) loadMTL(materialFile);
-        if (!textureFile.empty()) loadTexture(textureFile);
+        if (!textureFile.empty())  loadTexture(textureFile);
 
         return true;
     }
@@ -86,71 +78,62 @@ namespace RendererLib {
         glGenBuffers(1, &vboVertices);
         glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
         glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec3), positions.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(0);
 
         glGenBuffers(1, &vboNormals);
         glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
         glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(1);
 
         glGenBuffers(1, &vboTexCoords);
         glBindBuffer(GL_ARRAY_BUFFER, vboTexCoords);
         glBufferData(GL_ARRAY_BUFFER, texcoords.size() * sizeof(glm::vec2), texcoords.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(2);
 
         glBindVertexArray(0);
 
-        std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vertices." << std::endl;
+        std::cout << "[Model] Modelo instalado na GPU: " << indexCount << " vértices.\n";
     }
 
     void Model::BindAttributes(GLuint shaderProgram) {
         glBindVertexArray(vao);
 
-        GLint posLoc = glGetAttribLocation(shaderProgram, "aPos");
-        if (posLoc >= 0) {
-            glEnableVertexAttribArray(posLoc);
-            glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
-            glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        }
+        auto bind = [&](const char* name, GLuint vbo, GLint size) {
+            GLint loc = glGetAttribLocation(shaderProgram, name);
+            if (loc >= 0) {
+                glEnableVertexAttribArray(loc);
+                glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                glVertexAttribPointer(loc, size, GL_FLOAT, GL_FALSE, 0, nullptr);
+            }
+        };
 
-        GLint normLoc = glGetAttribLocation(shaderProgram, "aNormal");
-        if (normLoc >= 0) {
-            glEnableVertexAttribArray(normLoc);
-            glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
-            glVertexAttribPointer(normLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        }
-
-        GLint texLoc = glGetAttribLocation(shaderProgram, "aTexCoord");
-        if (texLoc >= 0) {
-            glEnableVertexAttribArray(texLoc);
-            glBindBuffer(GL_ARRAY_BUFFER, vboTexCoords);
-            glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        }
+        bind("aPos",      vboVertices,  3);
+        bind("aNormal",   vboNormals,   3);
+        bind("aTexCoord", vboTexCoords, 2);
 
         glBindVertexArray(0);
     }
 
-    void Model::Render(const glm::vec3& position, const glm::vec3& orientation, GLuint shaderProgram, float anguloCena) const {
+    void Model::Render(const glm::vec3& pos, const glm::vec3& rot, GLuint shader, float ang) const {
         if (!vao) return;
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, anguloCena, glm::vec3(0, 1, 0));
-        model = glm::translate(model, position);
-        model = glm::rotate(model, orientation.y, glm::vec3(0, 1, 0));
-        model = glm::rotate(model, orientation.x, glm::vec3(1, 0, 0));
-        model = glm::rotate(model, orientation.z, glm::vec3(0, 0, 1));
+        model = glm::rotate(model, ang,         glm::vec3(0, 1, 0));
+        model = glm::translate(model, pos);
+        model = glm::rotate(model, rot.y,       glm::vec3(0, 1, 0));
+        model = glm::rotate(model, rot.x,       glm::vec3(1, 0, 0));
+        model = glm::rotate(model, rot.z,       glm::vec3(0, 0, 1));
         model = glm::scale(model, glm::vec3(0.3f));
 
-        GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
         if (textureID) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, textureID);
-            glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+            glUniform1i(glGetUniformLocation(shader, "texture1"), 0);
         }
 
         glBindVertexArray(vao);
@@ -160,8 +143,8 @@ namespace RendererLib {
 
     void Model::loadMTL(const std::string& path) {
         std::ifstream file(path);
-        if (!file.is_open()) {
-            std::cerr << "[Model] Erro ao abrir ficheiro MTL: " << path << std::endl;
+        if (!file) {
+            std::cerr << "[Model] Erro ao abrir MTL: " << path << '\n';
             return;
         }
 
@@ -172,9 +155,9 @@ namespace RendererLib {
             iss >> prefix;
 
             if (prefix == "map_Kd") {
-                std::string textureName;
-                iss >> textureName;
-                textureFile = directory + textureName;
+                std::string texName;
+                iss >> texName;
+                textureFile = directory + texName;
                 break;
             }
         }
@@ -182,22 +165,21 @@ namespace RendererLib {
         file.close();
     }
 
-    void Model::loadTexture(const std::string& texturePath) {
-        int width, height, nrChannels;
+    void Model::loadTexture(const std::string& texPath) {
+        int w, h, ch;
         stbi_set_flip_vertically_on_load(true);
-        unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
+        unsigned char* data = stbi_load(texPath.c_str(), &w, &h, &ch, 0);
 
         if (!data) {
-            std::cerr << "[Model] Erro ao carregar textura: " << texturePath << std::endl;
+            std::cerr << "[Model] Erro ao carregar textura: " << texPath << '\n';
             return;
         }
 
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
 
-        GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
-
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        GLenum format = (ch == 4) ? GL_RGBA : GL_RGB;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -207,7 +189,7 @@ namespace RendererLib {
 
         stbi_image_free(data);
 
-        std::cout << "[Model] Textura carregada: " << texturePath << std::endl;
+        std::cout << "[Model] Textura carregada: " << texPath << '\n';
     }
 
-} // namespace RendererLib
+}
