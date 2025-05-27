@@ -201,7 +201,8 @@ setActiveCamera(&camera);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), false);
         glBindTexture(GL_TEXTURE_2D, 0);
-        drawMesa(shaderProgram, vao, miniView, miniProjection, lightState, noLightingMode, 0.0f);
+        LightState luzesOff = { false, false, false, false };
+        drawMesa(shaderProgram, vao, miniView, miniProjection, luzesOff, true, 0.0f);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), true);
         for (size_t i = 0; i < balls.size(); ++i) {
