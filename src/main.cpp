@@ -50,7 +50,7 @@ void processInput(GLFWwindow* w) {
     toggle(GLFW_KEY_1, 0, luz.useAmbient, "[Ambiente]");
     toggle(GLFW_KEY_2, 1, luz.useDirectional, "[Direcional]");
     toggle(GLFW_KEY_3, 2, luz.usePoint, "[Pontual]");
-    toggle(GLFW_KEY_4, 3, luz.useSpot, "[Cónica]");
+    toggle(GLFW_KEY_4, 3, luz.useSpot, "[Conica]");
     toggle(GLFW_KEY_5, 4, semLuz, "[Sem Luz]");
 
     if (glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_PRESS && !keys[5]) {
@@ -128,7 +128,7 @@ int main() {
             for (size_t i = 1; i < pos.size(); ++i) {
                 if (glm::distance(pos[0], pos[i]) < 0.6f) {
                     bolaMove = false;
-                    std::cout << "[STOP] Colisão\n";
+                    std::cout << "[STOP] Colisao\n";
                     break;
                 }
             }
