@@ -37,7 +37,11 @@ Exemplo:
 - **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Linguagem: Kotlin)*  
 - **IVC**: Introdução à Visão por Computador *(Linguagem: Python)*  
 - **PDW**: Programação e Desenvolvimento Web *(Linguagens: HTML, CSS, JavaScript)*  
-- **SAD**: Sistemas de Armazenamento de Dados *(Linguagens: SQL e C#)*  
+- **SAD**: Sistemas de Armazenamento de Dados *(Linguagens: SQL e C#)*
+
+### **2º Ano - 2º Semestre**
+- **P3D**: Programação 3D *(Linguagem: C++)*
+- **DJA**: Desenvolvimento de Jogos Aplicado *(Linguagem: C#)*
 
 ---
 
