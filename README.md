@@ -47,7 +47,7 @@ Exemplo:
 
 ## Como navegar neste repositório
 
-1. Cada pasta representa um **projeto** ou **exercício**, organizado com base na nomenclatura descrita.
+1. Cada pasta representa uma **unidade curricular**, podendo conter **projetos** e/ou **exercícios**, seguindo a nomenclatura descrita.
 2. A maioria das pastas contém documentação para mais detalhes sobre o funcionamento dos projetos.
 
 ---
