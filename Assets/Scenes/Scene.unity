@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  - component: {fileID: 330585548}
+  - component: {fileID: 330585550}
   - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
@@ -259,23 +259,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &330585548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 618b0e3f6c65dd247a4a016150006c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.FreeCamera
-  m_LookSpeedController: 120
-  m_LookSpeedMouse: 4
-  m_MoveSpeed: 10
-  m_MoveSpeedIncrement: 2.5
-  m_Turbo: 10
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,12 +273,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Shooter
   cam: {fileID: 330585545}
   firePoint: {fileID: 1440434143}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 988939107723957150, guid: 910dafaabfb22314c8adb09436d3b7e4, type: 3}
   muzzlePrefab: {fileID: 0}
   fireAction: {fileID: -5461633978197479092, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   projectileSpeed: 30
   fireRate: 4
   spread: 1
+--- !u!114 &330585550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7192b95adb3c24caab6423ed9127cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreeCam
+  moveSpeed: 6
+  turboMultiplier: 8
+  lookSensitivity: 0.1
+  minPitch: -85
+  maxPitch: 85
+  lockCursorWhileAiming: 1
 --- !u!1 &389540481
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,7 +719,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.2
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1478889119
 Rigidbody:
