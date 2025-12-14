@@ -10,7 +10,7 @@ public class Health : NetworkBehaviour
     [Header("Config")]
     public float maxHealth = 100f;
 
-    // --- Variáveis de Rede ---
+    [Header("Network")]
     public NetworkVariable<float> currentHealth = new NetworkVariable<float>(
         100f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
@@ -25,15 +25,14 @@ public class Health : NetworkBehaviour
     public UnityEvent OnDied;
     public event Action<float, Transform> OnTookDamage;
 
-    [Header("UI (Opcional)")]
+    [Header("UI")]
     [HideInInspector] public TextMeshProUGUI healthText;
 
-    private PlayerShield playerShield;
-    private ulong lastInstigatorClientId = ulong.MaxValue;
-    private Coroutine uiFinderCo;
+    PlayerShield playerShield;
+    ulong lastInstigatorClientId = ulong.MaxValue;
+    Coroutine uiFinderCo;
 
-    // --- FIX: Variável para impedir ressurreição instantânea ---
-    private float timeOfDeath = 0f;
+    float timeOfDeath = -999f;
 
     void Awake()
     {
@@ -47,12 +46,14 @@ public class Health : NetworkBehaviour
         {
             if (team.Value == -1)
             {
-                // Se tiver IA é Bot (-2), se não é Player (ClientId)
                 if (GetComponent<BotAI_Proto>() != null)
-                    team.Value = -2;
+                    team.Value = -2; // BOT
                 else
-                    team.Value = (int)OwnerClientId;
+                    team.Value = (int)OwnerClientId; // PLAYER
             }
+
+            currentHealth.Value = maxHealth;
+            isDead.Value = false;
         }
 
         currentHealth.OnValueChanged += OnHealthValueChanged;
@@ -62,181 +63,185 @@ public class Health : NetworkBehaviour
         OnHealthChanged?.Invoke(currentHealth.Value, maxHealth);
 
         if (IsOwner)
-            uiFinderCo = StartCoroutine(FindUIRefresh());
+            uiFinderCo = StartCoroutine(FindUI());
     }
 
-    private IEnumerator FindUIRefresh()
+    IEnumerator FindUI()
     {
-        const int safetyFrames = 600;
-        int frames = 0;
-        GameObject healthTextObj = null;
-
-        while (healthTextObj == null && frames < safetyFrames)
+        for (int i = 0; i < 600; i++)
         {
-            yield return null;
-            frames++;
-            healthTextObj = GameObject.FindWithTag("HealthText");
-            if (healthTextObj == null)
+            var obj = GameObject.FindWithTag("HealthText");
+            if (obj != null && obj.TryGetComponent(out TextMeshProUGUI txt))
             {
-                var byName = GameObject.Find("HealthText");
-                if (byName && byName.GetComponent<TextMeshProUGUI>() != null)
-                    healthTextObj = byName;
+                healthText = txt;
+                UpdateHealthUI(currentHealth.Value);
+                yield break;
             }
+            yield return null;
         }
-
-        if (healthTextObj != null)
-        {
-            healthText = healthTextObj.GetComponent<TextMeshProUGUI>();
-            UpdateHealthUI(currentHealth.Value);
-        }
-        uiFinderCo = null;
     }
 
     public override void OnNetworkDespawn()
     {
         currentHealth.OnValueChanged -= OnHealthValueChanged;
         isDead.OnValueChanged -= OnIsDeadChanged;
-        if (uiFinderCo != null) { StopCoroutine(uiFinderCo); uiFinderCo = null; }
+        if (uiFinderCo != null) StopCoroutine(uiFinderCo);
     }
 
-    private void OnHealthValueChanged(float prev, float curr)
+    void OnHealthValueChanged(float prev, float curr)
     {
         UpdateHealthUI(curr);
         OnHealthChanged?.Invoke(curr, maxHealth);
     }
 
-    private void OnIsDeadChanged(bool prev, bool curr)
+    void OnIsDeadChanged(bool prev, bool curr)
     {
         if (curr && !prev)
             OnDied?.Invoke();
     }
 
-    // ---------------------------------------------------
-    //                  SISTEMA DE DANO
-    // ---------------------------------------------------
+    // =========================
+    //          DANO
+    // =========================
 
-    public void ApplyDamageServer(float amount, int instigatorTeam, ulong instigatorClientId, Vector3 hitWorldPos, bool showIndicator = true)
+    public void ApplyDamageServer(
+        float amount,
+        int instigatorTeam,
+        ulong instigatorClientId,
+        Vector3 hitWorldPos,
+        bool showIndicator = true)
     {
         if (!IsServer) return;
-        if (isDead.Value) return; // Se já morreu, ignora dano
-
-        amount = Mathf.Clamp(amount, 0f, maxHealth * 2f);
+        if (isDead.Value) return;
         if (amount <= 0f) return;
 
-        // 1. Escudo
+        // Proteção absoluta contra instigator inválido
+        if (instigatorTeam == -1)
+            return;
+
+        // Friendly fire OFF
+        if (team.Value == instigatorTeam)
+            return;
+
+        // Escudo
         if (playerShield != null && playerShield.IsShieldActive.Value)
         {
             amount = playerShield.AbsorbDamageServer(amount);
             if (amount <= 0.01f) return;
         }
 
-        // 2. Friendly Fire
-        if (team.Value != -1 && instigatorTeam != -1 && team.Value == instigatorTeam)
-            return;
+        float oldHp = currentHealth.Value;
+        float newHp = Mathf.Clamp(oldHp - amount, 0f, maxHealth);
 
+        if (Mathf.Approximately(oldHp, newHp)) return;
+
+        currentHealth.Value = newHp;
         lastInstigatorClientId = instigatorClientId;
-        float oldHealth = currentHealth.Value;
-        float newHealth = Mathf.Max(0f, oldHealth - amount);
 
-        if (Mathf.Approximately(oldHealth, newHealth)) return;
+        OnTookDamage?.Invoke(amount, null);
 
-        currentHealth.Value = newHealth;
-
-        if (newHealth < oldHealth)
-            OnTookDamage?.Invoke(amount, null);
-
-        // 3. Feedback Visual
         if (showIndicator)
         {
-            var clientParams = new ClientRpcParams
+            var rpc = new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new[] { OwnerClientId } }
             };
-            DamageIndicatorClientRpc(hitWorldPos, amount, clientParams);
+            DamageIndicatorClientRpc(hitWorldPos, amount, rpc);
         }
 
-        // 4. Morte
-        if (newHealth <= 0.01f && !isDead.Value)
+        if (newHp <= 0f)
         {
             isDead.Value = true;
-            // --- FIX: Regista a hora da morte ---
             timeOfDeath = Time.time;
-
-            Debug.Log($"[Health] {name} (Team {team.Value}) morreu.");
-            TryAwardKillToLastInstigator();
+            TryAwardKill();
         }
     }
 
     [ClientRpc]
-    private void DamageIndicatorClientRpc(Vector3 sourceWorldPos, float damageAmount, ClientRpcParams rpcParams = default)
+    void DamageIndicatorClientRpc(Vector3 pos, float dmg, ClientRpcParams rpc = default)
     {
         if (!IsOwner) return;
         if (DamageIndicatorUI.Instance != null)
-            DamageIndicatorUI.Instance.RegisterHit(sourceWorldPos, damageAmount);
+            DamageIndicatorUI.Instance.RegisterHit(pos, dmg);
     }
 
-    private void TryAwardKillToLastInstigator()
+    void TryAwardKill()
     {
         if (!IsServer) return;
         if (lastInstigatorClientId == ulong.MaxValue) return;
         if (lastInstigatorClientId == OwnerClientId) return;
 
-        if (NetworkManager.Singleton != null &&
-            NetworkManager.Singleton.ConnectedClients.TryGetValue(lastInstigatorClientId, out var client) &&
-            client != null && client.PlayerObject != null)
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastInstigatorClientId, out var client))
         {
-            var ps = client.PlayerObject.GetComponent<PlayerScore>();
-            if (ps != null) ps.AwardKillAndPoints();
+            var score = client.PlayerObject.GetComponent<PlayerScore>();
+            if (score != null)
+                score.AwardKillAndPoints();
         }
+
         lastInstigatorClientId = ulong.MaxValue;
     }
 
-    // ---------------------------------------------------
-    //                  CURA / RESET
-    // ---------------------------------------------------
-
-    public void ResetFullHealth() => ResetHealthServerRpc();
-
-    [ServerRpc(RequireOwnership = false)]
-    private void ResetHealthServerRpc()
-    {
-        // --- FIX CRÍTICO ---
-        // Se tentarem resetar a vida logo após a morte (menos de 2 segundos), BLOQUEIA.
-        // Isto impede que eventos automáticos (OnDied -> Reset) te ressuscitem instantaneamente.
-        if (isDead.Value && Time.time < timeOfDeath + 2.0f)
-        {
-            return;
-        }
-
-        isDead.Value = false;
-        currentHealth.Value = maxHealth;
-    }
+    // =========================
+    //          CURA
+    // =========================
 
     public void Heal(float amount)
     {
-        if (isDead.Value) return;
-        HealServerRpc(amount);
+        if (!IsServer)
+        {
+            HealServerRpc(amount);
+            return;
+        }
+
+        ApplyHeal(amount);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HealServerRpc(float amount)
+    void HealServerRpc(float amount)
+    {
+        ApplyHeal(amount);
+    }
+
+    void ApplyHeal(float amount)
     {
         if (isDead.Value) return;
-        amount = Mathf.Clamp(amount, 0f, maxHealth * 2f);
         if (amount <= 0f) return;
+
         currentHealth.Value = Mathf.Min(maxHealth, currentHealth.Value + amount);
     }
 
-    public void TakeDamage(float amount) => TakeDamageServerRpc(amount, -1, ulong.MaxValue, Vector3.zero, false);
+    // =========================
+    //        RESPAWN
+    // =========================
 
-    [ServerRpc(RequireOwnership = false)]
-    private void TakeDamageServerRpc(float amount, int instigatorTeam, ulong instigatorClientId, Vector3 hitWorldPos, bool showIndicator)
+    public void ResetFullHealth()
     {
-        ApplyDamageServer(amount, instigatorTeam, instigatorClientId, hitWorldPos, showIndicator);
+        if (!IsServer)
+            ResetHealthServerRpc();
+        else
+            ApplyRespawn();
     }
 
-    private void UpdateHealthUI(float v)
+    [ServerRpc(RequireOwnership = false)]
+    void ResetHealthServerRpc()
     {
-        if (healthText != null) healthText.text = $"{v:0}";
+        ApplyRespawn();
+    }
+
+    void ApplyRespawn()
+    {
+        if (!isDead.Value) return;
+        if (Time.time < timeOfDeath + 2f) return;
+
+        currentHealth.Value = maxHealth;
+        isDead.Value = false;
+    }
+
+    // =========================
+
+    void UpdateHealthUI(float v)
+    {
+        if (healthText != null)
+            healthText.text = $"{Mathf.CeilToInt(v)}";
     }
 }
