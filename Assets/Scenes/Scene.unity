@@ -1007,6 +1007,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0911cb39f1072b441ba3eb44bb40ab21, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1478889118}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0911cb39f1072b441ba3eb44bb40ab21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1478889120}
   m_SourcePrefab: {fileID: 100100000, guid: 0911cb39f1072b441ba3eb44bb40ab21, type: 3}
 --- !u!4 &1478889116 stripped
 Transform:
@@ -1066,6 +1069,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &1478889120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478889117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd83c99b28c6db54a9ba28545d9aa366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnShieldRipples
+  shieldRipples: {fileID: 6113135867429167551, guid: 1d710b26c62918b49858bb511311b6ca, type: 3}
+  shieldRipplesVFX: {fileID: 0}
 --- !u!1 &1480705683
 GameObject:
   m_ObjectHideFlags: 0
