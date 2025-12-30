@@ -25,7 +25,7 @@ public class PlayerShield : NetworkBehaviour
 
     [Header("Tempo máximo do escudo")]
     [Tooltip("Tempo máximo (segundos) que o escudo permanece activo antes de desaparecer automaticamente.")]
-    [SerializeField] private float shieldMaxLifetime = 7f; // podes ajustar
+    [SerializeField] private float shieldMaxLifetime = 7f; 
 
     // Network Variables
     public NetworkVariable<bool> IsShieldActive = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -38,7 +38,6 @@ public class PlayerShield : NetworkBehaviour
 
     // Referência à coroutine do tempo de vida para cancelar quando necessário
     private Coroutine shieldLifetimeCoroutine = null;
-    // Se estiver em modo Duration, temos uma coroutine específica (opcional)
     private Coroutine shieldDurationCoroutine = null;
 
     void Awake()
@@ -64,11 +63,33 @@ public class PlayerShield : NetworkBehaviour
         shieldTextUI.text = "";
     }
 
+    // ---------------------------------------------------------
+    //  AQUI ESTÁ A CORREÇÃO PRINCIPAL (Método Update)
+    // ---------------------------------------------------------
     void Update()
     {
-        // Sincronia Visual
+        // Sincronia Visual: Verifica se o estado visual coincide com a variável de rede
         if (shieldVisual != null && shieldVisual.activeSelf != IsShieldActive.Value)
-            shieldVisual.SetActive(IsShieldActive.Value);
+        {
+            bool shouldBeActive = IsShieldActive.Value;
+            shieldVisual.SetActive(shouldBeActive);
+
+            // FIX PARA PARTÍCULAS:
+            // Se estamos a ligar o escudo, forçamos o ParticleSystem a reiniciar do zero.
+            if (shouldBeActive)
+            {
+                // Tenta encontrar no próprio objeto ou nos filhos (caso tenhas hierarquia)
+                var ps = shieldVisual.GetComponent<ParticleSystem>();
+                if (ps == null) ps = shieldVisual.GetComponentInChildren<ParticleSystem>();
+
+                if (ps != null)
+                {
+                    // Pára, limpa as partículas velhas e toca de novo
+                    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    ps.Play(true);
+                }
+            }
+        }
 
         // --- LÓGICA DO DONO (INPUT) ---
         if (IsOwner)
@@ -77,14 +98,13 @@ public class PlayerShield : NetworkBehaviour
             HandleInput();
         }
     }
+    // ---------------------------------------------------------
 
     private void HandleInput()
     {
-        // Segurança: Se estiver pausado ou morto, sai
         if (PauseMenuManager.IsPaused) return;
         if (health != null && health.isDead.Value) return;
 
-        // Usa o GameInput para ler as teclas
         if (GameInput.LocalInput != null)
         {
             if (GameInput.LocalInput.ShieldTriggered())
@@ -117,17 +137,13 @@ public class PlayerShield : NetworkBehaviour
         else
         {
             string msg = "";
-        
-            // --- 1. STATUS DO ESCUDO ---
             if (now < NextShieldReadyTime.Value) 
                 msg += $"Escudo: {(NextShieldReadyTime.Value - now):0.0}s"; 
             else 
                 msg += "Escudo: PRONTO (Z)";
 
-            // --- 2. QUEBRA DE LINHA PARA SEPARAR OS ITENS ---
             msg += "\n"; 
 
-            // --- 3. STATUS DO PULSO ---
             if (now < NextPulseReadyTime.Value) 
                 msg += $"Pulso: {(NextPulseReadyTime.Value - now):0.0}s";
             else 
@@ -138,7 +154,7 @@ public class PlayerShield : NetworkBehaviour
         }
     }
 
-    // --- RPCs (Mantêm-se iguais) ---
+    // --- RPCs ---
     [ServerRpc]
     public void RequestShieldServerRpc()
     {
@@ -149,14 +165,11 @@ public class PlayerShield : NetworkBehaviour
         NextShieldReadyTime.Value = now + shieldCooldown;
         ShieldHealth.Value = (shieldMode == ShieldMode.Capacity) ? shieldCapacity : 1000f;
 
-        // Cancela coroutines antigas (se houver) para evitar que uma activação anterior desactive a nova
         if (shieldLifetimeCoroutine != null) { StopCoroutine(shieldLifetimeCoroutine); shieldLifetimeCoroutine = null; }
         if (shieldDurationCoroutine != null) { StopCoroutine(shieldDurationCoroutine); shieldDurationCoroutine = null; }
 
-        // Inicia a coroutine que garante uma duração máxima do escudo (ex.: 7s)
         shieldLifetimeCoroutine = StartCoroutine(ShieldMaxLifetimeCoroutine());
 
-        // Se estiver em modo Duration, mantém também a lógica original de duração configurável
         if (shieldMode == ShieldMode.Duration)
         {
             shieldDurationCoroutine = StartCoroutine(ShieldTimer());
@@ -166,7 +179,6 @@ public class PlayerShield : NetworkBehaviour
     IEnumerator ShieldTimer()
     {
         yield return new WaitForSeconds(shieldDuration);
-        // chama função de desactivação centralizada (server)
         DeactivateShieldServer();
         shieldDurationCoroutine = null;
     }
@@ -178,7 +190,6 @@ public class PlayerShield : NetworkBehaviour
         shieldLifetimeCoroutine = null;
     }
 
-    // Centraliza a desactivação do escudo no servidor
     private void DeactivateShieldServer()
     {
         if (!IsServer) return;
@@ -187,7 +198,6 @@ public class PlayerShield : NetworkBehaviour
         IsShieldActive.Value = false;
         ShieldHealth.Value = 0f;
 
-        // Para quaisquer coroutines em curso relacionadas com o escudo
         if (shieldLifetimeCoroutine != null) { StopCoroutine(shieldLifetimeCoroutine); shieldLifetimeCoroutine = null; }
         if (shieldDurationCoroutine != null) { StopCoroutine(shieldDurationCoroutine); shieldDurationCoroutine = null; }
     }
@@ -201,7 +211,6 @@ public class PlayerShield : NetworkBehaviour
         ShieldHealth.Value -= absorbed;
         if (ShieldHealth.Value <= 0f)
         {
-            // Desactivar via função central para garantir limpeza correcta
             DeactivateShieldServer();
         }
         return incoming - absorbed;
