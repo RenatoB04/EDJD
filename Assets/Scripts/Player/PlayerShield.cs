@@ -8,7 +8,9 @@ public class PlayerShield : NetworkBehaviour
     public enum ShieldMode { Capacity, Duration }
 
     [Header("Referências Visuais")]
+    [Tooltip("O objeto visual do escudo que já está no boneco (filho).")]
     [SerializeField] private GameObject shieldVisual;
+    [Tooltip("O PREFAB da explosão (arrasta da pasta Project).")]
     [SerializeField] private GameObject pulseVfxPrefab;
     private TextMeshProUGUI shieldTextUI;
 
@@ -24,7 +26,6 @@ public class PlayerShield : NetworkBehaviour
     [SerializeField] private float pulseCooldown = 15.0f;
 
     [Header("Tempo máximo do escudo")]
-    [Tooltip("Tempo máximo (segundos) que o escudo permanece activo antes de desaparecer automaticamente.")]
     [SerializeField] private float shieldMaxLifetime = 7f; 
 
     // Network Variables
@@ -35,8 +36,6 @@ public class PlayerShield : NetworkBehaviour
     public NetworkVariable<double> NextPulseReadyTime = new NetworkVariable<double>(0.0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private Health health;
-
-    // Referência à coroutine do tempo de vida para cancelar quando necessário
     private Coroutine shieldLifetimeCoroutine = null;
     private Coroutine shieldDurationCoroutine = null;
 
@@ -63,42 +62,35 @@ public class PlayerShield : NetworkBehaviour
         shieldTextUI.text = "";
     }
 
-    // ---------------------------------------------------------
-    //  AQUI ESTÁ A CORREÇÃO PRINCIPAL (Método Update)
-    // ---------------------------------------------------------
     void Update()
     {
-        // Sincronia Visual: Verifica se o estado visual coincide com a variável de rede
+        // --- SINCRONIA VISUAL DO ESCUDO ---
         if (shieldVisual != null && shieldVisual.activeSelf != IsShieldActive.Value)
         {
             bool shouldBeActive = IsShieldActive.Value;
             shieldVisual.SetActive(shouldBeActive);
 
-            // FIX PARA PARTÍCULAS:
-            // Se estamos a ligar o escudo, forçamos o ParticleSystem a reiniciar do zero.
+            // FIX: Forçar o reinício das partículas quando o escudo liga
             if (shouldBeActive)
             {
-                // Tenta encontrar no próprio objeto ou nos filhos (caso tenhas hierarquia)
                 var ps = shieldVisual.GetComponent<ParticleSystem>();
                 if (ps == null) ps = shieldVisual.GetComponentInChildren<ParticleSystem>();
 
                 if (ps != null)
                 {
-                    // Pára, limpa as partículas velhas e toca de novo
                     ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                     ps.Play(true);
                 }
             }
         }
 
-        // --- LÓGICA DO DONO (INPUT) ---
+        // --- INPUT (SÓ PARA O DONO) ---
         if (IsOwner)
         {
             UpdateUI();
             HandleInput();
         }
     }
-    // ---------------------------------------------------------
 
     private void HandleInput()
     {
@@ -154,7 +146,7 @@ public class PlayerShield : NetworkBehaviour
         }
     }
 
-    // --- RPCs ---
+    // --- RPCs DO ESCUDO ---
     [ServerRpc]
     public void RequestShieldServerRpc()
     {
@@ -216,6 +208,7 @@ public class PlayerShield : NetworkBehaviour
         return incoming - absorbed;
     }
 
+    // --- RPCs DO PULSO (COM A CORREÇÃO DE ALTURA) ---
     [ServerRpc]
     public void RequestPulseServerRpc()
     {
@@ -231,7 +224,10 @@ public class PlayerShield : NetworkBehaviour
         
         if (health && !health.isDead.Value)
         {
-            PlayVfxClientRpc(transform.position);
+            // === AQUI ESTÁ A CORREÇÃO ===
+            // Spawn na posição + 1.5 metros para cima (peito)
+            PlayVfxClientRpc(transform.position + Vector3.up * 0.3f);
+            
             Collider[] hits = Physics.OverlapSphere(transform.position, pulseRadius);
             int myTeam = health.team.Value;
             foreach (var c in hits)
@@ -247,5 +243,8 @@ public class PlayerShield : NetworkBehaviour
     }
 
     [ClientRpc]
-    void PlayVfxClientRpc(Vector3 p) { if (pulseVfxPrefab) Instantiate(pulseVfxPrefab, p, Quaternion.identity); }
+    void PlayVfxClientRpc(Vector3 p) 
+    { 
+        if (pulseVfxPrefab) Instantiate(pulseVfxPrefab, p, Quaternion.identity); 
+    }
 }

@@ -846,9 +846,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2751027687307977091}
   serializedVersion: 5
-  m_Mass: 5
+  m_Mass: 80
   m_LinearDamping: 1
-  m_AngularDamping: 1
+  m_AngularDamping: 999
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -864,7 +864,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &6311201337086346178
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1018,7 +1018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2824729780
+  GlobalObjectIdHash: 2250448752
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1520,7 +1520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShield
   ShowTopMostFoldoutHeaderGroup: 1
   shieldVisual: {fileID: 8914926493546042823}
-  pulseVfxPrefab: {fileID: 6608167148170694059, guid: 47db5b5625b2aa141b0b9d6add0d426f, type: 3}
+  pulseVfxPrefab: {fileID: 3813059130662770783, guid: caab1ba8421c97e43a04525babfeb58a, type: 3}
   shieldMode: 0
   shieldCapacity: 100
   shieldDuration: 2
