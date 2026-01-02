@@ -27,13 +27,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] Button btnJoin;
     [SerializeField] Button btnLeave;
     [SerializeField] TMP_Text txtStatus;
-    [SerializeField] Button btnStartGame;            
-    [SerializeField] TMP_Text txtCountdown;          
-    [SerializeField] Button btnPlayBots;             
+    [SerializeField] Button btnStartGame;
+    [SerializeField] TMP_Text txtCountdown;
+    [SerializeField] Button btnPlayBots;
 
     [Header("UI (Equipas)")]
-    [Tooltip("Arrasta aqui o objeto pai que tem os botões de equipa (TeamSelectPanel)")]
-    [SerializeField] GameObject teamSelectionPanel; // --- NOVO ---
+    [Tooltip("Painel que contém os botões de equipa (TeamSelectPanel)")]
+    [SerializeField] GameObject teamSelectionPanel;
+    [Tooltip("Script LobbyTeamUI (com referências aos botões A/B)")]
+    [SerializeField] LobbyTeamUI lobbyTeamUI;
 
     [Header("Config")]
     [SerializeField] string gameSceneName = "Prototype";
@@ -89,8 +91,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (txtCreatedCode) { txtCreatedCode.gameObject.SetActive(false); txtCreatedCode.text = ""; }
         if (btnStartGame) btnStartGame.gameObject.SetActive(false);
 
-        // --- NOVO: Se não estamos ligados, esconde a seleção de equipas ---
+        // Oculta painel de equipas enquanto não está em sala
         if (teamSelectionPanel) teamSelectionPanel.SetActive(false);
+        if (lobbyTeamUI) lobbyTeamUI.SetTeamButtonsInteractable(false);
     }
 
     void SetUILobbyActions(bool inRoom)
@@ -101,8 +104,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (ifJoinCode) ifJoinCode.interactable = !inRoom && PhotonNetwork.IsConnectedAndReady;
         if (txtCreatedCode) txtCreatedCode.gameObject.SetActive(inRoom);
 
-        // --- NOVO: Se estamos numa sala, mostra a seleção de equipas! ---
+        // Mostra/esconde painel de equipas conforme estado
         if (teamSelectionPanel) teamSelectionPanel.SetActive(inRoom);
+        if (lobbyTeamUI) lobbyTeamUI.SetTeamButtonsInteractable(inRoom);
+
+        // Debug
+        Debug.Log($"[Lobby] teamSelectionPanel: {(teamSelectionPanel ? teamSelectionPanel.name : "NULL")} | inRoom={inRoom}");
     }
 
     void Log(string msg)
@@ -190,6 +197,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Log($"Lobby criado. Código: {PhotonNetwork.CurrentRoom?.Name}");
+
+        // Ativa imediatamente UI de lobby e botões de equipa
+        SetUILobbyActions(true);
+        if (lobbyTeamUI) lobbyTeamUI.SetTeamButtonsInteractable(true);
+
+        if (txtCreatedCode)
+        {
+            txtCreatedCode.gameObject.SetActive(true);
+            txtCreatedCode.text = $"Código: {PhotonNetwork.CurrentRoom?.Name}";
+        }
+
+        if (PhotonNetwork.IsMasterClient && btnStartGame)
+            btnStartGame.gameObject.SetActive(true);
     }
 
     public override async void OnJoinedRoom()
@@ -202,7 +222,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             txtCreatedCode.gameObject.SetActive(true);
             txtCreatedCode.text = $"Código: {code}";
         }
-        SetUILobbyActions(true); // Isto vai ativar o painel das equipas
+
+        SetUILobbyActions(true);
+        if (lobbyTeamUI) lobbyTeamUI.SetTeamButtonsInteractable(true);
 
         if (PhotonNetwork.IsMasterClient && btnStartGame)
             btnStartGame.gameObject.SetActive(true);
@@ -245,9 +267,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         if (btnStartGame) btnStartGame.interactable = false;
         if (txtCountdown) txtCountdown.gameObject.SetActive(true);
-        
+
         // Esconde as equipas quando a contagem começa (para não mudar à última da hora)
-        if (teamSelectionPanel) teamSelectionPanel.SetActive(false); 
+        if (teamSelectionPanel) teamSelectionPanel.SetActive(false);
+        if (lobbyTeamUI) lobbyTeamUI.SetTeamButtonsInteractable(false);
 
         for (int i = countdownSeconds; i > 0; i--)
         {

@@ -814,7 +814,7 @@ GameObject:
   - component: {fileID: 6907939308367491131}
   - component: {fileID: -1208498794494966522}
   - component: {fileID: 4863441718551655016}
-  - component: {fileID: 9058342283382641208}
+  - component: {fileID: 6493389405090278360}
   m_Layer: 10
   m_Name: FPSPlayer
   m_TagString: Player
@@ -1688,7 +1688,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
   m_Animator: {fileID: 7665056833086956892}
---- !u!114 &9058342283382641208
+--- !u!114 &6493389405090278360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1697,14 +1697,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2751027687307977091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 810e48845bb1eaf4bb13e06e0aa18274, type: 3}
+  m_Script: {fileID: 11500000, guid: cac7c4ff524dacd449c5254244015292, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TeamColorApplier
-  ShowTopMostFoldoutHeaderGroup: 1
-  targetRenderer: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
-  botColor: {r: 1, g: 0, b: 0, a: 1}
+  m_EditorClassIdentifier: Assembly-CSharp::TeamOutlineController
+  renderers: []
   teamAColor: {r: 0, g: 0, b: 1, a: 1}
   teamBColor: {r: 1, g: 0.5, b: 0, a: 1}
+  botColor: {r: 1, g: 0, b: 0, a: 1}
+  neutralColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  enemyOutlineColor: {r: 1, g: 0, b: 0, a: 1}
+  allyOutlineColor: {r: 0, g: 1, b: 1, a: 1}
+  enemyOutlineWidth: 0.02
+  allyOutlineWidth: 0
 --- !u!1 &2906013363015915789
 GameObject:
   m_ObjectHideFlags: 0
@@ -3978,6 +3982,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlueSoldier_Male
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 893ee03a8761a1d499e6d26c79d85754, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4f37798693d37a3438e90970e05fb5ff, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 23994ddcf2338c04592b52d36243087d, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3d15b6149148ad42b2d7ee50b2dda92, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a75c71e3280d4ca45b6046aa7740319e, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[5]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1385e42279a2d19498636aea2cec0deb, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[6]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 517893a0ce5a7aa4c8b3a35e47fc57ec, type: 2}
     - target: {fileID: 5866666021909216657, guid: 889cdc30202f091429529ff3e11d0c8e, type: 3}
       propertyPath: m_Controller
       value: 

@@ -3,27 +3,35 @@ using UnityEngine.UI;
 
 public class LobbyTeamUI : MonoBehaviour
 {
-    [Header("Configuração")]
-    [Tooltip("0 = Equipa A (Azul), 1 = Equipa B (Laranja)")]
-    public int teamToJoin = 0; 
+    [Header("Botões de equipa")]
+    public Button buttonTeamA;
+    public Button buttonTeamB;
 
-    [Header("Referências")]
-    [SerializeField] private Button myButton; 
+    [Header("Opcional: texto de estado")]
+    public Text statusText;
 
-    void Start()
+    void Awake()
     {
-        if (myButton != null)
-        {
-            myButton.onClick.AddListener(OnBtnClick);
-        }
+        if (buttonTeamA) buttonTeamA.onClick.AddListener(() => OnTeamPicked(0));
+        if (buttonTeamB) buttonTeamB.onClick.AddListener(() => OnTeamPicked(1));
+        UpdateStatus();
     }
 
-    void OnBtnClick()
+    void OnTeamPicked(int team)
     {
-        // EM VEZ DE PROCURAR O PLAYER, GUARDAMOS APENAS A ESCOLHA NO "CARTÃO"
-        GameInfo.MyChosenTeam = teamToJoin;
+        GameInfo.SetTeam(team);
+        UpdateStatus();
+    }
 
-        // Feedback visual para saberes que clicaste (opcional)
-        Debug.Log($"Escolha guardada: Vou ser da Equipa {teamToJoin} quando o jogo começar!");
+    void UpdateStatus()
+    {
+        if (statusText)
+            statusText.text = $"Equipa atual: {(GameInfo.MyChosenTeam == 0 ? "A" : "B")}";
+    }
+
+    public void SetTeamButtonsInteractable(bool interactable)
+    {
+        if (buttonTeamA) buttonTeamA.interactable = interactable;
+        if (buttonTeamB) buttonTeamB.interactable = interactable;
     }
 }
