@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using ExitGames.Client.Photon;
@@ -27,9 +27,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] Button btnJoin;
     [SerializeField] Button btnLeave;
     [SerializeField] TMP_Text txtStatus;
-    [SerializeField] Button btnStartGame;            // 👉 botão start original
-    [SerializeField] TMP_Text txtCountdown;          // 👉 contador original
-    [SerializeField] Button btnPlayBots;             // 👉 NOVO botão "Jogar com Bots"
+    [SerializeField] Button btnStartGame;            
+    [SerializeField] TMP_Text txtCountdown;          
+    [SerializeField] Button btnPlayBots;             
+
+    [Header("UI (Equipas)")]
+    [Tooltip("Arrasta aqui o objeto pai que tem os botões de equipa (TeamSelectPanel)")]
+    [SerializeField] GameObject teamSelectionPanel; // --- NOVO ---
 
     [Header("Config")]
     [SerializeField] string gameSceneName = "Prototype";
@@ -59,8 +63,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         btnJoin.onClick.AddListener(OnClickJoin);
         btnLeave.onClick.AddListener(OnClickLeave);
         if (btnStartGame) btnStartGame.onClick.AddListener(OnClickStartGame);
-
-        // 👉 regista o novo botão
         if (btnPlayBots) btnPlayBots.onClick.AddListener(OnClickPlayWithBots);
     }
 
@@ -71,8 +73,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         btnJoin.onClick.RemoveAllListeners();
         btnLeave.onClick.RemoveAllListeners();
         if (btnStartGame) btnStartGame.onClick.RemoveAllListeners();
-
-        // 👉 remove o listener do novo botão
         if (btnPlayBots) btnPlayBots.onClick.RemoveAllListeners();
     }
 
@@ -88,6 +88,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (btnLeave) btnLeave.interactable = false;
         if (txtCreatedCode) { txtCreatedCode.gameObject.SetActive(false); txtCreatedCode.text = ""; }
         if (btnStartGame) btnStartGame.gameObject.SetActive(false);
+
+        // --- NOVO: Se não estamos ligados, esconde a seleção de equipas ---
+        if (teamSelectionPanel) teamSelectionPanel.SetActive(false);
     }
 
     void SetUILobbyActions(bool inRoom)
@@ -97,6 +100,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (btnJoin) btnJoin.interactable = !inRoom && PhotonNetwork.IsConnectedAndReady && !string.IsNullOrEmpty(ifJoinCode?.text);
         if (ifJoinCode) ifJoinCode.interactable = !inRoom && PhotonNetwork.IsConnectedAndReady;
         if (txtCreatedCode) txtCreatedCode.gameObject.SetActive(inRoom);
+
+        // --- NOVO: Se estamos numa sala, mostra a seleção de equipas! ---
+        if (teamSelectionPanel) teamSelectionPanel.SetActive(inRoom);
     }
 
     void Log(string msg)
@@ -153,7 +159,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // 👉 clique do host no botão “Começar Jogo”
     void OnClickStartGame()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -197,9 +202,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             txtCreatedCode.gameObject.SetActive(true);
             txtCreatedCode.text = $"Código: {code}";
         }
-        SetUILobbyActions(true);
+        SetUILobbyActions(true); // Isto vai ativar o painel das equipas
 
-        // Ativa botão só para o host
         if (PhotonNetwork.IsMasterClient && btnStartGame)
             btnStartGame.gameObject.SetActive(true);
     }
@@ -241,6 +245,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         if (btnStartGame) btnStartGame.interactable = false;
         if (txtCountdown) txtCountdown.gameObject.SetActive(true);
+        
+        // Esconde as equipas quando a contagem começa (para não mudar à última da hora)
+        if (teamSelectionPanel) teamSelectionPanel.SetActive(false); 
 
         for (int i = countdownSeconds; i > 0; i--)
         {
@@ -319,7 +326,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         return sb.ToString();
     }
 
-    // -------------------- NOVO: modo offline com bots --------------------
+    // -------------------- Offline / Bots --------------------
     public void OnClickPlayWithBots()
     {
         Debug.Log("[Lobby] Modo offline com bots (host local).");
@@ -329,7 +336,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         if (NetworkManager.Singleton == null)
         {
-            Debug.LogError("[Lobby] NetworkManager.Singleton == null. Não consigo iniciar host local.");
+            Debug.LogError("[Lobby] NetworkManager.Singleton == null.");
             return;
         }
 
@@ -343,9 +350,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             }
         }
 
-        // marca que vamos arrancar em modo offline
         PlayerPrefs.SetInt("OfflineMode", 1);
-
         NetworkManager.Singleton.SceneManager.LoadScene("Prototype", LoadSceneMode.Single);
     }
 }

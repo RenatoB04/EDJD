@@ -40,7 +40,7 @@ public class Health : NetworkBehaviour
         UpdateHealthUI(maxHealth);
     }
 
-    public override void OnNetworkSpawn()
+public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
@@ -49,7 +49,7 @@ public class Health : NetworkBehaviour
                 if (GetComponent<BotAI_Proto>() != null)
                     team.Value = -2; // BOT
                 else
-                    team.Value = (int)OwnerClientId; // PLAYER
+                    team.Value = (int)OwnerClientId; // PLAYER (Valor temporário)
             }
 
             currentHealth.Value = maxHealth;
@@ -63,9 +63,18 @@ public class Health : NetworkBehaviour
         OnHealthChanged?.Invoke(currentHealth.Value, maxHealth);
 
         if (IsOwner)
+        {
             uiFinderCo = StartCoroutine(FindUI());
-    }
 
+            // --- NOVO: APLICAR A EQUIPA ESCOLHIDA NO LOBBY ---
+            // Assim que nasço, vou ver qual foi a equipa que escolhi no menu
+            int myChoice = GameInfo.MyChosenTeam;
+            
+            // Mando o servidor atualizar a minha equipa oficial
+            ChangeTeamServerRpc(myChoice);
+            // -------------------------------------------------
+        }
+    }
     IEnumerator FindUI()
     {
         for (int i = 0; i < 600; i++)
@@ -244,4 +253,21 @@ public class Health : NetworkBehaviour
         if (healthText != null)
             healthText.text = $"{Mathf.CeilToInt(v)}";
     }
+
+// Esta função é chamada pelos botões da UI
+    public void ChangeTeam(int newTeamIndex)
+    {
+        if (IsOwner) // Só eu posso mudar a minha própria equipa
+        {
+            ChangeTeamServerRpc(newTeamIndex);
+        }
+    }
+
+    [ServerRpc]
+    private void ChangeTeamServerRpc(int newTeamIndex)
+    {
+        // O Servidor atualiza a variável e todos (incluindo o TeamColorApplier) vão saber
+        team.Value = newTeamIndex;
+    }
+
 }
