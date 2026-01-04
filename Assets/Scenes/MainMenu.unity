@@ -975,6 +975,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
+--- !u!1 &1471678260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1471678262}
+  - component: {fileID: 1471678261}
+  m_Layer: 0
+  m_Name: MenuMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1471678261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471678260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70a47fe2a39336b428166b101f87e12f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuMusicPlayer
+  menuClip: {fileID: 8300000, guid: 2f46e3b08bf9355469d66c8600d21eef, type: 3}
+  menuScenes:
+  - MainMenu
+  - Lobby
+  gameplayScenes:
+  - Prototype
+  volume: 0.3
+--- !u!4 &1471678262
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471678260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 459.3741, y: 358.21033, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1668355631 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5916692961807416573, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
@@ -1204,3 +1255,4 @@ SceneRoots:
   - {fileID: 1160919616}
   - {fileID: 603423985}
   - {fileID: 1736129932}
+  - {fileID: 1471678262}
