@@ -9,45 +9,51 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button creditosButton;
     [SerializeField] private Button settingsButton;
 
+    [Header("Botão Voltar (Créditos)")]
+    [SerializeField] private Button voltarCreditsButton;
+
+    [Header("Painel de Créditos")]
+    [SerializeField] private GameObject creditsPanel;
+
     [Header("Prefab do painel de Settings")]
-    [SerializeField] private GameObject settingsPrefab; // arrasta o prefab do jogo aqui
+    [SerializeField] private GameObject settingsPrefab;
 
     private GameObject settingsInstance;
 
     private void Awake()
     {
-        // Botões do menu
+        // Liga botões do menu
         jogarButton.onClick.AddListener(Jogar);
-        creditosButton.onClick.AddListener(Creditos);
+        creditosButton.onClick.AddListener(AbrirCreditos);
         settingsButton.onClick.AddListener(AbrirSettings);
 
-        // Instancia o prefab dentro do Canvas do menu
+        // Liga botão voltar dos créditos
+        if (voltarCreditsButton != null)
+            voltarCreditsButton.onClick.AddListener(FecharCreditos);
+
+        // Créditos começam fechados
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
+
+        // Instancia o painel de settings
         if (settingsPrefab != null)
         {
-            // Procura o Canvas do menu para ser o pai do painel
             Canvas menuCanvas = FindObjectOfType<Canvas>();
             settingsInstance = Instantiate(settingsPrefab, menuCanvas.transform);
 
-            // Opcional: garante que o script SettingsMenu do prefab conhece o painel
             var settingsScript = settingsInstance.GetComponent<SettingsMenu>();
             if (settingsScript != null && settingsScript.settingsPanel == null)
-            {
                 settingsScript.settingsPanel = settingsInstance;
-            }
 
-            // Começa escondido
             settingsInstance.SetActive(false);
         }
     }
 
+    // ===== BOTÕES =====
+
     private void Jogar()
     {
         SceneManager.LoadScene("Lobby");
-    }
-
-    private void Creditos()
-    {
-        // Por enquanto vazio
     }
 
     private void AbrirSettings()
@@ -56,10 +62,23 @@ public class MainMenu : MonoBehaviour
             settingsInstance.SetActive(true);
     }
 
-    // Para ligar ao botão "Fechar" dentro do painel, se existir
+    private void AbrirCreditos()
+    {
+        if (creditsPanel != null)
+            creditsPanel.SetActive(true);
+    }
+
+    // ===== FECHAR =====
+
     public void FecharSettings()
     {
         if (settingsInstance != null)
             settingsInstance.SetActive(false);
+    }
+
+    public void FecharCreditos()
+    {
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
     }
 }
