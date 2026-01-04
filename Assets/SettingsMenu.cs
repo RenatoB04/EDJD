@@ -4,15 +4,16 @@ using UnityEngine.UI;
 using TMPro;
 using InfimaGames.LowPolyShooterPack;
 
-
 public class SettingsMenu : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private TMP_Dropdown resolutionsDropdown;
     [SerializeField] private Slider sensitivitySlider;
 
-    [Header("Painel e Botão")]
-    [SerializeField] private GameObject settingsPanel;
+    [Header("Painel")]
+    public GameObject settingsPanel; // Público para ser acessível externamente
+
+    [Header("Botões (opcional)")]
     [SerializeField] private Button openSettingsButton;
     [SerializeField] private Button closeSettingsButton;
 
@@ -24,32 +25,58 @@ public class SettingsMenu : MonoBehaviour
 
     private void Awake()
     {
-        // Configurar botões
+        // Se settingsPanel não estiver definido, usa o próprio GameObject
+        if (settingsPanel == null)
+            settingsPanel = gameObject;
+
+        // Configura os botões open/close (opcional)
         if (openSettingsButton != null)
-            openSettingsButton.onClick.AddListener(() => settingsPanel.SetActive(true));
+            openSettingsButton.onClick.AddListener(Abrir);
 
         if (closeSettingsButton != null)
-            closeSettingsButton.onClick.AddListener(() => settingsPanel.SetActive(false));
+            closeSettingsButton.onClick.AddListener(Fechar);
     }
 
     private void Start()
     {
+        // Começa escondido
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
 
-        // Tenta encontrar o Character activo e obter a interface da câmara
+        // Tenta encontrar o player (pode não existir no menu)
         Character playerCharacter = FindObjectOfType<Character>();
         if (playerCharacter != null)
             currentCameraLook = playerCharacter as ICameraLook;
 
-        CarregarResolucoes();
-        CarregarOpcoesGuardadas();
+        // Inicializa resoluções
+        if (resolutionsDropdown != null)
+        {
+            CarregarResolucoes();
+            resolutionsDropdown.onValueChanged.AddListener(OnResolutionChanged);
+        }
 
-        // Ligação automática dos eventos dos sliders e dropdowns
-        resolutionsDropdown.onValueChanged.AddListener(OnResolutionChanged);
-        sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+        // Inicializa sensibilidade
+        if (sensitivitySlider != null)
+        {
+            CarregarSensibilidade();
+            sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+        }
     }
 
+    // ======= CONTROLO DO PAINEL =======
+    public void Abrir()
+    {
+        if (settingsPanel != null)
+            settingsPanel.SetActive(true);
+    }
+
+    public void Fechar()
+    {
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+    }
+
+    // ======= RESOLUÇÕES =======
     private void CarregarResolucoes()
     {
         resolutions = Screen.resolutions;
@@ -60,8 +87,7 @@ public class SettingsMenu : MonoBehaviour
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string opcao = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(opcao);
+            options.Add(resolutions[i].width + " x " + resolutions[i].height);
 
             if (resolutions[i].width == Screen.currentResolution.width &&
                 resolutions[i].height == Screen.currentResolution.height)
@@ -78,32 +104,48 @@ public class SettingsMenu : MonoBehaviour
         resolutionsDropdown.value = guardada;
         resolutionsDropdown.RefreshShownValue();
 
+        // Aplica resolução imediatamente se estiver no Jogo
         AplicarResolucao(guardada);
-    }
-
-    private void CarregarOpcoesGuardadas()
-    {
-        float sens = PlayerPrefs.GetFloat(PREF_SENSITIVITY, 1.0f);
-        sensitivitySlider.value = sens;
-        AplicarSensibilidade(sens);
     }
 
     public void OnResolutionChanged(int index)
     {
-        AplicarResolucao(index);
+        // Guarda sempre a escolha no PlayerPrefs
         PlayerPrefs.SetInt(PREF_RESOLUTION, index);
-    }
+        PlayerPrefs.Save();
 
-    public void OnSensitivityChanged(float value)
-    {
-        AplicarSensibilidade(value);
-        PlayerPrefs.SetFloat(PREF_SENSITIVITY, value);
+        // Aplica a resolução agora se possível
+        AplicarResolucao(index);
     }
 
     private void AplicarResolucao(int index)
     {
+        if (resolutions == null || resolutions.Length == 0) return;
+
         Resolution r = resolutions[index];
         Screen.SetResolution(r.width, r.height, Screen.fullScreenMode);
+    }
+
+    // ======= SENSIBILIDADE =======
+    private void CarregarSensibilidade()
+    {
+        float sens = PlayerPrefs.GetFloat(PREF_SENSITIVITY, 1.0f);
+        sensitivitySlider.value = sens;
+
+        // Aplica apenas se houver player
+        if (currentCameraLook != null)
+            AplicarSensibilidade(sens);
+    }
+
+    public void OnSensitivityChanged(float value)
+    {
+        // Guarda sempre no PlayerPrefs
+        PlayerPrefs.SetFloat(PREF_SENSITIVITY, value);
+        PlayerPrefs.Save();
+
+        // Aplica apenas se houver player activo
+        if (currentCameraLook != null)
+            AplicarSensibilidade(value);
     }
 
     private void AplicarSensibilidade(float value)
