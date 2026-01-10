@@ -306,13 +306,32 @@ public class Weapon : NetworkBehaviour
         else { /* ... (código de erro) ... */ Destroy(bullet); }
     }
 
-    public void AddReserveAmmo(int amount)
+public void AddReserveAmmo(int amount)
+{
+    if (amount <= 0) return;
+
+    // Se não houver config ativo, tenta achar um
+    if (activeConfig == null)
     {
-        if (!requireConfigForFire || activeConfig == null || amount <= 0) return;
-        reserveAmmo = Mathf.Max(0, reserveAmmo + amount);
-        UpdateHUD();
-        if (currentAmmo == 0) TryReload();
+        RefreshActiveConfig(applyImmediately: false);
+        if (activeConfig == null && allConfigs != null && allConfigs.Length > 0)
+            activeConfig = allConfigs[0]; // fallback:  primeira arma
     }
+
+    // Se ainda não tiver config, usa fallback de 30 balas por "carregador"
+    int bulletsToAdd = (activeConfig != null) ? (amount * activeConfig.magSize) : (amount * 30);
+    
+    reserveAmmo = Mathf. Max(0, reserveAmmo + bulletsToAdd);
+
+    // ✅ ATUALIZA O DICIONÁRIO (fonte da verdade permanente)
+    if (activeConfig != null && ammoByConfig.TryGetValue(activeConfig, out var st))
+    {
+        st.reserve = reserveAmmo;
+    }
+
+    UpdateHUD();
+    if (currentAmmo == 0) TryReload();
+}
 
     void TryReload()
     {

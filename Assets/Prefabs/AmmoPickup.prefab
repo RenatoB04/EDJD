@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourcePickup
   healthAmount: 0
-  ammoReserveAmount: 1
+  ammoReserveAmount: 30
   targetTag: Player
   pickupSound: {fileID: 0}
   pickupVFX: {fileID: 0}

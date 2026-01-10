@@ -1,95 +1,177 @@
 using UnityEngine;
+using System. Collections;
+using System.Reflection;
 
-public class ResourcePickup : MonoBehaviour
+public class ResourcePickup :  MonoBehaviour
 {
     [Header("Recursos")]
-    public float healthAmount = 0f;        // quanto cura
-    public int ammoReserveAmount = 0;      // quantos "carregadores" dá (1 = 1 mag)
-    public string targetTag = "Player";    // tag do player
+    public float healthAmount = 0f;
+    [Tooltip("Quantidade de balas a adicionar (ex: 30 para um carregador)")]
+    public int ammoReserveAmount = 30;
+    public string targetTag = "Player";
 
     [Header("Efeitos")]
     public AudioClip pickupSound;
     public GameObject pickupVFX;
 
-    // Proteção anti-múltiplas ativações no mesmo frame
     bool pickedUp = false;
 
     void OnTriggerEnter(Collider other)
     {
-        // se já foi apanhado uma vez, ignora chamadas repetidas
         if (pickedUp) return;
 
-        // verificar se quem entrou é o player (objeto com Tag Player
-        // ou algum filho dele)
         if (!other.CompareTag(targetTag) && !other.transform.root.CompareTag(targetTag))
-        {
             return;
-        }
 
-        // marcamos como apanhado para não repetir a lógica
         pickedUp = true;
 
-        // tenta obter componentes do jogador
-        Transform playerRoot = other.transform.root;
+        Transform playerRoot = other.transform. root;
 
-        // tentar encontrar Health e Weapon no collider atingido...
-        Health playerHealth = other.GetComponent<Health>();
-        Weapon playerWeapon = other.GetComponent<Weapon>();
+        // Health
+        Health playerHealth = other.GetComponent<Health>() ?? playerRoot.GetComponent<Health>();
 
-        // ...se não estiverem no collider em si, tenta no root
-        if (playerHealth == null) playerHealth = playerRoot.GetComponent<Health>();
-        if (playerWeapon == null) playerWeapon = playerRoot.GetComponent<Weapon>();
+        bool appliedHealth = false;
+        bool appliedAmmo = false;
 
-        // ...e finalmente tenta em filhos do player (ex: WeaponHolder / arma na mão)
-        if (playerWeapon == null) playerWeapon = playerRoot.GetComponentInChildren<Weapon>(true);
-
-        // aplicar cura
+        // Vida
         if (healthAmount > 0f)
         {
             if (playerHealth != null)
             {
-                playerHealth.Heal(healthAmount);
+                playerHealth. Heal(healthAmount);
+                appliedHealth = true;
             }
             else
             {
-                Debug.LogWarning("Pickup: Falhou ao encontrar componente Health no Player.");
+                Debug.LogWarning("[Pickup] Player sem componente Health.");
             }
         }
 
-        // aplicar munição
+        // Munição
         if (ammoReserveAmount > 0)
         {
-            if (playerWeapon != null)
+            appliedAmmo = true;
+        }
+
+        // Efeitos visuais/sonoros imediatos
+        if (appliedHealth || appliedAmmo)
+        {
+            if (pickupSound) AudioSource.PlayClipAtPoint(pickupSound, transform. position);
+            if (pickupVFX) Instantiate(pickupVFX, transform. position, Quaternion.identity);
+
+            // Desativa collider
+            var col = GetComponent<Collider>();
+            if (col) col.enabled = false;
+
+            if (appliedAmmo)
             {
-                // AddReserveAmmo já trata de converter '1' em 1 carregador
-                playerWeapon.AddReserveAmmo(ammoReserveAmount);
+                StartCoroutine(TryApplyAmmoAndDestroy(playerRoot));
             }
             else
             {
-                Debug.LogWarning("Pickup: Falhou ao encontrar componente Weapon no Player.");
+                Destroy(gameObject);
             }
         }
+    }
 
-        // se conseguimos interagir com pelo menos um dos dois (vida ou munição),
-        // toca efeitos e elimina o pickup
-        if (playerHealth != null || playerWeapon != null)
+    IEnumerator TryApplyAmmoAndDestroy(Transform playerRoot)
+    {
+        WeaponConfig[] configs = playerRoot.GetComponentsInChildren<WeaponConfig>(true);
+
+        if (configs. Length == 0)
         {
-            if (pickupSound)
-            {
-                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-            }
-
-            if (pickupVFX)
-            {
-                Instantiate(pickupVFX, transform.position, Quaternion.identity);
-            }
-
-            // desativa o collider imediatamente para não voltar a disparar neste frame
-            Collider col = GetComponent<Collider>();
-            if (col) col.enabled = false;
-
-            // destrói o pickup
+            Debug.LogError("[Pickup] Nenhum WeaponConfig encontrado!");
             Destroy(gameObject);
+            yield break;
         }
+
+        bool foundActiveWeapon = false;
+        Component activeWeaponComp = null;
+        FieldInfo activeCurrentField = null;
+        FieldInfo activeReserveField = null;
+
+        // Processa APENAS a arma ATIVA
+        foreach (var cfg in configs)
+        {
+            // Ignora armas inativas
+            if (! cfg.gameObject.activeInHierarchy)
+            {
+                Debug.Log($"[Pickup] ⏭️ {cfg.name} está inativa, a ignorar.");
+                continue;
+            }
+
+            Component[] allComps = cfg.GetComponents<Component>();
+
+            foreach (var comp in allComps)
+            {
+                if (comp == null) continue;
+
+                var compType = comp.GetType();
+
+                if (compType.Name == "Weapon" && compType. Namespace != null && compType. Namespace.Contains("InfimaGames"))
+                {
+                    try
+                    {
+                        FieldInfo currentField = compType.GetField("ammunitionCurrent", BindingFlags.NonPublic | BindingFlags. Instance);
+                        FieldInfo reserveField = compType.GetField("ammunitionReserve", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                        if (reserveField != null && currentField != null)
+                        {
+                            int currentAmmo = (int)currentField.GetValue(comp);
+                            int reserveBefore = (int)reserveField.GetValue(comp);
+
+                            Debug. Log($"[Pickup] 📌 {cfg.name} está EQUIPADA! Munição ANTES: {currentAmmo}/{reserveBefore}");
+
+                            int newReserve = reserveBefore + ammoReserveAmount;
+
+                            reserveField. SetValue(comp, newReserve);
+                            Debug.Log($"[Pickup] ✅ {cfg.name}:  {reserveBefore} → {newReserve} (+{ammoReserveAmount})");
+
+                            foundActiveWeapon = true;
+                            activeWeaponComp = comp;
+                            activeCurrentField = currentField;
+                            activeReserveField = reserveField;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug. LogError($"[Pickup] ❌ Erro:  {ex.Message}");
+                    }
+
+                    break;
+                }
+            }
+
+            if (foundActiveWeapon)
+                break;
+        }
+
+        // Yield FORA do try-catch
+        if (foundActiveWeapon && activeWeaponComp != null)
+        {
+            yield return null;
+
+            try
+            {
+                int currentAmmoAfter = (int)activeCurrentField.GetValue(activeWeaponComp);
+                int reserveAfter = (int)activeReserveField.GetValue(activeWeaponComp);
+
+                if (AmmoUI. Instance != null)
+                {
+                    AmmoUI.Instance. Set(currentAmmoAfter, reserveAfter);
+                    Debug.Log($"[Pickup] ✅ UI atualizada para {currentAmmoAfter}/{reserveAfter}!");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[Pickup] ❌ Erro ao atualizar UI: {ex. Message}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Pickup] ⚠️ Nenhuma arma ATIVA encontrada!");
+        }
+
+        Destroy(gameObject);
     }
 }
