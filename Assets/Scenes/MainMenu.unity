@@ -233,6 +233,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jogar
       objectReference: {fileID: 0}
+    - target: {fileID: 5230826317255391481, guid: 8a1c7b8eddbf02a4393601bd1e08f53d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -580,7 +584,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &842836543
 RectTransform:
   m_ObjectHideFlags: 0
@@ -599,7 +603,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 48.002014, y: -0.0014038086}
+  m_AnchoredPosition: {x: 48.001953, y: -0.0014038086}
   m_SizeDelta: {x: 377.22, y: 257.97}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &842836544
@@ -934,6 +938,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Def
       objectReference: {fileID: 0}
+    - target: {fileID: 5230826317255391481, guid: 8a1c7b8eddbf02a4393601bd1e08f53d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1017,7 +1025,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1096,11 +1104,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 2297.2
+      value: 1950.9
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1374.2
+      value: 1155.8
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_LocalScale.x
@@ -1144,11 +1152,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 47.992
+      value: -2.1244
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0049706
+      value: -31.607
       objectReference: {fileID: 0}
     - target: {fileID: 795530185886755870, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1181,7 +1189,7 @@ PrefabInstance:
     - target: {fileID: 7245248754045897289, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: d173fb271c10fd24e9f097f36454d859, type: 3}
+      objectReference: {fileID: 21300000, guid: ddb2512b70e060246a6d93d88f708916, type: 3}
     - target: {fileID: 7245248754045897289, guid: b8bc480b03205d641af18a96ea6ba545, type: 3}
       propertyPath: m_Color.b
       value: 0.5
@@ -1413,10 +1421,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1160919616}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 48, y: -0.0000228888}
-  m_SizeDelta: {x: 2297.218, y: 1374.22}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -1.9603, y: -31.607}
+  m_SizeDelta: {x: 1951.2, y: 63.214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1720229132
 MonoBehaviour:
@@ -1438,7 +1446,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d173fb271c10fd24e9f097f36454d859, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ddb2512b70e060246a6d93d88f708916, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
