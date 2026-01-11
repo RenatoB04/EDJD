@@ -1704,11 +1704,11 @@ MonoBehaviour:
   renderers: []
   teamAColor: {r: 0, g: 0, b: 1, a: 0.5019608}
   teamBColor: {r: 0.8352941, g: 0.7294118, b: 0.59607846, a: 0.39215687}
-  botColor: {r: 1, g: 0, b: 0, a: 0}
-  neutralColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  enemyOutlineColor: {r: 1, g: 0.9175284, b: 0, a: 1}
+  botColor: {r: 1, g: 1, b: 1, a: 0}
+  neutralColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+  enemyOutlineColor: {r: 1, g: 0.5473725, b: 0, a: 1}
   allyOutlineColor: {r: 0, g: 1, b: 1, a: 0}
-  enemyOutlineWidth: 0.02
+  enemyOutlineWidth: 0.01
   allyOutlineWidth: 0
 --- !u!114 &8321578698747958271
 MonoBehaviour:
