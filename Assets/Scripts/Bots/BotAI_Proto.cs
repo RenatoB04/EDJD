@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.Netcode;
-
 [RequireComponent(typeof(NavMeshAgent))]
 public class BotAI_Proto : NetworkBehaviour
 {
@@ -15,81 +14,61 @@ public class BotAI_Proto : NetworkBehaviour
         Retreat,
         GoToAmmo
     }
-
     [Header("Debug")]
     [SerializeField] BotState currentState = BotState.Patrol;
     public bool debugLogs = false;
-
     [Header("Referências")]
     public Transform eyes;
     public Animator animator;
     public BotCombat combat;
-
-    // Campos de leitura de vida (compatibilidade)
     public MonoBehaviour healthSource;
     public string healthCurrentField = "currentHealth";
     public string healthMaxField = "maxHealth";
-
     [Header("Patrulha")]
     public Transform[] patrolPoints;
     public float waypointTolerance = 1.0f;
-
     [Header("Pickups")]
     public Transform[] healthPickups;
     public Transform[] ammoPickups;
-
     [Header("Visão / Target")]
     public string playerTag = "Player";
     public LayerMask obstacleMask = ~0;
     public float viewRadius = 60f;
     public float maxSearchTime = 10f;
-
     [Header("Otimização (NOVO)")]
     [Tooltip("Intervalo em segundos entre verificações de Raycast de visão.")]
-    public float visionCheckInterval = 0.2f; // ~5 vezes por segundo
-
+    public float visionCheckInterval = 0.2f; 
     [Header("Combate")]
     public float idealCombatDistance = 10f;
     public float tooCloseDistance = 4f;
     public float giveUpDistance = 120f;
-
     [Header("Prioridades")]
     [Range(0f, 1f)] public float lowHealthThreshold = 0.2f;
     [Range(0f, 1f)] public float lowAmmoThreshold = 0.2f;
-
     [Header("Fuga")]
     public float retreatSpeedMultiplier = 1.5f;
-
     [Header("Comunicação")]
     public static List<BotAI_Proto> allBots = new List<BotAI_Proto>();
     public float alertRadius = 25f;
-
-    // --- Interno ---
     NavMeshAgent agent;
     Transform currentTarget;
     bool isDead = false;
-
     float baseSpeed;
     int patrolIndex = -1;
     int patrolDirection = 1;
     Vector3 lastKnownPlayerPos;
     float timeSinceLastSeen;
     float targetSearchTimer = 0f;
-
-    // Variáveis de Otimização
     float visionTimer = 0f;
     bool cachedVisibility = false;
-
     void OnEnable()
     {
         allBots.Add(this);
     }
-
     void OnDisable()
     {
         allBots.Remove(this);
     }
-
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -97,20 +76,16 @@ public class BotAI_Proto : NetworkBehaviour
         if (!eyes) eyes = transform;
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!combat) combat = GetComponent<BotCombat>();
-
         if (healthSource == null)
         {
             var h = GetComponent("Health");
             if (h != null) healthSource = (MonoBehaviour)h;
         }
-
         patrolDirection = Random.value < 0.5f ? 1 : -1;
         patrolIndex = -1;
     }
-
     public override void OnNetworkSpawn()
     {
-        // A IA corre apenas no servidor
         if (!IsServer)
         {
             enabled = false;
@@ -118,12 +93,9 @@ public class BotAI_Proto : NetworkBehaviour
         }
         ChangeState(BotState.Patrol);
     }
-
     void Update()
     {
         if (!IsServer || !agent || !agent.isOnNavMesh) return;
-
-        // Verificar morte
         var health = GetComponent<Health>();
         if (health != null && health.isDead.Value)
         {
@@ -134,19 +106,14 @@ public class BotAI_Proto : NetworkBehaviour
             }
             return;
         }
-
-        // 1. Procurar Jogador (a cada 0.5s)
         targetSearchTimer += Time.deltaTime;
         if (targetSearchTimer > 0.5f)
         {
             FindClosestPlayer();
             targetSearchTimer = 0f;
         }
-
-        // 2. Decisão de Estado e Visão Otimizada
         float health01 = GetHealth01();
         bool lowHealth = health01 > 0f && health01 <= lowHealthThreshold;
-
         float ammo01 = 1f;
         bool lowAmmo = false;
         if (combat)
@@ -154,14 +121,10 @@ public class BotAI_Proto : NetworkBehaviour
             ammo01 = combat.AmmoNormalized;
             lowAmmo = ammo01 <= lowAmmoThreshold;
         }
-
-        // LÓGICA DE VISÃO OTIMIZADA
         float distToPlayer = Mathf.Infinity;
         if (currentTarget)
         {
             distToPlayer = Vector3.Distance(transform.position, currentTarget.position);
-            
-            // Só executa o Raycast pesado se o timer permitir
             visionTimer += Time.deltaTime;
             if (visionTimer >= visionCheckInterval)
             {
@@ -173,9 +136,7 @@ public class BotAI_Proto : NetworkBehaviour
         {
             cachedVisibility = false;
         }
-
         bool playerVisible = cachedVisibility;
-
         if (playerVisible)
         {
             lastKnownPlayerPos = currentTarget.position;
@@ -185,8 +146,6 @@ public class BotAI_Proto : NetworkBehaviour
         {
             timeSinceLastSeen += Time.deltaTime;
         }
-
-        // Prioridades e Transições
         if (lowHealth)
         {
             if (currentState != BotState.Retreat) ChangeState(BotState.Retreat);
@@ -206,7 +165,6 @@ public class BotAI_Proto : NetworkBehaviour
             }
             else
             {
-                // Perdeu visão
                 if (timeSinceLastSeen > 0f && timeSinceLastSeen <= maxSearchTime &&
                     (currentState == BotState.Chase || currentState == BotState.Attack))
                 {
@@ -219,8 +177,6 @@ public class BotAI_Proto : NetworkBehaviour
                 }
             }
         }
-
-        // 3. Execução
         switch (currentState)
         {
             case BotState.Patrol: TickPatrol(); break;
@@ -230,10 +186,8 @@ public class BotAI_Proto : NetworkBehaviour
             case BotState.Retreat: TickRetreat(); break;
             case BotState.GoToAmmo: TickGoToAmmo(); break;
         }
-
         UpdateAnimator();
     }
-
     void HandleDeath()
     {
         if (animator)
@@ -241,28 +195,23 @@ public class BotAI_Proto : NetworkBehaviour
             animator.SetBool("IsDead", true);
             animator.SetFloat("Speed", 0f);
         }
-
         if (agent)
         {
             agent.isStopped = true;
             agent.ResetPath();
         }
-
         if (combat) combat.SetInCombat(false);
     }
-
     void FindClosestPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         Transform closest = null;
         float minDst = Mathf.Infinity;
         Vector3 myPos = transform.position;
-
         foreach (var p in players)
         {
             var h = p.GetComponent<Health>();
             if (h != null && h.isDead.Value) continue;
-
             float d = Vector3.Distance(p.transform.position, myPos);
             if (d < minDst)
             {
@@ -270,13 +219,9 @@ public class BotAI_Proto : NetworkBehaviour
                 closest = p.transform;
             }
         }
-
         currentTarget = closest;
         if (combat) combat.SetTarget(currentTarget);
     }
-
-    // --- ESTADOS ---
-
     void TickPatrol()
     {
         if (patrolPoints == null || patrolPoints.Length == 0)
@@ -284,48 +229,37 @@ public class BotAI_Proto : NetworkBehaviour
             agent.isStopped = true;
             return;
         }
-
         agent.isStopped = false;
         agent.speed = baseSpeed;
-
         if (patrolIndex < 0 || patrolIndex >= patrolPoints.Length)
         {
             patrolIndex = Random.Range(0, patrolPoints.Length);
             agent.SetDestination(patrolPoints[patrolIndex].position);
             return;
         }
-
         Transform curWp = patrolPoints[patrolIndex];
         if (!curWp) { AdvancePatrolIndex(); return; }
-
         float sqrDist = (curWp.position - transform.position).sqrMagnitude;
         if (!agent.hasPath || sqrDist <= waypointTolerance * waypointTolerance)
         {
             AdvancePatrolIndex();
             if (patrolPoints[patrolIndex]) agent.SetDestination(patrolPoints[patrolIndex].position);
         }
-
         if (combat) combat.SetInCombat(false);
     }
-
     void TickChase()
     {
         if (!currentTarget) { ChangeState(BotState.Search); return; }
-
         agent.isStopped = false;
         agent.speed = baseSpeed;
         agent.SetDestination(currentTarget.position);
-
         if (combat) combat.SetInCombat(true);
     }
-
     void TickAttack()
     {
         if (!currentTarget) { ChangeState(BotState.Search); return; }
-
         Vector3 toPlayer = currentTarget.position - transform.position;
         float dist = toPlayer.magnitude;
-
         if (dist > idealCombatDistance + 1f)
         {
             agent.isStopped = false;
@@ -342,16 +276,13 @@ public class BotAI_Proto : NetworkBehaviour
         {
             agent.isStopped = true;
             agent.ResetPath();
-
             Vector3 dir = (currentTarget.position - transform.position).normalized;
             dir.y = 0;
             if (dir != Vector3.zero)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * 5f);
         }
-
         if (combat) combat.SetInCombat(true);
     }
-
     void TickSearch()
     {
         agent.isStopped = false;
@@ -359,12 +290,10 @@ public class BotAI_Proto : NetworkBehaviour
         agent.SetDestination(lastKnownPlayerPos);
         if (combat) combat.SetInCombat(false);
     }
-
     void TickRetreat()
     {
         agent.isStopped = false;
         agent.speed = baseSpeed * retreatSpeedMultiplier;
-
         Transform hp = GetClosestTransform(healthPickups, transform.position);
         if (hp != null)
         {
@@ -375,39 +304,27 @@ public class BotAI_Proto : NetworkBehaviour
             Vector3 away = (transform.position - currentTarget.position).normalized;
             agent.SetDestination(transform.position + away * 8f);
         }
-
         if (combat) combat.SetInCombat(true);
     }
-
     void TickGoToAmmo()
     {
         agent.isStopped = false;
         agent.speed = baseSpeed;
-
         Transform ammo = GetClosestTransform(ammoPickups, transform.position);
         if (ammo != null)
             agent.SetDestination(ammo.position);
         else
             ChangeState(BotState.Patrol);
-
         if (combat) combat.SetInCombat(false);
     }
-
-    // --- UTILITÁRIOS ---
-
-    // Método renomeado para "CheckVisibilityPhysics" para ser claro
     bool CheckVisibilityPhysics(float distToPlayer)
     {
         if (!currentTarget) return false;
         if (distToPlayer > viewRadius) return false;
-
         Vector3 origin = eyes.position;
-        // Aponta ligeiramente acima (1.0f) para evitar colisões com chão/joelhos
         Vector3 targetPos = currentTarget.position + Vector3.up * 1.0f;
         Vector3 dir = (targetPos - origin);
         float dist = dir.magnitude;
-
-        // O Raycast pesado que estamos a limitar
         if (Physics.Raycast(origin, dir.normalized, out RaycastHit hit, dist, obstacleMask, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.transform != currentTarget && hit.collider.transform.root != currentTarget)
@@ -415,7 +332,6 @@ public class BotAI_Proto : NetworkBehaviour
         }
         return true;
     }
-
     void AdvancePatrolIndex()
     {
         if (patrolPoints == null || patrolPoints.Length == 0) return;
@@ -427,7 +343,6 @@ public class BotAI_Proto : NetworkBehaviour
             if (patrolIndex < 0) patrolIndex = patrolPoints.Length - 1;
         }
     }
-
     Transform GetClosestTransform(Transform[] list, Vector3 from)
     {
         if (list == null || list.Length == 0) return null;
@@ -441,32 +356,26 @@ public class BotAI_Proto : NetworkBehaviour
         }
         return best;
     }
-
     float GetHealth01()
     {
         var h = GetComponent<Health>();
         if (h != null) return h.currentHealth.Value / h.maxHealth;
         return 1f;
     }
-
     void ChangeState(BotState newState)
     {
         if (currentState == newState) return;
         currentState = newState;
-
         if (currentState == BotState.Search && lastKnownPlayerPos != Vector3.zero)
             agent.SetDestination(lastKnownPlayerPos);
-
         if (combat)
         {
             bool inCombat = (currentState == BotState.Chase) || (currentState == BotState.Attack) || (currentState == BotState.Retreat);
             combat.SetInCombat(inCombat);
         }
-
         if (currentState == BotState.Chase || currentState == BotState.Attack)
             AlertNearbyBots();
     }
-
     void AlertNearbyBots()
     {
         if (!currentTarget) return;
@@ -478,7 +387,6 @@ public class BotAI_Proto : NetworkBehaviour
                 bot.OnAllySpottedPlayer(currentTarget.position);
         }
     }
-
     public void OnAllySpottedPlayer(Vector3 pos)
     {
         lastKnownPlayerPos = pos;
@@ -486,12 +394,10 @@ public class BotAI_Proto : NetworkBehaviour
         if (currentState == BotState.Patrol || currentState == BotState.Search)
             ChangeState(BotState.Chase);
     }
-
     void UpdateAnimator()
     {
         if (!animator || !agent) return;
         animator.SetFloat("Speed", agent.velocity.magnitude);
     }
-
     public void HearSound(Vector3 pos, float loudness) { }
 }

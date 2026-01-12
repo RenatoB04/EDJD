@@ -6,8 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Chat;
 using ExitGames.Client.Photon;
-using Photon.Pun; // para fallback do PhotonServerSettings
-
+using Photon.Pun; 
 public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
 {
     [Header("Photon Chat")]
@@ -16,50 +15,37 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
     [SerializeField] private string chatVersion = "1.0";
     [SerializeField] private string fixedRegion = "eu";
     [SerializeField] private string lobbyChannel = "global-lobby";
-
     [Header("Identidade")]
-    [SerializeField] private TMP_InputField playerNameInput;   // input do NOME (do teu Lobby Manager)
+    [SerializeField] private TMP_InputField playerNameInput;   
     [SerializeField] private string invalidSampleName = "Nome Jogador";
-
     [Header("UI (mensagens)")]
-    [SerializeField] private TMP_InputField inputField;   // onde escreves a MENSAGEM
-    [SerializeField] private Button sendButton;           // botão Enviar
-    [SerializeField] private ScrollRect scrollRect;       // ScrollView
-    [SerializeField] private TMP_Text messagesText;       // TMP_Text no Content
-
+    [SerializeField] private TMP_InputField inputField;   
+    [SerializeField] private Button sendButton;           
+    [SerializeField] private ScrollRect scrollRect;       
+    [SerializeField] private TMP_Text messagesText;       
     [Header("Controlo de fluxo")]
-    [SerializeField] private Button connectButton;        // (opcional) botão "Conectar" do lobby
-    [SerializeField] private bool sendOnEnter = true;     // Enter envia (bloqueado até subscrever)
+    [SerializeField] private Button connectButton;        
+    [SerializeField] private bool sendOnEnter = true;     
     [SerializeField] private int maxVisibleMessages = 100;
-
     [Header("Debug / Test")]
     [Tooltip("Se true, tenta auto-conectar 1s após Start() (útil para testes no Editor).")]
     public bool autoConnectForTesting = false;
-
     private ChatClient _chat;
     private readonly Queue<string> _lines = new Queue<string>(128);
     private bool isSubscribed = false;
     private bool isConnectingOrConnected = false;
     private string displayName = "";
-
-    // ================== Unity ==================
     void Awake()
     {
         SetChatInteractable(false);
-
         if (sendButton) sendButton.onClick.AddListener(OnClickSend);
         if (inputField && sendOnEnter) inputField.onSubmit.AddListener(_ => OnClickSend());
-
         if (connectButton) connectButton.onClick.AddListener(OnConnectButtonPressed);
-
         TryAutoWireUI();
     }
-
     IEnumerator Start()
     {
         Application.runInBackground = true;
-
-        // Fallback: se AppId vazio no componente, tenta usar AppSettings (PhotonServerSettings)
         if (string.IsNullOrWhiteSpace(appIdChat))
         {
             var settings = PhotonNetwork.PhotonServerSettings;
@@ -69,7 +55,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
                 Debug.Log("[SimpleLobbyChat] AppIdChat vazio no componente; a usar AppId do PhotonServerSettings.");
             }
         }
-
         if (string.IsNullOrWhiteSpace(appIdChat))
         {
             Debug.LogError("[SimpleLobbyChat] AppIdChat vazio. Define no componente ou em PhotonServerSettings > AppSettings > AppIdChat.");
@@ -77,10 +62,7 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             enabled = false;
             yield break;
         }
-
         AppendSystem("Define o teu nome e carrega <b>Conectar</b> para ativar o chat.");
-
-        // Se estivermos em modo de teste, conecta automaticamente após 1s
         if (autoConnectForTesting)
         {
             yield return new WaitForSeconds(1f);
@@ -88,10 +70,8 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             OnConnectButtonPressed();
         }
     }
-
     void Update()
     {
-        // Necessário para o Photon Chat processar callbacks
         try
         {
             _chat?.Service();
@@ -101,7 +81,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             Debug.LogError("[SimpleLobbyChat] Exception no ChatClient.Service(): " + ex);
         }
     }
-
     void OnDestroy()
     {
         if (_chat != null) { _chat.Disconnect(); _chat = null; }
@@ -109,8 +88,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
         if (sendButton) sendButton.onClick.RemoveListener(OnClickSend);
         if (inputField && sendOnEnter) inputField.onSubmit.RemoveAllListeners();
     }
-
-    // ================== Fluxo de ligação ==================
     public void OnConnectButtonPressed()
     {
         if (isConnectingOrConnected)
@@ -119,7 +96,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             Debug.Log("[SimpleLobbyChat] OnConnectButtonPressed: já ligado/ouligando.");
             return;
         }
-
         string proposed = GetProposedName();
         if (!IsNameValid(proposed))
         {
@@ -128,11 +104,8 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             Debug.Log("[SimpleLobbyChat] Nome inválido para chat: '" + proposed + "'");
             return;
         }
-
         displayName = proposed.Trim();
         AppendSystem($"[chat] A tentar conectar como <b>{displayName}</b>...");
-
-        // prepara ChatClient
         try
         {
             if (_chat == null)
@@ -141,7 +114,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
                 _chat.ChatRegion = fixedRegion;
                 Debug.Log("[SimpleLobbyChat] Criado ChatClient, region=" + fixedRegion);
             }
-
             bool ok = _chat.Connect(appIdChat, chatVersion, new AuthenticationValues(displayName));
             isConnectingOrConnected = true;
             Debug.Log($"[SimpleLobbyChat] Connect chamada -> returned {ok}. appIdChat length={(appIdChat?.Length ?? 0)}");
@@ -153,18 +125,14 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             isConnectingOrConnected = false;
         }
     }
-
     string GetProposedName()
     {
         if (playerNameInput != null && !string.IsNullOrWhiteSpace(playerNameInput.text))
             return playerNameInput.text;
-
         if (!string.IsNullOrWhiteSpace(PhotonNetwork.NickName))
             return PhotonNetwork.NickName;
-
         return string.Empty;
     }
-
     bool IsNameValid(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) return false;
@@ -174,18 +142,14 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             n.Equals(invalidSampleName, StringComparison.OrdinalIgnoreCase)) return false;
         return true;
     }
-
     void SetChatInteractable(bool enabledUI)
     {
         if (sendButton) sendButton.interactable = enabledUI;
         if (inputField) inputField.readOnly = !enabledUI;
     }
-
-    // ================== UI de envio ==================
     public void OnClickSend()
     {
         if (inputField == null) { AppendSystem("⚠ InputField da mensagem não está atribuído."); return; }
-
         var currentName = GetProposedName();
         if (!IsNameValid(displayName) || !IsNameValid(currentName))
         {
@@ -194,39 +158,31 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             return;
         }
         displayName = currentName.Trim();
-
         if (_chat == null || !_chat.CanChat || !isSubscribed)
         {
             AppendSystem("⚠ O chat ainda não está pronto. Tenta novamente.");
             SetChatInteractable(false);
             return;
         }
-
         string msg = inputField.text;
         if (string.IsNullOrWhiteSpace(msg)) return;
-
         string trimmed = msg.Trim();
         bool sent = _chat.PublishMessage(lobbyChannel, trimmed);
         Debug.Log($"[SimpleLobbyChat] PublishMessage returned: {sent}");
-
         AppendLine($"<b>{displayName}</b>: {trimmed}");
-
         inputField.text = string.Empty;
         inputField.ActivateInputField();
     }
-
     private void AppendLine(string line)
     {
         _lines.Enqueue(line);
         while (_lines.Count > maxVisibleMessages) _lines.Dequeue();
-
         if (messagesText != null)
         {
             messagesText.enableWordWrapping = true;
             messagesText.richText = true;
             messagesText.alignment = TextAlignmentOptions.TopLeft;
             messagesText.text = string.Join("\n", _lines);
-
             Canvas.ForceUpdateCanvases();
             if (scrollRect != null && scrollRect.content != null)
             {
@@ -238,17 +194,13 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             }
         }
     }
-
     private void AppendSystem(string text) => AppendLine($"<color=#888>[system]</color> {text}");
-
     void TryAutoWireUI()
     {
         if (scrollRect == null) scrollRect = GetComponentInChildren<ScrollRect>(true);
         if (messagesText == null && scrollRect != null)
             messagesText = scrollRect.content != null ? scrollRect.content.GetComponentInChildren<TMP_Text>(true) : null;
     }
-
-    // ================== Photon Chat callbacks ==================
     public void OnConnected()
     {
         Debug.Log("[SimpleLobbyChat] OnConnected()");
@@ -264,7 +216,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
             AppendSystem("[chat] Erro ao subscrever canal: " + ex.Message);
         }
     }
-
     public void OnSubscribed(string[] channels, bool[] results)
     {
         Debug.Log("[SimpleLobbyChat] OnSubscribed(): channels=" + string.Join(",", channels));
@@ -272,7 +223,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
         AppendSystem($"Joined channel <b>{lobbyChannel}</b>.");
         SetChatInteractable(true);
     }
-
     public void OnUnsubscribed(string[] channels)
     {
         Debug.Log("[SimpleLobbyChat] OnUnsubscribed()");
@@ -280,7 +230,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
         SetChatInteractable(false);
         AppendSystem($"Left channel(s): {string.Join(", ", channels)}.");
     }
-
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
         Debug.Log($"[SimpleLobbyChat] OnGetMessages: channel={channelName} count={messages.Length}");
@@ -292,7 +241,6 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
                 AppendLine($"<b>{sender}</b>: {text}");
         }
     }
-
     public void OnDisconnected()
     {
         Debug.Log("[SimpleLobbyChat] OnDisconnected()");
@@ -301,20 +249,16 @@ public class SimpleLobbyChat : MonoBehaviour, IChatClientListener
         SetChatInteractable(false);
         AppendSystem("<color=#f66>Disconnected.</color>");
     }
-
     public void OnChatStateChange(ChatState state)
     {
         Debug.Log("[SimpleLobbyChat] OnChatStateChange: " + state);
         AppendSystem($"[chat] Chat state: {state}");
     }
-
     public void DebugReturn(DebugLevel level, string message)
     {
         Debug.Log($"[SimpleLobbyChat] DebugReturn ({level}): {message}");
         AppendSystem($"[chat] Debug: {message}");
     }
-
-    // Assinatura usada nas versões antigas do Photon Chat (compatível)
     public void OnPrivateMessage(string sender, object message, string channelName) { }
     public void OnUserSubscribed(string channel, string user) { }
     public void OnUserUnsubscribed(string channel, string user) { }

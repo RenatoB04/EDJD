@@ -1,18 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
-
 public class OfflineSpawnManager : MonoBehaviour
 {
     [SerializeField] Transform spawnPoint;
-
     IEnumerator Start()
     {
-        // só mexe se viemos do botão "Jogar com Bots"
         if (PlayerPrefs.GetInt("OfflineMode", 0) != 1)
             yield break;
-
-        // espera o Netcode instanciar o jogador
         GameObject localPlayer = null;
         for (int i = 0; i < 120 && localPlayer == null; i++)
         {
@@ -25,12 +20,9 @@ public class OfflineSpawnManager : MonoBehaviour
                     break;
                 }
             }
-            yield return null; // espera 1 frame
+            yield return null; 
         }
-
-        // limpa a flag
         PlayerPrefs.SetInt("OfflineMode", 0);
-
         if (localPlayer != null && spawnPoint != null)
         {
             localPlayer.transform.SetPositionAndRotation(
@@ -40,7 +32,7 @@ public class OfflineSpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("OfflineSpawnManager: não encontrou player ou spawnPoint.");
+            Debug.LogWarning("OfflineSpawnManager: nï¿½o encontrou player ou spawnPoint.");
         }
     }
 }

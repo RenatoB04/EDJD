@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class WeaponConfig : MonoBehaviour
 {
     [Header("Refs")]
@@ -9,14 +8,12 @@ public class WeaponConfig : MonoBehaviour
     public AudioClip fireSfx;
     public AudioClip emptyClickSfx;             
     public AudioClip reloadSfx;
-
     [Header("Stats")]
     public string displayName = "Pistol";       
     public bool automatic = false;              
     public float bulletSpeed = 40f;
     public float fireRate = 0.12f;
     public float maxAimDistance = 200f;
-
     [Header("Ammo")]
     public int magSize = 12;                    
     public int startingReserve = 48;           

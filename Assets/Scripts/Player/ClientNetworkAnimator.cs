@@ -1,6 +1,5 @@
 using Unity.Netcode.Components;
 using UnityEngine;
-
 namespace InfimaGames.LowPolyShooterPack
 {
     [DisallowMultipleComponent]
@@ -8,7 +7,7 @@ namespace InfimaGames.LowPolyShooterPack
     {
         protected override bool OnIsServerAuthoritative()
         {
-            return false; // Isto permite que o cliente controle as suas próprias animações
+            return false; 
         }
     }
 }

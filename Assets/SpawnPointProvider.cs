@@ -1,33 +1,22 @@
-// SpawnPointsProvider.cs
-// Coloca este componente numa GameObject da cena (por exemplo "SpawnPointsProvider")
-// e arrasta os dois empties (SP_A e SP_B) para os campos "Spawn A" e "Spawn B".
-
 using System;
 using UnityEngine;
-
 public class SpawnPointsProvider : MonoBehaviour
 {
     public static SpawnPointsProvider Instance { get; private set; }
-
     [Header("Arrasta aqui os spawn points da cena")]
     [SerializeField] private Transform spawnA;
     [SerializeField] private Transform spawnB;
-
     [Header("Opcional: auto-descoberta por Tag (se não arrastares)")]
     [SerializeField] private bool autoDiscoverByTag = true;
     [SerializeField] private string spawnPointTag = "SpawnPoint";
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            // Mantém o primeiro provider e evita duplicados.
             Destroy(gameObject);
             return;
         }
         Instance = this;
-
-        // Tentativa de auto-descoberta se os campos estiverem vazios.
         if (autoDiscoverByTag && (spawnA == null || spawnB == null) && !string.IsNullOrEmpty(spawnPointTag))
         {
             var objs = GameObject.FindGameObjectsWithTag(spawnPointTag);
@@ -39,7 +28,6 @@ public class SpawnPointsProvider : MonoBehaviour
             }
         }
     }
-
     public bool TryGetSpawnA(out Vector3 pos, out Quaternion rot)
     {
         if (spawnA != null)
@@ -52,7 +40,6 @@ public class SpawnPointsProvider : MonoBehaviour
         rot = Quaternion.identity;
         return false;
     }
-
     public bool TryGetSpawnB(out Vector3 pos, out Quaternion rot)
     {
         if (spawnB != null)
@@ -65,7 +52,6 @@ public class SpawnPointsProvider : MonoBehaviour
         rot = Quaternion.identity;
         return false;
     }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
