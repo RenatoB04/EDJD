@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - HealthText
+  - AmmoText
+  - DeathMenu
+  - GasTank
+  - Target
+  - Concrete
+  - Metal
+  - Bullet
+  - ExplosiveBarrel
+  - ShieldText
+  - SpawnPoint
+  - FirstPerson
+  - RespawnTimerTag
+  - HealthPickup
+  - AmmoPickup
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Arms
+  - Water
+  - UI
+  - player
+  - environment
+  - enemy
+  - bullet
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  m_RenderingLayers:
+  - Default
