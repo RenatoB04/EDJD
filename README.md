@@ -35,7 +35,7 @@ Exemplo:
 
 ### **2º Ano - 1º Semestre**
 - **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Kotlin, Android Studio)*  
-- **IVC**: Introdução à Visão por Computador *(Linguagem: Python)*  
+- **IVC**: Introdução à Visão por Computador *(Python)*  
 - **PDW**: Programação e Desenvolvimento Web *(HTML, CSS, JavaScript, React)*  
 - **SAD**: Sistemas de Armazenamento de Dados *(SQL, C#)*
 
