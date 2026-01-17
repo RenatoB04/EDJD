@@ -25,23 +25,29 @@ Exemplo:
 ## Disciplinas por Ano e Semestre
 
 ### **1º Ano - 1º Semestre**
-- **PI**: Programação Imperativa *(Linguagem: C)*  
-- **POO**: Programação Orientada a Objetos *(Linguagem: C#)*  
+- **PI**: Programação Imperativa *(C)*  
+- **POO**: Programação Orientada a Objetos *(C#)*  
 
 ### **1º Ano - 2º Semestre**
-- **EDA**: Estruturas de Dados Avançadas *(Linguagem: C)*  
-- **PE**: Probabilidades e Estatística *(Linguagem: Python)*  
-- **TDV**: Técnicas de Desenvolvimento de Videojogos *(Linguagem: C#)*  
+- **EDA**: Estruturas de Dados Avançadas *(C)*  
+- **PE**: Probabilidades e Estatística *(Python)*  
+- **TDV**: Técnicas de Desenvolvimento de Videojogos *(C#, MonoGame)*  
 
 ### **2º Ano - 1º Semestre**
-- **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Linguagem: Kotlin)*  
+- **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Kotlin, Android Studio)*  
 - **IVC**: Introdução à Visão por Computador *(Linguagem: Python)*  
-- **PDW**: Programação e Desenvolvimento Web *(Linguagens: HTML, CSS, JavaScript)*  
-- **SAD**: Sistemas de Armazenamento de Dados *(Linguagens: SQL e C#)*
+- **PDW**: Programação e Desenvolvimento Web *(HTML, CSS, JavaScript, React)*  
+- **SAD**: Sistemas de Armazenamento de Dados *(SQL, C#)*
 
 ### **2º Ano - 2º Semestre**
-- **P3D**: Programação 3D *(Linguagem: C++)*
-- **DJA**: Desenvolvimento de Jogos Aplicado *(Linguagem: C#)*
+- **DJA**: Desenvolvimento de Jogos Aplicado *(C#, Unity)*
+- **P3D**: Programação 3D *(C++, OpenGL)*
+
+### **3º Ano - 1º Semestre**
+- **IA**: Inteligência Artificial Aplicada a Jogos *(C#, Unity)*  
+- **PA**: Projeto Aplicado *(C#, Unity)*
+- **PVR**: Programação para Vídeojogos em Rede *(C#, Unity)*
+- **TEV**: Técnicas de Computação Gráfica para Efeitos Visuais *(C#, Unity)*  
 
 ---
 
