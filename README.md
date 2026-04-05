@@ -1,61 +1,64 @@
-# Repositório de Projetos e Exercícios
-# Engenharia e Desenvolvimento de Jogos Digitais (IPCA)
+# Projects and Exercises Repository
+# Digital Games Engineering and Development (IPCA)
 
-Este repositório contém todos os projetos e exercícios desenvolvidos ao longo do meu curso de **Engenharia e Desenvolvimento de Jogos Digitais** no **IPCA**. Está organizado por anos, semestres, e disciplinas, abrangendo diversas tecnologias e linguagens de programação.
+This repository contains all the projects and exercises developed throughout my **Digital Games Engineering and Development** course at **IPCA**. It is organized by years, semesters, and subjects, covering various technologies and programming languages.
+
+> Note: As the course is taught in Portuguese, most of the individual project documentation is written in Portuguese.
 
 ---
 
-## Organização do Repositório
+## Repository Organization
 
-Os ficheiros estão organizados da seguinte forma:
+Files are organized as follows:
 
-- **E**: Exercícios de disciplinas, geralmente problemas mais simples para consolidar a aprendizagem.
-- **P**: Projetos mais complexos e completos desenvolvidos ao longo do curso.
+- **E**: Exercises for the subjects, generally simpler problems to consolidate learning.
+- **P**: More complex and complete projects developed throughout the course.
 
-A estrutura do nome dos ficheiros é a seguinte:
+File naming structure:
 ```
-[Tipo][Número]-[Disciplina]
+[Type][Number]-[Subject]
 ```
-Exemplo:
-- `E01-PDW`: Exercício 01 da disciplina de **Programação e Desenvolvimento Web**.
-- `P01-POO`: Projeto 01 da disciplina de **Programação Orientada a Objetos**.
+
+Example:
+- `E01-PDW`: Exercise 01 from the subject **Programação e Desenvolvimento Web (Programming and Web Development)**.
+- `P01-POO`: Project 01 from the subject **Programação Orientada a Objetos (Object-Oriented Programming)**.
 
 ---
 
-## Disciplinas por Ano e Semestre
+## Subjects by Year and Semester
 
-### **1º Ano - 1º Semestre**
-- **PI**: Programação Imperativa *(C)*  
-- **POO**: Programação Orientada a Objetos *(C#)*  
+### **1st Year - 1st Semester**
+- **PI**: Programação Imperativa *(Imperative Programming, C)*  
+- **POO**: Programação Orientada a Objetos *(Object-Oriented Programming, C#)*  
 
-### **1º Ano - 2º Semestre**
-- **EDA**: Estruturas de Dados Avançadas *(C)*  
-- **PE**: Probabilidades e Estatística *(Python)*  
-- **TDV**: Técnicas de Desenvolvimento de Videojogos *(C#, MonoGame)*  
+### **1st Year - 2nd Semester**
+- **EDA**: Estruturas de Dados Avançadas *(Advanced Data Structures, C)*  
+- **PE**: Probabilidades e Estatística *(Probability and Statistics, Python)*  
+- **TDV**: Técnicas de Desenvolvimento de Videojogos *(Video Game Development Techniques, C#, MonoGame)*  
 
-### **2º Ano - 1º Semestre**
-- **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Kotlin, Android Studio)*  
-- **IVC**: Introdução à Visão por Computador *(Python)*  
-- **PDW**: Programação e Desenvolvimento Web *(HTML, CSS, JavaScript, React)*  
-- **SAD**: Sistemas de Armazenamento de Dados *(SQL, C#)*
+### **2nd Year - 1st Semester**
+- **DJPM**: Desenvolvimento de Jogos para Plataformas Móveis *(Game Development for Mobile Platforms, Kotlin, Android Studio)*  
+- **IVC**: Introdução à Visão por Computador *(Introduction to Computer Vision, Python)*  
+- **PDW**: Programação e Desenvolvimento Web *(Programming and Web Development, HTML, CSS, JavaScript, React)*  
+- **SAD**: Sistemas de Armazenamento de Dados *(Data Storage Systems, SQL, C#)*
 
-### **2º Ano - 2º Semestre**
-- **DJA**: Desenvolvimento de Jogos Aplicado *(C#, Unity)*
-- **P3D**: Programação 3D *(C++, OpenGL)*
+### **2nd Year - 2nd Semester**
+- **DJA**: Desenvolvimento de Jogos Aplicado *(Applied Game Development, C#, Unity)*  
+- **P3D**: Programação 3D *(3D Programming, C++, OpenGL)*
 
-### **3º Ano - 1º Semestre**
-- **IA**: Inteligência Artificial Aplicada a Jogos *(C#, Unity)*  
-- **PA**: Projeto Aplicado *(C#, Unity)*
-- **PVR**: Programação para Vídeojogos em Rede *(C#, Unity)*
-- **TEV**: Técnicas de Computação Gráfica para Efeitos Visuais *(C#, Unity)*  
-
----
-
-## Como navegar neste repositório
-
-1. Cada pasta representa uma **unidade curricular**, podendo conter **projetos** e/ou **exercícios**, seguindo a nomenclatura descrita.
-2. A maioria das pastas contém documentação para mais detalhes sobre o funcionamento dos projetos.
+### **3rd Year - 1st Semester**
+- **IA**: Inteligência Artificial Aplicada a Jogos *(Artificial Intelligence Applied to Games, C#, Unity)*  
+- **PA**: Projeto Aplicado *(Applied Project, C#, Unity)*  
+- **PVR**: Programação para Vídeojogos em Rede *(Networked Video Game Programming, C#, Unity)*  
+- **TEV**: Técnicas de Computação Gráfica para Efeitos Visuais *(Graphic Computing Techniques for Visual Effects, C#, Unity)*  
 
 ---
 
-Este repositório serve como uma compilação do meu progresso e desenvolvimento ao longo do curso.
+## How to Navigate This Repository
+
+1. Each folder represents a **course unit**, which may contain **projects** and/or **exercises**, following the naming structure described above.  
+2. Most folders include documentation providing more details about how the projects work.
+
+---
+
+This repository serves as a compilation of my progress and development throughout the course.
