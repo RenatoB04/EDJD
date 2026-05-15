@@ -16,7 +16,7 @@ class PlayerNode: SKSpriteNode {
     private func setupPhysics() {
         self.physicsBody = SKPhysicsBody(rectangleOf: self.size)
         self.physicsBody?.categoryBitMask = PhysicsCategory.player
-        self.physicsBody?.contactTestBitMask = PhysicsCategory.obstacle
+        self.physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.coin
         self.physicsBody?.collisionBitMask = PhysicsCategory.none
         self.physicsBody?.affectedByGravity = true
         self.physicsBody?.allowsRotation = false

@@ -1,9 +1,10 @@
 import SpriteKit
 
 struct PhysicsCategory {
-    static let none: UInt32 = 0
-    static let player: UInt32 = 0b1
-    static let obstacle: UInt32 = 0b10
+    static let none: UInt32     = 0
+    static let player: UInt32   = 0b001
+    static let obstacle: UInt32 = 0b010
+    static let coin: UInt32     = 0b100
 }
 
 struct GameConfig {
@@ -19,12 +20,13 @@ struct StorageKeys {
 }
 
 struct NodeNames {
-    static let retryButton = "retryButton"
-    static let menuButton = "menuButton"
-    static let gameOverOverlay = "gameOverOverlay"
+    static let retryButton      = "retryButton"
+    static let menuButton       = "menuButton"
+    static let gameOverOverlay  = "gameOverOverlay"
+    static let coin             = "coin"
 }
-    
-    struct StarFieldConfig {
+
+struct StarFieldConfig {
         static let farLayerSpeed: CGFloat = 20.0
         static let midLayerSpeed: CGFloat = 50.0
         static let nearLayerSpeed: CGFloat = 100.0
@@ -48,4 +50,10 @@ struct SpawnConfig {
     static let baseObstacleDuration: TimeInterval = 3.5
     static let minSpawnRate: TimeInterval = 0.45
     static let minObstacleDuration: TimeInterval = 1.4
+}
+
+struct CoinConfig {
+    static let radius: CGFloat = 10.0
+    static let baseSpawnRate: TimeInterval = 2.2
+    static let minMoveDuration: TimeInterval = 1.4
 }

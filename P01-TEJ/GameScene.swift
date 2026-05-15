@@ -3,15 +3,18 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let player = PlayerNode()
     let spawner = ObstacleSpawner()
+    let coinSpawner = CoinSpawner()
     let difficultyManager = DifficultyManager()
     
     var isThrusting = false
     var isGameOver = false
     
     private var score: Int = 0
+    private var coinCount: Int = 0
     private var lastUpdateTime: TimeInterval = 0
     private var elapsedTime: TimeInterval = 0
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+    private let coinLabel  = SKLabelNode(fontNamed: "AvenirNext-Bold")
     
     private var starField: StarField?
     
@@ -34,6 +37,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         setupHUD()
         scheduleNextSpawn()
+        scheduleNextCoinSpawn()
     }
     
     private func setupStarField(view: SKView) {
@@ -52,6 +56,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if scoreLabel.parent == nil {
             addChild(scoreLabel)
         }
+
+        coinLabel.text = "🪙 0"
+        coinLabel.fontSize = 22
+        coinLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
+        coinLabel.horizontalAlignmentMode = .right
+        coinLabel.position = CGPoint(x: size.width - 20, y: size.height - 80)
+        coinLabel.zPosition = 100
+        if coinLabel.parent == nil {
+            addChild(coinLabel)
+        }
     }
     
     private func scheduleNextSpawn() {
@@ -68,6 +82,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let sequence = SKAction.sequence([wait, spawn])
         run(sequence, withKey: "spawnLoop")
+    }
+    
+    private func scheduleNextCoinSpawn() {
+        self.removeAction(forKey: "coinSpawnLoop")
+
+        let rate = max(CoinConfig.baseSpawnRate / TimeInterval(difficultyManager.currentDifficulty),
+                       CoinConfig.baseSpawnRate * 0.45)
+        let wait  = SKAction.wait(forDuration: rate)
+        let spawn = SKAction.run { [weak self] in
+            guard let self = self, !self.isGameOver else { return }
+            let duration = self.difficultyManager.currentObstacleDuration()
+            self.coinSpawner.spawn(in: self, moveDuration: duration)
+            self.scheduleNextCoinSpawn()
+        }
+        run(SKAction.sequence([wait, spawn]), withKey: "coinSpawnLoop")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -143,7 +172,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         guard !isGameOver else { return }
-        triggerGameOver()
+
+        let categoryA = contact.bodyA.categoryBitMask
+        let categoryB = contact.bodyB.categoryBitMask
+        let combined  = categoryA | categoryB
+
+        if combined == (PhysicsCategory.player | PhysicsCategory.coin) {
+            let coinBody = (categoryA == PhysicsCategory.coin) ? contact.bodyA : contact.bodyB
+            collectCoin(node: coinBody.node)
+        } else if combined == (PhysicsCategory.player | PhysicsCategory.obstacle) {
+            triggerGameOver()
+        }
+    }
+
+    private func collectCoin(node: SKNode?) {
+        guard let coin = node, coin.parent != nil else { return }
+
+        coinCount += 1
+        coinLabel.text = "🪙 \(coinCount)"
+
+        let moveUp  = SKAction.moveBy(x: 0, y: 25, duration: 0.25)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+        let collect = SKAction.group([moveUp, fadeOut])
+        let remove  = SKAction.removeFromParent()
+        coin.run(SKAction.sequence([collect, remove]))
+
+        let scaleUp   = SKAction.scale(to: 1.35, duration: 0.08)
+        let scaleDown = SKAction.scale(to: 1.0,  duration: 0.12)
+        coinLabel.run(SKAction.sequence([scaleUp, scaleDown]))
     }
     
     private func triggerGameOver() {
@@ -151,10 +207,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isThrusting = false
         
         self.removeAction(forKey: "spawnLoop")
+        self.removeAction(forKey: "coinSpawnLoop")
         player.physicsBody?.velocity = .zero
         player.physicsBody?.affectedByGravity = false
         
         self.enumerateChildNodes(withName: "obstacle") { node, _ in
+            node.removeAllActions()
+        }
+        self.enumerateChildNodes(withName: NodeNames.coin) { node, _ in
             node.removeAllActions()
         }
         
@@ -184,21 +244,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.enumerateChildNodes(withName: "obstacle") { node, _ in
             node.removeFromParent()
         }
+        self.enumerateChildNodes(withName: NodeNames.coin) { node, _ in
+            node.removeFromParent()
+        }
         
         player.position = CGPoint(x: size.width * 0.2, y: size.height / 2)
         player.physicsBody?.velocity = .zero
         player.physicsBody?.affectedByGravity = true
         
         score = 0
+        coinCount = 0
         elapsedTime = 0
         lastUpdateTime = 0
         scoreLabel.text = "0 m"
+        coinLabel.text  = "🪙 0"
         isGameOver = false
         isThrusting = false
         
         difficultyManager.reset()
         
         scheduleNextSpawn()
+        scheduleNextCoinSpawn()
     }
     
     private func goToMenu() {
