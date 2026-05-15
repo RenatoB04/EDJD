@@ -3,17 +3,15 @@ import SpriteKit
 
 class CoinSpawner {
 
-    func spawn(in scene: SKScene, moveDuration: TimeInterval) {
+    func spawn(in parent: SKNode, moveDuration: TimeInterval, sceneSize: CGSize) {
         let coin = CoinNode()
 
-        let randomY = CGFloat.random(in: 60...(scene.size.height - 60))
-        coin.position = CGPoint(x: scene.size.width + 30, y: randomY)
+        let randomY = CGFloat.random(in: 60...(sceneSize.height - 60))
+        coin.position = CGPoint(x: sceneSize.width + 30, y: randomY)
 
-        scene.addChild(coin)
+        parent.addChild(coin)
 
-        let moveAction   = SKAction.moveTo(x: -30, duration: moveDuration)
-        let removeAction = SKAction.removeFromParent()
-        coin.run(SKAction.sequence([moveAction, removeAction]))
+        let moveAction = SKAction.moveTo(x: -30, duration: moveDuration)
+        coin.run(SKAction.sequence([moveAction, SKAction.removeFromParent()]))
     }
 }
-

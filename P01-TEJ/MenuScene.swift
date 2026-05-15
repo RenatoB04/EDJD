@@ -1,44 +1,119 @@
 import SpriteKit
 
 class MenuScene: SKScene {
-    
+
     var lastScore: Int? = nil
-    
+
     override func didMove(to view: SKView) {
-        self.backgroundColor = .darkGray
-        
+        self.backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
+
+        AudioManager.shared.startMusic()
+
         let title = SKLabelNode(text: "Astro Drift")
         title.fontName = "AvenirNext-Bold"
-        title.fontSize = 40
-        title.position = CGPoint(x: size.width / 2, y: size.height * 0.75)
+        title.fontSize = 44
+        title.fontColor = .white
+        title.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
         addChild(title)
-        
-        let highScore = UserDefaults.standard.integer(forKey: StorageKeys.highScore)
+
+        let defaults = UserDefaults.standard
+        let highScore = defaults.integer(forKey: StorageKeys.highScore)
+        let wallet    = defaults.integer(forKey: StorageKeys.coinWallet)
+
         let highLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
         highLabel.text = "Recorde: \(highScore) m"
         highLabel.fontSize = 22
         highLabel.fontColor = .yellow
-        highLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.58)
+        highLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.72)
         addChild(highLabel)
-        
+
+        let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        walletLabel.text = "🪙 \(wallet)"
+        walletLabel.fontSize = 22
+        walletLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
+        walletLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.66)
+        addChild(walletLabel)
+
         if let lastScore = lastScore {
             let lastLabel = SKLabelNode(fontNamed: "AvenirNext")
             lastLabel.text = "Última: \(lastScore) m"
             lastLabel.fontSize = 18
             lastLabel.fontColor = .white
-            lastLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.5)
+            lastLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.6)
             addChild(lastLabel)
         }
-        
-        let startLabel = SKLabelNode(text: "Tocar para Jogar")
-        startLabel.fontSize = 20
-        startLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.3)
-        addChild(startLabel)
+
+        let preview = SKSpriteNode(texture: SKTexture(imageNamed: PlayerInventory.equippedSkin.assetName))
+        preview.size = CGSize(width: 70, height: 70)
+        preview.position = CGPoint(x: size.width / 2, y: size.height * 0.5)
+        addChild(preview)
+        let float = SKAction.sequence([
+            SKAction.moveBy(x: 0, y: 6,  duration: 1.0),
+            SKAction.moveBy(x: 0, y: -6, duration: 1.0)
+        ])
+        preview.run(SKAction.repeatForever(float))
+
+        addChild(makeButton(text: "Jogar",
+                            color: .systemGreen,
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.36),
+                            size: CGSize(width: 220, height: 56),
+                            name: NodeNames.playButton))
+
+        addChild(makeButton(text: "Loja",
+                            color: SKColor(red: 0.6, green: 0.3, blue: 0.8, alpha: 1.0),
+                            position: CGPoint(x: size.width * 0.32, y: size.height * 0.22),
+                            size: CGSize(width: 130, height: 46),
+                            name: NodeNames.shopButton))
+
+        addChild(makeButton(text: "Definições",
+                            color: .systemGray,
+                            position: CGPoint(x: size.width * 0.68, y: size.height * 0.22),
+                            size: CGSize(width: 130, height: 46),
+                            name: NodeNames.settingsButton))
     }
-    
+
+    private func makeButton(text: String, color: SKColor, position: CGPoint, size: CGSize, name: String) -> SKSpriteNode {
+        let button = SKSpriteNode(color: color, size: size)
+        button.position = position
+        button.name = name
+
+        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        label.text = text
+        label.fontSize = 20
+        label.fontColor = .white
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.name = name
+        button.addChild(label)
+        return button
+    }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let names = nodes(at: location).compactMap { $0.name }
+
+        if names.contains(NodeNames.playButton) {
+            startGame()
+        } else if names.contains(NodeNames.shopButton) {
+            transition(to: ShopScene(size: self.size))
+        } else if names.contains(NodeNames.settingsButton) {
+            transition(to: SettingsScene(size: self.size))
+        }
+    }
+
+    private func transition(to scene: SKScene) {
+        AudioManager.shared.playSFX(.button, on: self)
+        HapticsManager.shared.buttonTap()
+        scene.scaleMode = .aspectFill
+        view?.presentScene(scene, transition: .fade(withDuration: 0.4))
+    }
+
+    private func startGame() {
+        AudioManager.shared.playSFX(.button, on: self)
+        HapticsManager.shared.buttonTap()
         let game = GameScene(size: self.size)
         game.scaleMode = .aspectFill
-        self.view?.presentScene(game, transition: .crossFade(withDuration: 1.0))
+        view?.presentScene(game, transition: .crossFade(withDuration: 0.6))
     }
 }
