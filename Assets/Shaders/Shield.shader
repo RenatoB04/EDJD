@@ -1,4 +1,4 @@
-Shader "Custom/SciFi_Shield"
+Shader "Custom/Shield"
 {
     Properties
     {

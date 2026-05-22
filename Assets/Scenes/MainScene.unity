@@ -578,6 +578,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShieldInteract
   maxRadius: 3
   rippleSpeed: 3
+  maxHealth: 100
+  currentHealth: 0
+  damagePerHit: 25
+  generatorController: {fileID: 1599762120}
+  emergencyController: {fileID: 963194230}
+  particleShader: {fileID: 4800000, guid: 18600d129fdbf3745ae072914b918943, type: 3}
+  sparkColor: {r: 1, g: 0.45, b: 0, a: 1}
+  sparksPerHit: 15
+  sparkSize: 0.12
 --- !u!1 &1249894289
 GameObject:
   m_ObjectHideFlags: 0
