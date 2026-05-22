@@ -2,9 +2,9 @@ import SpriteKit
 
 class SettingsScene: SKScene {
 
-    private var musicToggle: SKSpriteNode!
-    private var sfxToggle: SKSpriteNode!
-    private var hapticsToggle: SKSpriteNode!
+    private var musicToggle: SKShapeNode!
+    private var sfxToggle: SKShapeNode!
+    private var hapticsToggle: SKShapeNode!
 
     override func didMove(to view: SKView) {
         self.backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
@@ -16,42 +16,28 @@ class SettingsScene: SKScene {
         title.position = CGPoint(x: size.width / 2, y: size.height * 0.85)
         addChild(title)
 
-        musicToggle   = makeToggleRow(label: "Música",    y: size.height * 0.7,  name: NodeNames.musicToggle)
+        musicToggle   = makeToggleRow(label: "Música",    y: size.height * 0.71,  name: NodeNames.musicToggle)
         sfxToggle     = makeToggleRow(label: "Efeitos",   y: size.height * 0.6,  name: NodeNames.sfxToggle)
-        hapticsToggle = makeToggleRow(label: "Vibração",  y: size.height * 0.5,  name: NodeNames.hapticsToggle)
+        hapticsToggle = makeToggleRow(label: "Vibração",  y: size.height * 0.49,  name: NodeNames.hapticsToggle)
 
-        let reset = SKSpriteNode(color: .systemRed, size: CGSize(width: 220, height: 46))
-        reset.position = CGPoint(x: size.width / 2, y: size.height * 0.32)
-        reset.name = NodeNames.resetButton
+        addChild(makeButton(text: "Apagar Progresso",
+                            fontSize: 16,
+                            color: .systemRed,
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.32),
+                            size: CGSize(width: 220, height: 46),
+                            name: NodeNames.resetButton))
 
-        let resetLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        resetLabel.text = "Apagar Progresso"
-        resetLabel.fontSize = 16
-        resetLabel.fontColor = .white
-        resetLabel.verticalAlignmentMode = .center
-        resetLabel.horizontalAlignmentMode = .center
-        resetLabel.name = NodeNames.resetButton
-        reset.addChild(resetLabel)
-        addChild(reset)
-
-        let back = SKSpriteNode(color: .systemGray, size: CGSize(width: 160, height: 46))
-        back.position = CGPoint(x: size.width / 2, y: size.height * 0.18)
-        back.name = NodeNames.backButton
-
-        let backLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        backLabel.text = "Voltar"
-        backLabel.fontSize = 18
-        backLabel.fontColor = .white
-        backLabel.verticalAlignmentMode = .center
-        backLabel.horizontalAlignmentMode = .center
-        backLabel.name = NodeNames.backButton
-        back.addChild(backLabel)
-        addChild(back)
+        addChild(makeButton(text: "Voltar",
+                            fontSize: 18,
+                            color: .systemGray,
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.18),
+                            size: CGSize(width: 160, height: 46),
+                            name: NodeNames.backButton))
 
         refresh()
     }
 
-    private func makeToggleRow(label: String, y: CGFloat, name: String) -> SKSpriteNode {
+    private func makeToggleRow(label: String, y: CGFloat, name: String) -> SKShapeNode {
         let labelNode = SKLabelNode(fontNamed: "AvenirNext-Bold")
         labelNode.text = label
         labelNode.fontSize = 22
@@ -61,9 +47,16 @@ class SettingsScene: SKScene {
         labelNode.position = CGPoint(x: size.width * 0.2, y: y)
         addChild(labelNode)
 
-        let toggle = SKSpriteNode(color: .systemGray, size: CGSize(width: 90, height: 40))
+        let toggleSize = CGSize(width: 90, height: 40)
+        let cornerRadius = toggleSize.height / 2
+        let rect = CGRect(x: -toggleSize.width / 2, y: -toggleSize.height / 2, width: toggleSize.width, height: toggleSize.height)
+        
+        let toggle = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
         toggle.position = CGPoint(x: size.width * 0.8, y: y)
         toggle.name = name
+        toggle.fillColor = .systemGray
+        toggle.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        toggle.lineWidth = 1.5
 
         let state = SKLabelNode(fontNamed: "AvenirNext-Bold")
         state.fontSize = 14
@@ -77,14 +70,39 @@ class SettingsScene: SKScene {
         return toggle
     }
 
+    private func makeButton(text: String, fontSize: CGFloat, color: SKColor, position: CGPoint, size: CGSize, name: String) -> SKShapeNode {
+        let cornerRadius = size.height * 0.3
+        let rect = CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
+        
+        let button = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
+        button.position = position
+        button.name = name
+        button.fillColor = color
+        button.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        button.lineWidth = 1.5
+
+        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        label.text = text
+        label.fontSize = fontSize
+        label.fontColor = .white
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.name = name
+        button.addChild(label)
+        return button
+    }
+
     private func refresh() {
         applyToggleState(musicToggle,   isOn: AudioManager.shared.isMusicEnabled)
         applyToggleState(sfxToggle,     isOn: AudioManager.shared.isSfxEnabled)
         applyToggleState(hapticsToggle, isOn: HapticsManager.shared.isEnabled)
     }
 
-    private func applyToggleState(_ node: SKSpriteNode, isOn: Bool) {
-        node.color = isOn ? .systemGreen : .systemGray
+    private func applyToggleState(_ node: SKShapeNode, isOn: Bool) {
+        node.fillColor = isOn ? .systemGreen : .systemGray
+        node.strokeColor = isOn
+            ? SKColor.white.withAlphaComponent(0.4)
+            : SKColor.white.withAlphaComponent(0.2)
         if let label = node.children.first as? SKLabelNode {
             label.text = isOn ? "ON" : "OFF"
         }

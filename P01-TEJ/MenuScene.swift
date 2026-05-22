@@ -24,7 +24,7 @@ class MenuScene: SKScene {
         highLabel.text = "Recorde: \(highScore) m"
         highLabel.fontSize = 22
         highLabel.fontColor = .yellow
-        highLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.72)
+        highLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.75)
         addChild(highLabel)
 
         let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
@@ -45,7 +45,7 @@ class MenuScene: SKScene {
 
         let preview = SKSpriteNode(texture: SKTexture(imageNamed: PlayerInventory.equippedSkin.assetName))
         preview.size = CGSize(width: 70, height: 70)
-        preview.position = CGPoint(x: size.width / 2, y: size.height * 0.5)
+        preview.position = CGPoint(x: size.width / 2, y: size.height * 0.55)
         addChild(preview)
         let float = SKAction.sequence([
             SKAction.moveBy(x: 0, y: 6,  duration: 1.0),
@@ -55,38 +55,44 @@ class MenuScene: SKScene {
 
         addChild(makeButton(text: "Jogar",
                             color: .systemGreen,
-                            position: CGPoint(x: size.width / 2, y: size.height * 0.36),
-                            size: CGSize(width: 220, height: 56),
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.40),
+                            size: CGSize(width: 220, height: 50),
                             name: NodeNames.playButton))
 
         addChild(makeButton(text: "Loja",
                             color: SKColor(red: 0.6, green: 0.3, blue: 0.8, alpha: 1.0),
-                            position: CGPoint(x: size.width * 0.32, y: size.height * 0.22),
-                            size: CGSize(width: 130, height: 46),
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.25),
+                            size: CGSize(width: 220, height: 50),
                             name: NodeNames.shopButton))
 
         addChild(makeButton(text: "Definições",
                             color: .systemGray,
-                            position: CGPoint(x: size.width * 0.68, y: size.height * 0.22),
-                            size: CGSize(width: 130, height: 46),
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.10),
+                            size: CGSize(width: 220, height: 50),
                             name: NodeNames.settingsButton))
     }
 
-    private func makeButton(text: String, color: SKColor, position: CGPoint, size: CGSize, name: String) -> SKSpriteNode {
-        let button = SKSpriteNode(color: color, size: size)
-        button.position = position
-        button.name = name
+    private func makeButton(text: String, color: SKColor, position: CGPoint, size: CGSize, name: String) -> SKShapeNode {
+            let cornerRadius = size.height * 0.3
+            let rect = CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
+            
+            let button = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
+            button.position = position
+            button.name = name
+            button.fillColor = color
+            button.strokeColor = SKColor.white.withAlphaComponent(0.25)
+            button.lineWidth = 1.5
 
-        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        label.text = text
-        label.fontSize = 20
-        label.fontColor = .white
-        label.verticalAlignmentMode = .center
-        label.horizontalAlignmentMode = .center
-        label.name = name
-        button.addChild(label)
-        return button
-    }
+            let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+            label.text = text
+            label.fontSize = 20
+            label.fontColor = .white
+            label.verticalAlignmentMode = .center
+            label.horizontalAlignmentMode = .center
+            label.name = name
+            button.addChild(label)
+            return button
+        }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }

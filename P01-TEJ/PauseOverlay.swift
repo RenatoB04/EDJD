@@ -29,7 +29,7 @@ class PauseOverlay: SKNode {
                             name: NodeNames.resumeButton))
 
         addChild(makeButton(text: "Menu",
-                            position: CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.36),
+                            position: CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.34),
                             color: .systemGray,
                             name: NodeNames.menuButton))
     }
@@ -38,10 +38,17 @@ class PauseOverlay: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func makeButton(text: String, position: CGPoint, color: SKColor, name: String) -> SKSpriteNode {
-        let button = SKSpriteNode(color: color, size: CGSize(width: 180, height: 50))
+    private func makeButton(text: String, position: CGPoint, color: SKColor, name: String) -> SKShapeNode {
+        let buttonSize = CGSize(width: 180, height: 50)
+        let cornerRadius = buttonSize.height * 0.3
+        let rect = CGRect(x: -buttonSize.width / 2, y: -buttonSize.height / 2, width: buttonSize.width, height: buttonSize.height)
+        
+        let button = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
         button.position = position
         button.name = name
+        button.fillColor = color
+        button.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        button.lineWidth = 1.5
 
         let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
         label.text = text

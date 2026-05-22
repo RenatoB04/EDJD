@@ -4,7 +4,7 @@ class ShopScene: SKScene {
 
     private var walletLabel: SKLabelNode!
     private var statusLabel: SKLabelNode!
-    private var skinNodes: [String: SKSpriteNode] = [:]
+    private var skinNodes: [String: SKShapeNode] = [:]
 
     override func didMove(to view: SKView) {
         self.backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
@@ -55,10 +55,16 @@ class ShopScene: SKScene {
         }
     }
 
-    private func makeSkinCard(skin: Skin) -> SKSpriteNode {
-        let card = SKSpriteNode(color: SKColor(white: 0.15, alpha: 1.0),
-                                size: CGSize(width: 150, height: 110))
+    private func makeSkinCard(skin: Skin) -> SKShapeNode {
+        let cardSize = CGSize(width: 150, height: 110)
+        let cornerRadius: CGFloat = 16
+        let rect = CGRect(x: -cardSize.width / 2, y: -cardSize.height / 2, width: cardSize.width, height: cardSize.height)
+        
+        let card = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
         card.name = "skinCard_\(skin.id)"
+        card.fillColor = SKColor(white: 0.15, alpha: 1.0)
+        card.strokeColor = SKColor.white.withAlphaComponent(0.15)
+        card.lineWidth = 1.0
 
         let sprite = SKSpriteNode(texture: SKTexture(imageNamed: skin.assetName))
         sprite.size = CGSize(width: 60, height: 60)
@@ -84,9 +90,16 @@ class ShopScene: SKScene {
     }
 
     private func addBackButton() {
-        let back = SKSpriteNode(color: .systemGray, size: CGSize(width: 160, height: 46))
+        let buttonSize = CGSize(width: 160, height: 46)
+        let cornerRadius = buttonSize.height * 0.3
+        let rect = CGRect(x: -buttonSize.width / 2, y: -buttonSize.height / 2, width: buttonSize.width, height: buttonSize.height)
+        
+        let back = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
         back.position = CGPoint(x: size.width / 2, y: size.height * 0.08)
         back.name = NodeNames.backButton
+        back.fillColor = .systemGray
+        back.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        back.lineWidth = 1.5
 
         let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
         label.text = "Voltar"
@@ -114,15 +127,18 @@ class ShopScene: SKScene {
             if !PlayerInventory.isOwned(skin.id) {
                 priceLabel?.text = "🪙 \(skin.price)"
                 priceLabel?.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
-                card.color = SKColor(white: 0.15, alpha: 1.0)
+                card.fillColor = SKColor(white: 0.15, alpha: 1.0)
+                card.strokeColor = SKColor.white.withAlphaComponent(0.15)
             } else if skin.id == equipped {
                 priceLabel?.text = "EQUIPADA"
                 priceLabel?.fontColor = .systemGreen
-                card.color = SKColor(red: 0.1, green: 0.3, blue: 0.15, alpha: 1.0)
+                card.fillColor = SKColor(red: 0.1, green: 0.3, blue: 0.15, alpha: 1.0)
+                card.strokeColor = SKColor.systemGreen.withAlphaComponent(0.6)
             } else {
                 priceLabel?.text = "TOCA P/ EQUIPAR"
                 priceLabel?.fontColor = .white
-                card.color = SKColor(white: 0.22, alpha: 1.0)
+                card.fillColor = SKColor(white: 0.22, alpha: 1.0)
+                card.strokeColor = SKColor.white.withAlphaComponent(0.3)
             }
         }
     }

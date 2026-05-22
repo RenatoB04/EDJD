@@ -126,14 +126,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let overlay = TutorialOverlay(sceneSize: self.size)
         addChild(overlay)
         tutorialOverlay = overlay
-        isPaused = true
+        
+        physicsWorld.speed = 0
+        player.physicsBody?.velocity = .zero
     }
 
     private func dismissTutorial() {
         tutorialOverlay?.removeFromParent()
         tutorialOverlay = nil
         UserDefaults.standard.set(true, forKey: StorageKeys.tutorialSeen)
-        isPaused = false
+        
+        player.physicsBody?.velocity = .zero
+        physicsWorld.speed = 1
+        
         startGameplay()
     }
 
@@ -257,6 +262,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard !isManuallyPaused, !isGameOver else { return }
         isManuallyPaused = true
         worldNode.isPaused = true
+        physicsWorld.speed = 0
         AudioManager.shared.stopThrustLoop()
         AudioManager.shared.pauseAll()
         HapticsManager.shared.buttonTap()
@@ -269,6 +275,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func resumeGame() {
         isManuallyPaused = false
         worldNode.isPaused = false
+        
+        player.physicsBody?.velocity = .zero
+        physicsWorld.speed = 1
+        
         AudioManager.shared.resumeAll()
         pauseOverlay?.removeFromParent()
         pauseOverlay = nil
