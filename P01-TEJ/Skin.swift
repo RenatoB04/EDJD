@@ -14,14 +14,14 @@ enum SkinCatalog {
     static let all: [Skin] = [
         Skin(
             id: "default",
-            displayName: "Foguetão",
+            displayName: "Foguetao",
             assetName: AssetNames.player,
             trailColor: .orange,
             price: 0
         ),
         Skin(
             id: "red",
-            displayName: "Falcão Vermelho",
+            displayName: "Falcao Vermelho",
             assetName: "player_red",
             trailColor: SKColor(red: 1.0, green: 0.4, blue: 0.2, alpha: 1.0),
             price: 50

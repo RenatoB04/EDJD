@@ -49,7 +49,7 @@ function New-PlayerSprite {
 
     $s = [double]$Size
 
-    # Flame exhaust (left side, behind rocket — rocket points right)
+    # Flame exhaust (left side, behind rocket - rocket points right)
     $flameOuter = New-Object System.Drawing.Drawing2D.GraphicsPath
     [System.Drawing.PointF[]]$flameOuterPts = @(
         (New-Object System.Drawing.PointF([single]($s*0.00),[single]($s*0.50))),
@@ -160,7 +160,7 @@ function New-AsteroidSprite {
     $rockPath = New-Object System.Drawing.Drawing2D.GraphicsPath
     $rockPath.AddPolygon($points.ToArray())
 
-    # Base fill — radial gradient for shading
+    # Base fill - radial gradient for shading
     $rockBrush = New-Object System.Drawing.Drawing2D.PathGradientBrush($rockPath)
     $rockBrush.CenterColor = [System.Drawing.Color]::FromArgb(255,170,160,150)
     $rockBrush.SurroundColors = @([System.Drawing.Color]::FromArgb(255,85,78,72))

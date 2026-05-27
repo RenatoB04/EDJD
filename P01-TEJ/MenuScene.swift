@@ -28,7 +28,7 @@ class MenuScene: SKScene {
         addChild(highLabel)
 
         let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        walletLabel.text = "🪙 \(wallet)"
+        walletLabel.text = "Moedas: \(wallet)"
         walletLabel.fontSize = 22
         walletLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
         walletLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.66)
@@ -36,7 +36,7 @@ class MenuScene: SKScene {
 
         if let lastScore = lastScore {
             let lastLabel = SKLabelNode(fontNamed: "AvenirNext")
-            lastLabel.text = "Última: \(lastScore) m"
+            lastLabel.text = "Ultima: \(lastScore) m"
             lastLabel.fontSize = 18
             lastLabel.fontColor = .white
             lastLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.6)
@@ -65,7 +65,7 @@ class MenuScene: SKScene {
                             size: CGSize(width: 220, height: 50),
                             name: NodeNames.shopButton))
 
-        addChild(makeButton(text: "Definições",
+        addChild(makeButton(text: "Definicoes",
                             color: .systemGray,
                             position: CGPoint(x: size.width / 2, y: size.height * 0.10),
                             size: CGSize(width: 220, height: 50),
@@ -110,14 +110,12 @@ class MenuScene: SKScene {
 
     private func transition(to scene: SKScene) {
         AudioManager.shared.playSFX(.button, on: self)
-        HapticsManager.shared.buttonTap()
         scene.scaleMode = .aspectFill
         view?.presentScene(scene, transition: .fade(withDuration: 0.4))
     }
 
     private func startGame() {
         AudioManager.shared.playSFX(.button, on: self)
-        HapticsManager.shared.buttonTap()
         let game = GameScene(size: self.size)
         game.scaleMode = .aspectFill
         view?.presentScene(game, transition: .crossFade(withDuration: 0.6))

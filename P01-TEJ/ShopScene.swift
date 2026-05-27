@@ -114,7 +114,7 @@ class ShopScene: SKScene {
     }
 
     private func refresh() {
-        walletLabel.text = "🪙 \(PlayerInventory.walletBalance())"
+        walletLabel.text = "Moedas: \(PlayerInventory.walletBalance())"
 
         let equipped = PlayerInventory.equippedSkinId
 
@@ -125,7 +125,7 @@ class ShopScene: SKScene {
                 .first(where: { $0.position.y < -30 })
 
             if !PlayerInventory.isOwned(skin.id) {
-                priceLabel?.text = "🪙 \(skin.price)"
+                priceLabel?.text = "\(skin.price) moedas"
                 priceLabel?.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
                 card.fillColor = SKColor(white: 0.15, alpha: 1.0)
                 card.strokeColor = SKColor.white.withAlphaComponent(0.15)
@@ -150,7 +150,6 @@ class ShopScene: SKScene {
 
         if names.contains(NodeNames.backButton) {
             AudioManager.shared.playSFX(.button, on: self)
-            HapticsManager.shared.buttonTap()
             let menu = MenuScene(size: self.size)
             menu.scaleMode = .aspectFill
             view?.presentScene(menu, transition: .fade(withDuration: 0.4))
@@ -171,15 +170,12 @@ class ShopScene: SKScene {
             PlayerInventory.equip(skin.id)
             statusLabel.text = "Equipado: \(skin.displayName)"
             AudioManager.shared.playSFX(.button, on: self)
-            HapticsManager.shared.buttonTap()
         } else if PlayerInventory.purchase(skin) {
             PlayerInventory.equip(skin.id)
             statusLabel.text = "Comprado e equipado!"
             AudioManager.shared.playSFX(.shield, on: self)
-            HapticsManager.shared.shieldHit()
         } else {
             statusLabel.text = "Moedas insuficientes (\(skin.price))"
-            HapticsManager.shared.playerDied()
         }
 
         refresh()

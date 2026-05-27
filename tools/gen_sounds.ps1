@@ -154,7 +154,7 @@ function Gen-Music {
     $duration = 8.0
     $n = [int]($sampleRate * $duration)
     $samples = New-Object int16[] $n
-    # C minor pad: C2, Eb3, G3, Bb3 — slow LFO on amplitude
+    # C minor pad: C2, Eb3, G3, Bb3 - slow LFO on amplitude
     $notes = @(65.41, 155.56, 196.00, 233.08)
     for ($i = 0; $i -lt $n; $i++) {
         $t = $i / [double]$sampleRate

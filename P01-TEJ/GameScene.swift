@@ -33,7 +33,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     private weak var gameOverOverlay: GameOverOverlay?
     private weak var pauseOverlay: PauseOverlay?
-    private weak var tutorialOverlay: SKNode?
 
     private static let spawnLoopKey       = "spawnLoop"
     private static let coinSpawnLoopKey   = "coinSpawnLoop"
@@ -58,13 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupHUD()
 
         AudioManager.shared.startMusic()
-
-        let hasSeenTutorial = UserDefaults.standard.bool(forKey: StorageKeys.tutorialSeen)
-        if !hasSeenTutorial {
-            showTutorial()
-        } else {
-            startGameplay()
-        }
+        startGameplay()
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleEnterBackground),
@@ -91,7 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.zPosition = 100
         addChild(scoreLabel)
 
-        coinLabel.text = "🪙 0"
+        coinLabel.text = "Moedas: 0"
         coinLabel.fontSize = 22
         coinLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
         coinLabel.horizontalAlignmentMode = .right
@@ -99,7 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         coinLabel.zPosition = 100
         addChild(coinLabel)
 
-        multiplierLabel.text = ""
+        multiplierLabel.text = nil
         multiplierLabel.fontSize = 18
         multiplierLabel.fontColor = .systemOrange
         multiplierLabel.horizontalAlignmentMode = .right
@@ -113,33 +106,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseButton.zPosition = 100
 
         let pauseGlyph = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        pauseGlyph.text = "⏸"
-        pauseGlyph.fontSize = 22
+        pauseGlyph.text = "II"
+        pauseGlyph.fontSize = 18
         pauseGlyph.verticalAlignmentMode = .center
         pauseGlyph.horizontalAlignmentMode = .center
         pauseGlyph.name = NodeNames.pauseButton
         pauseButton.addChild(pauseGlyph)
         addChild(pauseButton)
-    }
-
-    private func showTutorial() {
-        let overlay = TutorialOverlay(sceneSize: self.size)
-        addChild(overlay)
-        tutorialOverlay = overlay
-        
-        physicsWorld.speed = 0
-        player.physicsBody?.velocity = .zero
-    }
-
-    private func dismissTutorial() {
-        tutorialOverlay?.removeFromParent()
-        tutorialOverlay = nil
-        UserDefaults.standard.set(true, forKey: StorageKeys.tutorialSeen)
-        
-        player.physicsBody?.velocity = .zero
-        physicsWorld.speed = 1
-        
-        startGameplay()
     }
 
     private func startGameplay() {
@@ -192,11 +165,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
 
-        if tutorialOverlay != nil {
-            dismissTutorial()
-            return
-        }
-
         if isGameOver {
             handleGameOverTouch(at: location)
             return
@@ -235,7 +203,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
               let buttonName = overlay.buttonName(at: location) else { return }
 
         AudioManager.shared.playSFX(.button, on: self)
-        HapticsManager.shared.buttonTap()
 
         switch buttonName {
         case NodeNames.retryButton: restartGame()
@@ -249,7 +216,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
               let buttonName = overlay.buttonName(at: location) else { return }
 
         AudioManager.shared.playSFX(.button, on: self)
-        HapticsManager.shared.buttonTap()
 
         switch buttonName {
         case NodeNames.resumeButton: resumeGame()
@@ -261,11 +227,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func pauseGame() {
         guard !isManuallyPaused, !isGameOver else { return }
         isManuallyPaused = true
+        removeAction(forKey: GameScene.spawnLoopKey)
+        removeAction(forKey: GameScene.coinSpawnLoopKey)
+        removeAction(forKey: GameScene.shieldSpawnLoopKey)
         worldNode.isPaused = true
         physicsWorld.speed = 0
         AudioManager.shared.stopThrustLoop()
         AudioManager.shared.pauseAll()
-        HapticsManager.shared.buttonTap()
 
         let overlay = PauseOverlay(sceneSize: self.size)
         addChild(overlay)
@@ -278,6 +246,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         player.physicsBody?.velocity = .zero
         physicsWorld.speed = 1
+        lastUpdateTime = 0
+        startGameplay()
         
         AudioManager.shared.resumeAll()
         pauseOverlay?.removeFromParent()
@@ -285,13 +255,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     @objc private func handleEnterBackground() {
-        if !isGameOver && !isManuallyPaused && tutorialOverlay == nil {
+        if !isGameOver && !isManuallyPaused {
             pauseGame()
         }
     }
 
     override func update(_ currentTime: TimeInterval) {
-        guard !isGameOver, !isManuallyPaused, tutorialOverlay == nil else { return }
+        guard !isGameOver, !isManuallyPaused else { return }
 
         if lastUpdateTime == 0 { lastUpdateTime = currentTime }
         let dt = currentTime - lastUpdateTime
@@ -358,7 +328,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         coinCount += 1
         coinStreak += 1
-        coinLabel.text = "🪙 \(coinCount)"
+        coinLabel.text = "Moedas: \(coinCount)"
 
         if coinStreak >= ScoreConfig.coinsForStreak {
             increaseMultiplier()
@@ -377,7 +347,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ]))
 
         AudioManager.shared.playSFX(.coin, on: self)
-        HapticsManager.shared.coinCollected()
     }
 
     private func collectShield(node: SKNode?) {
@@ -391,7 +360,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ]), withKey: "shieldTimer")
 
         AudioManager.shared.playSFX(.shield, on: self)
-        HapticsManager.shared.shieldHit()
     }
 
     private func consumeShield(obstacleNode: SKNode?) {
@@ -406,7 +374,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         Effects.flash(in: self, color: SKColor(red: 0.4, green: 0.85, blue: 1.0, alpha: 1.0), peakAlpha: 0.4)
         AudioManager.shared.playSFX(.shield, on: self)
-        HapticsManager.shared.shieldHit()
     }
 
     private func increaseMultiplier() {
@@ -422,7 +389,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func resetMultiplier() {
         scoreMultiplier = 1.0
         streakRemaining = 0
-        multiplierLabel.text = ""
+        multiplierLabel.text = nil
     }
 
     private func triggerGameOver() {
@@ -439,7 +406,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         AudioManager.shared.stopThrustLoop()
         AudioManager.shared.playSFX(.hit, on: self)
-        HapticsManager.shared.playerDied()
 
         Effects.flash(in: self)
         Effects.screenShake(on: worldNode)
@@ -515,7 +481,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = 0
         resetMultiplier()
         scoreLabel.text = "0 m"
-        coinLabel.text  = "🪙 0"
+        coinLabel.text  = "Moedas: 0"
         isGameOver = false
         isThrusting = false
 

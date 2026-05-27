@@ -4,26 +4,24 @@ class SettingsScene: SKScene {
 
     private var musicToggle: SKShapeNode!
     private var sfxToggle: SKShapeNode!
-    private var hapticsToggle: SKShapeNode!
 
     override func didMove(to view: SKView) {
         self.backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
 
         let title = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        title.text = "Definições"
+        title.text = "Definicoes"
         title.fontSize = 36
         title.fontColor = .white
         title.position = CGPoint(x: size.width / 2, y: size.height * 0.85)
         addChild(title)
 
-        musicToggle   = makeToggleRow(label: "Música",    y: size.height * 0.71,  name: NodeNames.musicToggle)
+        musicToggle   = makeToggleRow(label: "Musica",    y: size.height * 0.71,  name: NodeNames.musicToggle)
         sfxToggle     = makeToggleRow(label: "Efeitos",   y: size.height * 0.6,  name: NodeNames.sfxToggle)
-        hapticsToggle = makeToggleRow(label: "Vibração",  y: size.height * 0.49,  name: NodeNames.hapticsToggle)
 
         addChild(makeButton(text: "Apagar Progresso",
                             fontSize: 16,
                             color: .systemRed,
-                            position: CGPoint(x: size.width / 2, y: size.height * 0.32),
+                            position: CGPoint(x: size.width / 2, y: size.height * 0.38),
                             size: CGSize(width: 220, height: 46),
                             name: NodeNames.resetButton))
 
@@ -95,7 +93,6 @@ class SettingsScene: SKScene {
     private func refresh() {
         applyToggleState(musicToggle,   isOn: AudioManager.shared.isMusicEnabled)
         applyToggleState(sfxToggle,     isOn: AudioManager.shared.isSfxEnabled)
-        applyToggleState(hapticsToggle, isOn: HapticsManager.shared.isEnabled)
     }
 
     private func applyToggleState(_ node: SKShapeNode, isOn: Bool) {
@@ -115,19 +112,13 @@ class SettingsScene: SKScene {
 
         if names.contains(NodeNames.musicToggle) {
             AudioManager.shared.isMusicEnabled.toggle()
-            HapticsManager.shared.buttonTap()
         } else if names.contains(NodeNames.sfxToggle) {
             AudioManager.shared.isSfxEnabled.toggle()
             AudioManager.shared.playSFX(.button, on: self)
-            HapticsManager.shared.buttonTap()
-        } else if names.contains(NodeNames.hapticsToggle) {
-            HapticsManager.shared.isEnabled.toggle()
-            HapticsManager.shared.buttonTap()
         } else if names.contains(NodeNames.resetButton) {
             resetProgress()
         } else if names.contains(NodeNames.backButton) {
             AudioManager.shared.playSFX(.button, on: self)
-            HapticsManager.shared.buttonTap()
             let menu = MenuScene(size: self.size)
             menu.scaleMode = .aspectFill
             view?.presentScene(menu, transition: .fade(withDuration: 0.4))
@@ -142,7 +133,5 @@ class SettingsScene: SKScene {
         defaults.removeObject(forKey: StorageKeys.coinWallet)
         defaults.removeObject(forKey: StorageKeys.ownedSkins)
         defaults.removeObject(forKey: StorageKeys.equippedSkin)
-        defaults.removeObject(forKey: StorageKeys.tutorialSeen)
-        HapticsManager.shared.playerDied()
     }
 }

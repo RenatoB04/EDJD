@@ -22,7 +22,6 @@
 		29C5F9FF2F9B725100CD44B4 /* DifficultyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5F9FE2F9B725100CD44B4 /* DifficultyManager.swift */; };
 		29E481852FB7139800A5292F /* CoinSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E481842FB7139800A5292F /* CoinSpawner.swift */; };
 		29E481872FB713A900A5292F /* CoinNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E481862FB713A900A5292F /* CoinNode.swift */; };
-		2A0000A12FB80001ABCD1001 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A22FB80001ABCD1001 /* HapticsManager.swift */; };
 		2A0000A32FB80001ABCD1001 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A42FB80001ABCD1001 /* Effects.swift */; };
 		2A0000A52FB80001ABCD1001 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A62FB80001ABCD1001 /* AudioManager.swift */; };
 		2A0000A72FB80001ABCD1001 /* LaserSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A82FB80001ABCD1001 /* LaserSpawner.swift */; };
@@ -32,7 +31,6 @@
 		2A0000AF2FB80001ABCD1001 /* ShopScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000B02FB80001ABCD1001 /* ShopScene.swift */; };
 		2A0000B12FB80001ABCD1001 /* PauseOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000B22FB80001ABCD1001 /* PauseOverlay.swift */; };
 		2A0000B32FB80001ABCD1001 /* SettingsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000B42FB80001ABCD1001 /* SettingsScene.swift */; };
-		2A0000B52FB80001ABCD1001 /* TutorialOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000B62FB80001ABCD1001 /* TutorialOverlay.swift */; };
 		2A0000B72FB80001ABCD1001 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2A0000B82FB80001ABCD1001 /* Sounds */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +51,6 @@
 		29C5F9FE2F9B725100CD44B4 /* DifficultyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyManager.swift; sourceTree = "<group>"; };
 		29E481842FB7139800A5292F /* CoinSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinSpawner.swift; sourceTree = "<group>"; };
 		29E481862FB713A900A5292F /* CoinNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinNode.swift; sourceTree = "<group>"; };
-		2A0000A22FB80001ABCD1001 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		2A0000A42FB80001ABCD1001 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		2A0000A62FB80001ABCD1001 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		2A0000A82FB80001ABCD1001 /* LaserSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserSpawner.swift; sourceTree = "<group>"; };
@@ -63,7 +60,6 @@
 		2A0000B02FB80001ABCD1001 /* ShopScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopScene.swift; sourceTree = "<group>"; };
 		2A0000B22FB80001ABCD1001 /* PauseOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseOverlay.swift; sourceTree = "<group>"; };
 		2A0000B42FB80001ABCD1001 /* SettingsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScene.swift; sourceTree = "<group>"; };
-		2A0000B62FB80001ABCD1001 /* TutorialOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialOverlay.swift; sourceTree = "<group>"; };
 		2A0000B82FB80001ABCD1001 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,7 +104,6 @@
 				29C5F9FA2F9B6FB900CD44B4 /* GameOverOverlay.swift */,
 				29C5F9E12F9B632900CD44B4 /* GameScene.swift */,
 				29C5F9E32F9B632900CD44B4 /* GameViewController.swift */,
-				2A0000A22FB80001ABCD1001 /* HapticsManager.swift */,
 				2A0000A82FB80001ABCD1001 /* LaserSpawner.swift */,
 				29C5F9EA2F9B632B00CD44B4 /* LaunchScreen.storyboard */,
 				29C5F9E52F9B632900CD44B4 /* Main.storyboard */,
@@ -123,7 +118,6 @@
 				2A0000AE2FB80001ABCD1001 /* Skin.swift */,
 				2A0000B82FB80001ABCD1001 /* Sounds */,
 				29C5F9FC2F9B710300CD44B4 /* StarField.swift */,
-				2A0000B62FB80001ABCD1001 /* TutorialOverlay.swift */,
 			);
 			path = "P01-TEJ";
 			sourceTree = "<group>";
@@ -212,7 +206,6 @@
 				29C5F9F32F9B63A500CD44B4 /* Constants.swift in Sources */,
 				29E481852FB7139800A5292F /* CoinSpawner.swift in Sources */,
 				29C5F9F52F9B63D000CD44B4 /* PlayerNode.swift in Sources */,
-				2A0000A12FB80001ABCD1001 /* HapticsManager.swift in Sources */,
 				2A0000A32FB80001ABCD1001 /* Effects.swift in Sources */,
 				2A0000A52FB80001ABCD1001 /* AudioManager.swift in Sources */,
 				2A0000A72FB80001ABCD1001 /* LaserSpawner.swift in Sources */,
@@ -222,7 +215,6 @@
 				2A0000AF2FB80001ABCD1001 /* ShopScene.swift in Sources */,
 				2A0000B12FB80001ABCD1001 /* PauseOverlay.swift in Sources */,
 				2A0000B32FB80001ABCD1001 /* SettingsScene.swift in Sources */,
-				2A0000B52FB80001ABCD1001 /* TutorialOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

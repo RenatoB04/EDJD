@@ -21,10 +21,8 @@ struct StorageKeys {
     static let coinWallet      = "astroDrift.coinWallet"
     static let musicEnabled    = "astroDrift.musicEnabled"
     static let sfxEnabled      = "astroDrift.sfxEnabled"
-    static let hapticsEnabled  = "astroDrift.hapticsEnabled"
     static let ownedSkins      = "astroDrift.ownedSkins"
     static let equippedSkin    = "astroDrift.equippedSkin"
-    static let tutorialSeen    = "astroDrift.tutorialSeen"
 }
 
 struct NodeNames {
@@ -46,11 +44,9 @@ struct NodeNames {
 
     static let musicToggle      = "musicToggle"
     static let sfxToggle        = "sfxToggle"
-    static let hapticsToggle    = "hapticsToggle"
 
     static let gameOverOverlay  = "gameOverOverlay"
     static let pauseOverlay     = "pauseOverlay"
-    static let tutorialOverlay  = "tutorialOverlay"
 }
 
 struct AssetNames {

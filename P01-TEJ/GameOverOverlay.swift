@@ -38,7 +38,7 @@ class GameOverOverlay: SKNode {
         addChild(title)
 
         let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        scoreLabel.text = "Distância: \(score) m"
+        scoreLabel.text = "Distancia: \(score) m"
         scoreLabel.fontSize = 26
         scoreLabel.fontColor = .white
         scoreLabel.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.62)
@@ -47,7 +47,7 @@ class GameOverOverlay: SKNode {
 
         let highLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
         if isNewRecord {
-            highLabel.text = "✨ Novo Recorde! ✨"
+            highLabel.text = "Novo Recorde!"
             highLabel.fontColor = .yellow
         } else {
             highLabel.text = "Recorde: \(highScore) m"
@@ -59,7 +59,7 @@ class GameOverOverlay: SKNode {
         addChild(highLabel)
 
         let coinLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        coinLabel.text = "🪙 \(coinsThisRun) moedas"
+        coinLabel.text = "Moedas: \(coinsThisRun)"
         coinLabel.fontSize = 18
         coinLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
         coinLabel.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.49)
