@@ -212,14 +212,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
-        if player.position.y > size.height - 20 {
-            player.position.y = size.height - 20
-            player.physicsBody?.velocity.dy = 0
-        }
-
-        if player.position.y < 20 {
-            player.position.y = 20
-            player.physicsBody?.velocity.dy = 0
+        let margin = player.size.height / 2
+        if player.position.y > size.height + margin || player.position.y < -margin {
+            triggerGameOver()
         }
     }
 
