@@ -1,51 +1,59 @@
-# Astro Drift - Plan
+# Astro Drift — Plan
 
 ## Concept
 
-Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids and lasers, collect coins, grab shields. Beat your high score.
+Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids. Beat your high score.
 
 - **Genre:** Endless runner (Jetpack Joyride style)
-- **Platform:** iOS - SpriteKit + Swift
-- **Session length:** 30-90 seconds
+- **Platform:** iOS — SpriteKit + Swift
+- **Session length:** 30–90 seconds
 - **Input:** One touch (tap = thrust up, release = fall)
 
-## Status
+## Gameplay Loop
 
-**v1.0 - MVP (concluido)**
-Player, obstaculos, score, recorde, menu, game over.
+1. Player taps Play
+2. Astronaut drifts forward, asteroids scroll from the right
+3. Tap/hold to rise, release to fall — dodge asteroids
+4. Speed increases gradually
+5. Hit asteroid → Game Over → see score → retry or menu
 
-**v1.1 - Visual / Audio polish (concluido)**
-Parallax 3-camadas, moedas, dificuldade logaritmica, assets para player/asteroide.
+## Technical Approach
 
-**v1.2 - Full content drop (concluido)**
-Game feel (particles, shake), audio (musica + SFX procedurais), lasers, escudo, multiplicador, loja com 4 skins, definicoes e pausa.
+- **Engine:** SpriteKit (built into iOS, no dependencies)
+- **Physics:** `SKPhysicsBody` for gravity + collisions
+- **Obstacles:** `SKAction.sequence` for spawn → move → remove
+- **Scoring:** Distance counter in `update()`, saved with `UserDefaults`
+- **Art:** Colored shapes (no external assets needed)
+- **Scenes:** `MenuScene`, `GameScene`, Game Over overlay (`SKNode`)
 
-## Proximas iteracoes
+### File Structure (7 files)
 
-### v1.3 - Social / progressao (futuro)
-- Game Center leaderboard
-- Achievements
-- Daily mission
+```
+GameViewController.swift   — loads first scene
+MenuScene.swift            — title, play button, high score
+GameScene.swift            — all gameplay
+PlayerNode.swift           — astronaut + physics body
+ObstacleSpawner.swift      — asteroid spawning logic
+Constants.swift            — physics categories, config values
+Assets.xcassets            — app icon only
+```
 
-### v1.4 - Polish externo
-- SFX e musica profissionais
-- Localizacao EN/PT
-- Texture atlases para performance
+## MVP Scope (4 weeks)
 
-## Stack tecnico
+| Week | Goal | Done When |
+|------|------|-----------|
+| 1 | Player movement | Square flies up/down with touch |
+| 2 | Obstacles + death | Dodge circles, die on contact, retry |
+| 3 | Score + menu | HUD, high score, MenuScene, full loop |
+| 4 | Polish | Star background, speed ramp, particles |
 
-- **Engine:** SpriteKit (built into iOS)
-- **Physics:** `SKPhysicsBody` para gravidade + colisoes via `contactTestBitMask`
-- **Obstaculos:** `SKAction.sequence` para spawn -> move -> remove
-- **Score:** acumulador `rawScore: Double` com `scoreMultiplier`
-- **Audio:** `AVAudioPlayer` para musica/thrust loop, `SKAction.playSoundFileNamed` para SFX one-shot
-- **Persistencia:** `UserDefaults` (recorde, carteira, skins, settings)
-- **Assets:** PNG @2x/@3x gerados programaticamente via `tools/*.ps1` (PowerShell + System.Drawing)
+**Weeks 5–6:** Bug fixes, playtesting, difficulty tuning.
 
-## Decisoes de design
+## Future Ideas (only after MVP)
 
-- **Colisoes trigger-only** (`collisionBitMask = .none`) - sem fisica resolvida, so notificacao
-- **`worldNode` separado** dos HUD/overlays para o screen shake afectar so o mundo
-- **Singleton** para `AudioManager` - settings globais de audio
-- **Inventario em UserDefaults** - sem servidor, sem cloud sync
-- **SFX procedurais** geradas em PowerShell - facilita iterar sem precisar de assets externos; substituiveis sem mexer no codigo (`Sounds/coin.wav` etc.)
+- Sound effect on death
+- Screen shake
+- Asteroid rotation animation
+- Jetpack particle trail
+- Second obstacle type (tall rectangle)
+- Background music
