@@ -2,7 +2,7 @@
 
 ## Concept
 
-Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids and lasers. Beat your high score.
+Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids. Beat your high score.
 
 - **Genre:** Endless runner (Jetpack Joyride style)
 - **Platform:** iOS - SpriteKit + Swift
@@ -24,7 +24,7 @@ Endless horizontal runner in space. Tap to fly up, release to fall. Dodge astero
 - **Physics:** `SKPhysicsBody` for gravity and contact detection
 - **Obstacles:** `SKAction.sequence` for spawn -> move -> remove
 - **Scoring:** Distance counter in `update()`, saved with `UserDefaults`
-- **Art:** Simple generated sprites in `Assets.xcassets`
+- **Art:** Static PNG assets in `Assets.xcassets`
 - **Scenes:** `MenuScene`, `GameScene`, `GameOverOverlay`
 
 ## File Structure
@@ -40,9 +40,8 @@ Constants.swift            - physics categories and config values
 GameOverOverlay.swift      - retry/menu UI
 PauseOverlay.swift         - pause UI
 DifficultyManager.swift    - gradual speed ramp
-StarField.swift            - star background
-Effects.swift              - particles, flash, shake
-AudioManager.swift         - simple music and sound playback
+StarField.swift            - simple star background
+Effects.swift              - simple flash and shake effects
 Assets.xcassets            - app icon and game sprites
 ```
 
@@ -53,13 +52,12 @@ Assets.xcassets            - app icon and game sprites
 | 1 | Player movement | Ship flies up/down with touch |
 | 2 | Obstacles + death | Dodge asteroids, die on contact, retry |
 | 3 | Score + menu | HUD, high score, menu, full loop |
-| 4 | Polish | Star background, speed ramp, particles |
+| 4 | Polish | Star background, speed ramp, simple effects |
 
 ## Extra Polish
 
 - Sound effect on death
 - Screen shake
 - Asteroid rotation animation
-- Jetpack particle trail
+- Jetpack flame
 - Second obstacle type
-- Background music
