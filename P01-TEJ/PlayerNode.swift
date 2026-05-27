@@ -2,7 +2,7 @@ import SpriteKit
 
 class PlayerNode: SKSpriteNode {
 
-    private(set) var trail: SKEmitterNode!
+    private let flame = SKShapeNode()
 
     init() {
         let texture = SKTexture(imageNamed: AssetNames.player)
@@ -10,7 +10,7 @@ class PlayerNode: SKSpriteNode {
 
         name = NodeNames.player
         setupPhysics()
-        setupTrail()
+        setupFlame()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -27,14 +27,22 @@ class PlayerNode: SKSpriteNode {
         physicsBody?.allowsRotation = false
     }
 
-    private func setupTrail() {
-        trail = Effects.makeJetpackTrail()
-        trail.position = CGPoint(x: -size.width * 0.4, y: 0)
-        trail.particleBirthRate = 0
-        addChild(trail)
+    private func setupFlame() {
+        let path = CGMutablePath()
+        path.move(to: CGPoint(x: -size.width * 0.45, y: 0))
+        path.addLine(to: CGPoint(x: -size.width * 0.8, y: 9))
+        path.addLine(to: CGPoint(x: -size.width * 0.8, y: -9))
+        path.closeSubpath()
+
+        flame.path = path
+        flame.fillColor = .orange
+        flame.strokeColor = .clear
+        flame.isHidden = true
+        flame.zPosition = -1
+        addChild(flame)
     }
 
     func setThrusting(_ thrusting: Bool) {
-        trail.particleBirthRate = thrusting ? 140 : 0
+        flame.isHidden = !thrusting
     }
 }

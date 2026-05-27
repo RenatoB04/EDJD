@@ -47,17 +47,8 @@ struct ObstacleConfig {
 }
 
 struct StarFieldConfig {
-    static let farLayerSpeed: CGFloat = 20.0
-    static let midLayerSpeed: CGFloat = 50.0
-    static let nearLayerSpeed: CGFloat = 100.0
-
-    static let farStarCount: Int = 40
-    static let midStarCount: Int = 25
-    static let nearStarCount: Int = 15
-
-    static let farStarSize: CGFloat = 1.0
-    static let midStarSize: CGFloat = 2.0
-    static let nearStarSize: CGFloat = 3.0
+    static let speed: CGFloat = 45.0
+    static let starCount: Int = 70
 }
 
 struct DifficultyConfig {

@@ -7,8 +7,6 @@ class MenuScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
 
-        AudioManager.shared.startMusic()
-
         let title = SKLabelNode(text: "Astro Drift")
         title.fontName = "AvenirNext-Bold"
         title.fontSize = 44
@@ -86,7 +84,7 @@ class MenuScene: SKScene {
     }
 
     private func startGame() {
-        AudioManager.shared.playSFX(.button, on: self)
+        run(SKAction.playSoundFileNamed("Sounds/button.wav", waitForCompletion: false))
 
         let game = GameScene(size: size)
         game.scaleMode = .aspectFill

@@ -1,5 +1,4 @@
 import SpriteKit
-import UIKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
@@ -39,29 +38,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         worldNode = SKNode()
         addChild(worldNode)
 
-        setupStarField(view: view)
+        setupStarField()
 
         player.position = CGPoint(x: size.width * 0.2, y: size.height / 2)
         worldNode.addChild(player)
-        player.trail.targetNode = worldNode
 
         setupHUD()
-
-        AudioManager.shared.startMusic()
         startGameplay()
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleEnterBackground),
-                                               name: UIApplication.willResignActiveNotification,
-                                               object: nil)
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    private func setupStarField(view: SKView) {
-        let field = StarField(sceneSize: size, view: view)
+    private func setupStarField() {
+        let field = StarField(sceneSize: size)
         worldNode.addChild(field)
         starField = field
     }
@@ -136,7 +123,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         isThrusting = true
         player.setThrusting(true)
-        AudioManager.shared.startThrustLoop()
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -150,14 +136,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func stopThrust() {
         isThrusting = false
         player.setThrusting(false)
-        AudioManager.shared.stopThrustLoop()
     }
 
     private func handleGameOverTouch(at location: CGPoint) {
         guard let overlay = gameOverOverlay,
               let buttonName = overlay.buttonName(at: location) else { return }
 
-        AudioManager.shared.playSFX(.button, on: self)
+        run(SKAction.playSoundFileNamed("Sounds/button.wav", waitForCompletion: false))
 
         switch buttonName {
         case NodeNames.retryButton: restartGame()
@@ -170,7 +155,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard let overlay = pauseOverlay,
               let buttonName = overlay.buttonName(at: location) else { return }
 
-        AudioManager.shared.playSFX(.button, on: self)
+        run(SKAction.playSoundFileNamed("Sounds/button.wav", waitForCompletion: false))
 
         switch buttonName {
         case NodeNames.resumeButton: resumeGame()
@@ -186,8 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         removeAction(forKey: GameScene.spawnLoopKey)
         worldNode.isPaused = true
         physicsWorld.speed = 0
-        AudioManager.shared.stopThrustLoop()
-        AudioManager.shared.pauseAll()
+        stopThrust()
 
         let overlay = PauseOverlay(sceneSize: size)
         addChild(overlay)
@@ -202,15 +186,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = 0
         startGameplay()
 
-        AudioManager.shared.resumeAll()
         pauseOverlay?.removeFromParent()
         pauseOverlay = nil
-    }
-
-    @objc private func handleEnterBackground() {
-        if !isGameOver && !isManuallyPaused {
-            pauseGame()
-        }
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -263,11 +240,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody?.velocity = .zero
         player.physicsBody?.affectedByGravity = false
 
-        AudioManager.shared.playSFX(.hit, on: self)
+        run(SKAction.playSoundFileNamed("Sounds/hit.wav", waitForCompletion: false))
 
         Effects.flash(in: self)
         Effects.screenShake(on: worldNode)
-        Effects.deathExplosion(at: player.position, in: self)
         Effects.playerDeathAnimation(on: player)
 
         let fade = SKAction.sequence([
@@ -330,8 +306,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func goToMenu() {
-        AudioManager.shared.stopThrustLoop()
-
         let menu = MenuScene(size: size)
         menu.scaleMode = .aspectFill
         menu.lastScore = score

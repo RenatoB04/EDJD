@@ -28,10 +28,10 @@ Toca para subir, larga para descer, evita asteroides e lasers, e tenta bater o r
 - Asteroides rotativos
 - Lasers como segundo obstaculo
 - Rampa gradual de dificuldade
-- Parallax de estrelas em 3 camadas
-- Particulas de jetpack
-- Screen shake, flash e explosao na morte
-- Musica ambiente e efeitos sonoros simples
+- Fundo simples com estrelas
+- Chama simples no jetpack
+- Screen shake e flash na morte
+- Efeitos sonoros simples
 - Pausa com botao na HUD
 
 ## Estrutura
@@ -49,14 +49,8 @@ P01-TEJ/
 |-- LaserSpawner.swift
 |-- DifficultyManager.swift
 |-- StarField.swift
-|-- AudioManager.swift
 |-- Effects.swift
 |-- Constants.swift
 |-- Assets.xcassets
 `-- Sounds/
 ```
-
-## Ferramentas
-
-- `tools/gen_sprites.ps1` - gera os PNG base do `player` e `asteroid`
-- `tools/gen_sounds.ps1` - gera sons procedurais simples
