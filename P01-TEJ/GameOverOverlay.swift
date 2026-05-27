@@ -4,15 +4,15 @@ class GameOverOverlay: SKNode {
 
     private let sceneSize: CGSize
 
-    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int) {
+    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool) {
         self.sceneSize = sceneSize
         super.init()
 
-        self.name = NodeNames.gameOverOverlay
-        self.zPosition = 1000
+        name = NodeNames.gameOverOverlay
+        zPosition = 1000
 
         setupBackground()
-        setupLabels(score: score, highScore: highScore, isNewRecord: isNewRecord, coinsThisRun: coinsThisRun)
+        setupLabels(score: score, highScore: highScore, isNewRecord: isNewRecord)
         setupButtons()
     }
 
@@ -24,11 +24,10 @@ class GameOverOverlay: SKNode {
         let background = SKSpriteNode(color: .black, size: sceneSize)
         background.alpha = 0.65
         background.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height / 2)
-        background.zPosition = 0
         addChild(background)
     }
 
-    private func setupLabels(score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int) {
+    private func setupLabels(score: Int, highScore: Int, isNewRecord: Bool) {
         let title = SKLabelNode(fontNamed: "AvenirNext-Bold")
         title.text = "Fim de Jogo"
         title.fontSize = 44
@@ -46,48 +45,31 @@ class GameOverOverlay: SKNode {
         addChild(scoreLabel)
 
         let highLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        if isNewRecord {
-            highLabel.text = "Novo Recorde!"
-            highLabel.fontColor = .yellow
-        } else {
-            highLabel.text = "Recorde: \(highScore) m"
-            highLabel.fontColor = .lightGray
-        }
+        highLabel.text = isNewRecord ? "Novo Recorde!" : "Recorde: \(highScore) m"
         highLabel.fontSize = 20
+        highLabel.fontColor = isNewRecord ? .yellow : .lightGray
         highLabel.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.55)
         highLabel.zPosition = 1
         addChild(highLabel)
-
-        let coinLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        coinLabel.text = "Moedas: \(coinsThisRun)"
-        coinLabel.fontSize = 18
-        coinLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
-        coinLabel.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.49)
-        coinLabel.zPosition = 1
-        addChild(coinLabel)
     }
 
     private func setupButtons() {
-        let buttonWidth: CGFloat = 180
-        let buttonHeight: CGFloat = 50
-        let buttonY = sceneSize.height * 0.33
-
         let retryButton = makeButton(
             text: "Jogar de Novo",
-            size: CGSize(width: buttonWidth, height: buttonHeight),
+            size: CGSize(width: 180, height: 50),
             color: .systemGreen,
             name: NodeNames.retryButton
         )
-        retryButton.position = CGPoint(x: sceneSize.width / 2, y: buttonY)
+        retryButton.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.34)
         addChild(retryButton)
 
         let menuButton = makeButton(
             text: "Menu",
-            size: CGSize(width: buttonWidth, height: buttonHeight),
+            size: CGSize(width: 180, height: 50),
             color: .systemGray,
             name: NodeNames.menuButton
         )
-        menuButton.position = CGPoint(x: sceneSize.width / 2, y: buttonY - 70)
+        menuButton.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.22)
         addChild(menuButton)
     }
 
@@ -102,8 +84,6 @@ class GameOverOverlay: SKNode {
         label.fontColor = .white
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
-        label.position = .zero
-        label.zPosition = 1
         label.name = name
         button.addChild(label)
 

@@ -5,8 +5,8 @@ class DifficultyManager {
     private(set) var currentDifficulty: CGFloat = 1.0
 
     func update(elapsedTime: TimeInterval) {
-        let raw = 1.0 + log(1.0 + CGFloat(elapsedTime) / CGFloat(DifficultyConfig.rampDuration)) * DifficultyConfig.rampIntensity
-        currentDifficulty = min(raw, DifficultyConfig.maxDifficulty)
+        let progress = CGFloat(elapsedTime / DifficultyConfig.rampDuration)
+        currentDifficulty = min(1.0 + progress * DifficultyConfig.rampIntensity, DifficultyConfig.maxDifficulty)
     }
 
     func reset() {
@@ -21,12 +21,6 @@ class DifficultyManager {
     func currentObstacleDuration() -> TimeInterval {
         let scaled = SpawnConfig.baseObstacleDuration / TimeInterval(currentDifficulty)
         return max(scaled, SpawnConfig.minObstacleDuration)
-    }
-
-    func currentCoinSpawnRate() -> TimeInterval {
-        let scaled = CoinConfig.baseSpawnRate / TimeInterval(currentDifficulty)
-        let floor  = CoinConfig.baseSpawnRate * TimeInterval(CoinConfig.minSpawnRateFactor)
-        return max(scaled, floor)
     }
 
     func currentParallaxMultiplier() -> CGFloat {

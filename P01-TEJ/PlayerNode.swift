@@ -3,21 +3,12 @@ import SpriteKit
 class PlayerNode: SKSpriteNode {
 
     private(set) var trail: SKEmitterNode!
-    private(set) var skin: Skin
-
-    var hasShield: Bool = false {
-        didSet { refreshShieldAura() }
-    }
-
-    private weak var shieldAura: ShieldAuraNode?
 
     init() {
-        let skin = PlayerInventory.equippedSkin
-        self.skin = skin
-        let texture = SKTexture(imageNamed: skin.assetName)
+        let texture = SKTexture(imageNamed: AssetNames.player)
         super.init(texture: texture, color: .clear, size: PlayerConfig.size)
 
-        self.name = NodeNames.player
+        name = NodeNames.player
         setupPhysics()
         setupTrail()
     }
@@ -30,7 +21,7 @@ class PlayerNode: SKSpriteNode {
         let bodySize = CGSize(width: size.width * 0.7, height: size.height * 0.6)
         physicsBody = SKPhysicsBody(rectangleOf: bodySize)
         physicsBody?.categoryBitMask = PhysicsCategory.player
-        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.coin | PhysicsCategory.shieldPickup
+        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle
         physicsBody?.collisionBitMask = PhysicsCategory.none
         physicsBody?.affectedByGravity = true
         physicsBody?.allowsRotation = false
@@ -38,7 +29,6 @@ class PlayerNode: SKSpriteNode {
 
     private func setupTrail() {
         trail = Effects.makeJetpackTrail()
-        Effects.tintTrail(trail, color: skin.trailColor)
         trail.position = CGPoint(x: -size.width * 0.4, y: 0)
         trail.particleBirthRate = 0
         addChild(trail)
@@ -46,23 +36,5 @@ class PlayerNode: SKSpriteNode {
 
     func setThrusting(_ thrusting: Bool) {
         trail.particleBirthRate = thrusting ? 140 : 0
-    }
-
-    private func refreshShieldAura() {
-        if hasShield {
-            guard shieldAura == nil else { return }
-            let aura = ShieldAuraNode()
-            addChild(aura)
-            shieldAura = aura
-        } else {
-            shieldAura?.removeFromParent()
-            shieldAura = nil
-        }
-    }
-
-    func reloadSkin() {
-        self.skin = PlayerInventory.equippedSkin
-        self.texture = SKTexture(imageNamed: skin.assetName)
-        Effects.tintTrail(trail, color: skin.trailColor)
     }
 }

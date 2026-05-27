@@ -2,50 +2,64 @@
 
 ## Concept
 
-Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids and lasers, collect coins, grab shields. Beat your high score.
+Endless horizontal runner in space. Tap to fly up, release to fall. Dodge asteroids and lasers. Beat your high score.
 
 - **Genre:** Endless runner (Jetpack Joyride style)
 - **Platform:** iOS - SpriteKit + Swift
 - **Session length:** 30-90 seconds
 - **Input:** One touch (tap = thrust up, release = fall)
 
-## Status
+## Gameplay Loop
 
-**v1.0 - MVP (concluido)**
-Player, obstaculos, score, recorde, menu, game over.
+1. Player taps Play.
+2. The ship moves forward while obstacles scroll from the right.
+3. Tap and hold to rise, release to fall.
+4. Speed increases gradually.
+5. Hit an obstacle to get Game Over.
+6. See score, then retry or return to menu.
 
-**v1.1 - Visual / Audio polish (concluido)**
-Parallax 3-camadas, moedas, dificuldade logaritmica, assets para player/asteroide.
+## Technical Approach
 
-**v1.2 - Full content drop (concluido)**
-Game feel (particles, shake), audio (musica + SFX procedurais), lasers, escudo, multiplicador, loja com 4 skins, definicoes e pausa.
+- **Engine:** SpriteKit (built into iOS, no dependencies)
+- **Physics:** `SKPhysicsBody` for gravity and contact detection
+- **Obstacles:** `SKAction.sequence` for spawn -> move -> remove
+- **Scoring:** Distance counter in `update()`, saved with `UserDefaults`
+- **Art:** Simple generated sprites in `Assets.xcassets`
+- **Scenes:** `MenuScene`, `GameScene`, `GameOverOverlay`
 
-## Proximas iteracoes
+## File Structure
 
-### v1.3 - Social / progressao (futuro)
-- Game Center leaderboard
-- Achievements
-- Daily mission
+```text
+GameViewController.swift   - loads the first scene
+MenuScene.swift            - title, play button, high score
+GameScene.swift            - gameplay loop
+PlayerNode.swift           - player sprite and physics body
+ObstacleSpawner.swift      - asteroid spawning logic
+LaserSpawner.swift         - second obstacle type
+Constants.swift            - physics categories and config values
+GameOverOverlay.swift      - retry/menu UI
+PauseOverlay.swift         - pause UI
+DifficultyManager.swift    - gradual speed ramp
+StarField.swift            - star background
+Effects.swift              - particles, flash, shake
+AudioManager.swift         - simple music and sound playback
+Assets.xcassets            - app icon and game sprites
+```
 
-### v1.4 - Polish externo
-- SFX e musica profissionais
-- Localizacao EN/PT
-- Texture atlases para performance
+## MVP Scope
 
-## Stack tecnico
+| Week | Goal | Done When |
+| --- | --- | --- |
+| 1 | Player movement | Ship flies up/down with touch |
+| 2 | Obstacles + death | Dodge asteroids, die on contact, retry |
+| 3 | Score + menu | HUD, high score, menu, full loop |
+| 4 | Polish | Star background, speed ramp, particles |
 
-- **Engine:** SpriteKit (built into iOS)
-- **Physics:** `SKPhysicsBody` para gravidade + colisoes via `contactTestBitMask`
-- **Obstaculos:** `SKAction.sequence` para spawn -> move -> remove
-- **Score:** acumulador `rawScore: Double` com `scoreMultiplier`
-- **Audio:** `AVAudioPlayer` para musica/thrust loop, `SKAction.playSoundFileNamed` para SFX one-shot
-- **Persistencia:** `UserDefaults` (recorde, carteira, skins, settings)
-- **Assets:** PNG @2x/@3x gerados programaticamente via `tools/*.ps1` (PowerShell + System.Drawing)
+## Extra Polish
 
-## Decisoes de design
-
-- **Colisoes trigger-only** (`collisionBitMask = .none`) - sem fisica resolvida, so notificacao
-- **`worldNode` separado** dos HUD/overlays para o screen shake afectar so o mundo
-- **Singleton** para `AudioManager` - settings globais de audio
-- **Inventario em UserDefaults** - sem servidor, sem cloud sync
-- **SFX procedurais** geradas em PowerShell - facilita iterar sem precisar de assets externos; substituiveis sem mexer no codigo (`Sounds/coin.wav` etc.)
+- Sound effect on death
+- Screen shake
+- Asteroid rotation animation
+- Jetpack particle trail
+- Second obstacle type
+- Background music
