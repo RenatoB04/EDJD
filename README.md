@@ -31,7 +31,7 @@ Toca para subir, larga para descer, evita asteroides e lasers, e tenta bater o r
 - Fundo simples com estrelas
 - Chama simples no jetpack
 - Screen shake e flash na morte
-- Efeitos sonoros simples
+- Musica de fundo e efeitos sonoros simples
 - Pausa com botao na HUD
 
 ## Estrutura
@@ -49,6 +49,7 @@ P01-TEJ/
 |-- LaserSpawner.swift
 |-- DifficultyManager.swift
 |-- StarField.swift
+|-- AudioManager.swift
 |-- Effects.swift
 |-- Constants.swift
 |-- Assets.xcassets

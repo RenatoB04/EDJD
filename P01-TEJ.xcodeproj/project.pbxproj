@@ -20,6 +20,7 @@
 		29C5F9FB2F9B6FB900CD44B4 /* GameOverOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5F9FA2F9B6FB900CD44B4 /* GameOverOverlay.swift */; };
 		29C5F9FD2F9B710300CD44B4 /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5F9FC2F9B710300CD44B4 /* StarField.swift */; };
 		29C5F9FF2F9B725100CD44B4 /* DifficultyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5F9FE2F9B725100CD44B4 /* DifficultyManager.swift */; };
+		2A0000A52FB80001ABCD1001 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A62FB80001ABCD1001 /* AudioManager.swift */; };
 		2A0000A32FB80001ABCD1001 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A42FB80001ABCD1001 /* Effects.swift */; };
 		2A0000A72FB80001ABCD1001 /* LaserSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000A82FB80001ABCD1001 /* LaserSpawner.swift */; };
 		2A0000B12FB80001ABCD1001 /* PauseOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0000B22FB80001ABCD1001 /* PauseOverlay.swift */; };
@@ -41,6 +42,7 @@
 		29C5F9FA2F9B6FB900CD44B4 /* GameOverOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverOverlay.swift; sourceTree = "<group>"; };
 		29C5F9FC2F9B710300CD44B4 /* StarField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
 		29C5F9FE2F9B725100CD44B4 /* DifficultyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyManager.swift; sourceTree = "<group>"; };
+		2A0000A62FB80001ABCD1001 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		2A0000A42FB80001ABCD1001 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		2A0000A82FB80001ABCD1001 /* LaserSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserSpawner.swift; sourceTree = "<group>"; };
 		2A0000B22FB80001ABCD1001 /* PauseOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseOverlay.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				29C5F9DB2F9B632900CD44B4 /* AppDelegate.swift */,
+				2A0000A62FB80001ABCD1001 /* AudioManager.swift */,
 				29C5F9E82F9B632B00CD44B4 /* Assets.xcassets */,
 				29C5F9F22F9B63A500CD44B4 /* Constants.swift */,
 				29C5F9FE2F9B725100CD44B4 /* DifficultyManager.swift */,
@@ -181,6 +184,7 @@
 				29C5F9F32F9B63A500CD44B4 /* Constants.swift in Sources */,
 				29C5F9F52F9B63D000CD44B4 /* PlayerNode.swift in Sources */,
 				2A0000A32FB80001ABCD1001 /* Effects.swift in Sources */,
+				2A0000A52FB80001ABCD1001 /* AudioManager.swift in Sources */,
 				2A0000A72FB80001ABCD1001 /* LaserSpawner.swift in Sources */,
 				2A0000B12FB80001ABCD1001 /* PauseOverlay.swift in Sources */,
 			);

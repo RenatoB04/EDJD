@@ -44,6 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         worldNode.addChild(player)
 
         setupHUD()
+        AudioManager.shared.startMusic()
         startGameplay()
     }
 
@@ -123,6 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         isThrusting = true
         player.setThrusting(true)
+        AudioManager.shared.startThrust()
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -136,6 +138,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func stopThrust() {
         isThrusting = false
         player.setThrusting(false)
+        AudioManager.shared.stopThrust()
     }
 
     private func handleGameOverTouch(at location: CGPoint) {
@@ -172,6 +175,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         worldNode.isPaused = true
         physicsWorld.speed = 0
         stopThrust()
+        AudioManager.shared.pauseAll()
 
         let overlay = PauseOverlay(sceneSize: size)
         addChild(overlay)
@@ -186,6 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = 0
         startGameplay()
 
+        AudioManager.shared.resumeMusic()
         pauseOverlay?.removeFromParent()
         pauseOverlay = nil
     }
@@ -301,6 +306,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func goToMenu() {
+        AudioManager.shared.stopThrust()
+
         let menu = MenuScene(size: size)
         menu.scaleMode = .aspectFill
         menu.lastScore = score

@@ -41,6 +41,7 @@ GameOverOverlay.swift      - retry/menu UI
 PauseOverlay.swift         - pause UI
 DifficultyManager.swift    - gradual speed ramp
 StarField.swift            - simple star background
+AudioManager.swift         - simple background music and thrust sound
 Effects.swift              - simple flash and shake effects
 Assets.xcassets            - app icon and game sprites
 ```
@@ -60,4 +61,5 @@ Assets.xcassets            - app icon and game sprites
 - Screen shake
 - Asteroid rotation animation
 - Jetpack flame
+- Background music
 - Second obstacle type

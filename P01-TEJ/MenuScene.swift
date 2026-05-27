@@ -6,6 +6,7 @@ class MenuScene: SKScene {
 
     override func didMove(to view: SKView) {
         backgroundColor = SKColor(red: 0.05, green: 0.05, blue: 0.12, alpha: 1.0)
+        AudioManager.shared.startMusic()
 
         let title = SKLabelNode(text: "Astro Drift")
         title.fontName = "AvenirNext-Bold"
