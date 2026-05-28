@@ -10,7 +10,7 @@ final class AudioManager {
 
     func startMusic() {
         if musicPlayer == nil {
-            musicPlayer = makePlayer(fileName: "music", volume: 0.25)
+            musicPlayer = makePlayer(fileName: "music", volume: 0.1)
             musicPlayer?.numberOfLoops = -1
         }
         musicPlayer?.play()
