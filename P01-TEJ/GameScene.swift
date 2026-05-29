@@ -15,7 +15,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var score: Int = 0
     private var rawScore: Double = 0
     private var coinsThisRun: Int = 0
-    private var walletCoins: Int = 0
     private var hasUsedContinue = false
 
     private var lastUpdateTime: TimeInterval = 0
@@ -23,7 +22,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let coinLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-    private let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private var pauseButton: SKShapeNode!
 
     private var starField: StarField?
@@ -51,8 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         worldNode.addChild(player)
 
         setupHUD()
-        walletCoins = UserDefaults.standard.integer(forKey: StorageKeys.coinWallet)
-        updateCoinLabels()
+        updateCoinLabel()
         AudioManager.shared.startMusic()
         startGameplay()
     }
@@ -78,13 +75,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         coinLabel.position = CGPoint(x: size.width - 20, y: size.height - 78)
         coinLabel.zPosition = 100
         addChild(coinLabel)
-
-        walletLabel.fontSize = 18
-        walletLabel.fontColor = .lightGray
-        walletLabel.horizontalAlignmentMode = .right
-        walletLabel.position = CGPoint(x: size.width - 20, y: size.height - 103)
-        walletLabel.zPosition = 100
-        addChild(walletLabel)
 
         let pauseSize = CGSize(width: 44, height: 44)
         let rect = CGRect(x: -pauseSize.width / 2, y: -pauseSize.height / 2, width: pauseSize.width, height: pauseSize.height)
@@ -288,7 +278,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard let coin = node, coin.parent != nil else { return }
 
         coinsThisRun += 1
-        updateCoinLabels()
+        updateCoinLabel()
         run(SKAction.playSoundFileNamed("Sounds/coin.wav", waitForCompletion: false))
 
         coin.removeAllActions()
@@ -336,7 +326,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if isNewRecord {
             defaults.set(score, forKey: StorageKeys.highScore)
         }
-        addRunCoinsToWallet()
 
         let overlay = GameOverOverlay(
             sceneSize: size,
@@ -344,7 +333,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             highScore: max(previousHigh, score),
             isNewRecord: isNewRecord,
             coinsThisRun: coinsThisRun,
-            walletCoins: walletCoins,
             canContinue: canContinue()
         )
         overlay.alpha = 0
@@ -357,17 +345,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func canContinue() -> Bool {
-        return !hasUsedContinue && walletCoins >= CoinConfig.continueCost
+        return !hasUsedContinue && coinsThisRun >= CoinConfig.continueCost
     }
 
     private func continueGame() {
         guard canContinue() else { return }
 
         hasUsedContinue = true
-        walletCoins -= CoinConfig.continueCost
-        coinsThisRun = 0
-        UserDefaults.standard.set(walletCoins, forKey: StorageKeys.coinWallet)
-        updateCoinLabels()
+        coinsThisRun -= CoinConfig.continueCost
+        updateCoinLabel()
 
         gameOverOverlay?.removeFromParent()
         gameOverOverlay = nil
@@ -417,7 +403,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         elapsedTime = 0
         lastUpdateTime = 0
         scoreLabel.text = "0 m"
-        updateCoinLabels()
+        updateCoinLabel()
         isGameOver = false
         isThrusting = false
 
@@ -425,16 +411,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startGameplay()
     }
 
-    private func addRunCoinsToWallet() {
-        guard coinsThisRun > 0 else { return }
-        walletCoins += coinsThisRun
-        UserDefaults.standard.set(walletCoins, forKey: StorageKeys.coinWallet)
-        updateCoinLabels()
-    }
-
-    private func updateCoinLabels() {
+    private func updateCoinLabel() {
         coinLabel.text = "Moedas: \(coinsThisRun)"
-        walletLabel.text = "Carteira: \(walletCoins)"
     }
 
     private func goToMenu() {

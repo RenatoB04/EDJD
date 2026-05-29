@@ -5,7 +5,7 @@ class GameOverOverlay: SKNode {
     private let sceneSize: CGSize
     private let canContinue: Bool
 
-    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, walletCoins: Int, canContinue: Bool) {
+    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, canContinue: Bool) {
         self.sceneSize = sceneSize
         self.canContinue = canContinue
         super.init()
@@ -14,7 +14,7 @@ class GameOverOverlay: SKNode {
         zPosition = 1000
 
         setupBackground()
-        setupLabels(score: score, highScore: highScore, isNewRecord: isNewRecord, coinsThisRun: coinsThisRun, walletCoins: walletCoins)
+        setupLabels(score: score, highScore: highScore, isNewRecord: isNewRecord, coinsThisRun: coinsThisRun)
         setupButtons()
     }
 
@@ -29,7 +29,7 @@ class GameOverOverlay: SKNode {
         addChild(background)
     }
 
-    private func setupLabels(score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, walletCoins: Int) {
+    private func setupLabels(score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int) {
         let title = SKLabelNode(fontNamed: "AvenirNext-Bold")
         title.text = "Fim de Jogo"
         title.fontSize = 44
@@ -55,7 +55,7 @@ class GameOverOverlay: SKNode {
         addChild(highLabel)
 
         let coinsLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        coinsLabel.text = "Moedas: +\(coinsThisRun)   Carteira: \(walletCoins)"
+        coinsLabel.text = "Moedas: \(coinsThisRun)"
         coinsLabel.fontSize = 18
         coinsLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
         coinsLabel.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.52)
@@ -68,7 +68,7 @@ class GameOverOverlay: SKNode {
 
         if canContinue {
             let continueButton = makeButton(
-                text: "Continuar -\(CoinConfig.continueCost)",
+                text: "Continuar: \(CoinConfig.continueCost) moedas",
                 size: CGSize(width: 190, height: 48),
                 color: .systemBlue,
                 name: NodeNames.continueButton

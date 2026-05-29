@@ -17,7 +17,6 @@ struct GameConfig {
 
 struct StorageKeys {
     static let highScore = "astroDrift.highScore"
-    static let coinWallet = "astroDrift.coinWallet"
 }
 
 struct NodeNames {
@@ -71,5 +70,5 @@ struct SpawnConfig {
 struct CoinConfig {
     static let radius: CGFloat = 10.0
     static let spawnRate: TimeInterval = 2.0
-    static let continueCost: Int = 20
+    static let continueCost: Int = 10
 }

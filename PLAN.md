@@ -24,7 +24,7 @@ Endless horizontal runner in space. Tap to fly up, release to fall. Dodge astero
 - **Physics:** `SKPhysicsBody` for gravity and contact detection
 - **Obstacles:** `SKAction.sequence` for spawn -> move -> remove
 - **Scoring:** Distance counter in `update()`, saved with `UserDefaults`
-- **Coins:** Simple collectible circles saved to a coin wallet
+- **Coins:** Simple collectible circles counted during each run
 - **Art:** Static PNG assets in `Assets.xcassets`
 - **Scenes:** `MenuScene`, `GameScene`, `GameOverOverlay`
 
