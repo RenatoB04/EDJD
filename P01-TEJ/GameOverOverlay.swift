@@ -4,10 +4,12 @@ class GameOverOverlay: SKNode {
 
     private let sceneSize: CGSize
     private let canContinue: Bool
+    private let continueCost: Int
 
-    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, canContinue: Bool) {
+    init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, canContinue: Bool, continueCost: Int) {
         self.sceneSize = sceneSize
         self.canContinue = canContinue
+        self.continueCost = continueCost
         super.init()
 
         name = NodeNames.gameOverOverlay
@@ -68,7 +70,7 @@ class GameOverOverlay: SKNode {
 
         if canContinue {
             let continueButton = makeButton(
-                text: "Continuar: \(CoinConfig.continueCost) moedas",
+                text: "Continuar: -\(continueCost)",
                 size: CGSize(width: 190, height: 48),
                 color: .systemBlue,
                 name: NodeNames.continueButton

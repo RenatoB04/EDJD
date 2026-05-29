@@ -15,7 +15,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var score: Int = 0
     private var rawScore: Double = 0
     private var coinsThisRun: Int = 0
-    private var hasUsedContinue = false
+    private var currentContinueCost = CoinConfig.continueCost
 
     private var lastUpdateTime: TimeInterval = 0
     private var elapsedTime: TimeInterval = 0
@@ -333,7 +333,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             highScore: max(previousHigh, score),
             isNewRecord: isNewRecord,
             coinsThisRun: coinsThisRun,
-            canContinue: canContinue()
+            canContinue: canContinue(),
+            continueCost: currentContinueCost
         )
         overlay.alpha = 0
         addChild(overlay)
@@ -345,14 +346,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func canContinue() -> Bool {
-        return !hasUsedContinue && coinsThisRun >= CoinConfig.continueCost
+        return coinsThisRun >= currentContinueCost
     }
 
     private func continueGame() {
         guard canContinue() else { return }
 
-        hasUsedContinue = true
-        coinsThisRun -= CoinConfig.continueCost
+        coinsThisRun -= currentContinueCost
+        currentContinueCost *= 2
         updateCoinLabel()
 
         gameOverOverlay?.removeFromParent()
@@ -399,7 +400,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         score = 0
         rawScore = 0
         coinsThisRun = 0
-        hasUsedContinue = false
+        currentContinueCost = CoinConfig.continueCost
         elapsedTime = 0
         lastUpdateTime = 0
         scoreLabel.text = "0 m"

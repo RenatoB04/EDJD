@@ -22,7 +22,7 @@ Toca para subir, larga para descer, evita asteroides e lasers, e tenta bater o r
 - Obstaculos a entrar pela direita
 - Score por distancia
 - Moedas colecionaveis durante a run
-- Continue uma vez por run se apanhar 10 moedas
+- Continue com custo dobrando a cada uso na run
 - Recorde persistente com `UserDefaults`
 - Menu, retry e game over
 

@@ -61,7 +61,7 @@ Assets.xcassets            - app icon and game sprites
 ## Extra Polish
 
 - Sound effect on death
-- Coins and one paid continue per run
+- Coins and paid continues with increasing cost
 - Screen shake
 - Asteroid rotation animation
 - Jetpack flame
