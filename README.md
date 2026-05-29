@@ -21,6 +21,8 @@ Toca para subir, larga para descer, evita asteroides e lasers, e tenta bater o r
 - Voo com gravidade + empuxo
 - Obstaculos a entrar pela direita
 - Score por distancia
+- Moedas colecionaveis com carteira persistente
+- Continue uma vez por run por 20 moedas
 - Recorde persistente com `UserDefaults`
 - Menu, retry e game over
 
@@ -45,6 +47,8 @@ P01-TEJ/
 |-- GameOverOverlay.swift
 |-- PauseOverlay.swift
 |-- PlayerNode.swift
+|-- CoinNode.swift
+|-- CoinSpawner.swift
 |-- ObstacleSpawner.swift
 |-- LaserSpawner.swift
 |-- DifficultyManager.swift

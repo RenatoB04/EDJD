@@ -24,18 +24,26 @@ class MenuScene: SKScene {
         highLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.68)
         addChild(highLabel)
 
+        let wallet = UserDefaults.standard.integer(forKey: StorageKeys.coinWallet)
+        let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        walletLabel.text = "Moedas: \(wallet)"
+        walletLabel.fontSize = 20
+        walletLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
+        walletLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.62)
+        addChild(walletLabel)
+
         if let lastScore = lastScore {
             let lastLabel = SKLabelNode(fontNamed: "AvenirNext")
             lastLabel.text = "Ultima: \(lastScore) m"
             lastLabel.fontSize = 18
             lastLabel.fontColor = .white
-            lastLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.61)
+            lastLabel.position = CGPoint(x: size.width / 2, y: size.height * 0.56)
             addChild(lastLabel)
         }
 
         let preview = SKSpriteNode(texture: SKTexture(imageNamed: AssetNames.player))
         preview.size = CGSize(width: 70, height: 70)
-        preview.position = CGPoint(x: size.width / 2, y: size.height * 0.50)
+        preview.position = CGPoint(x: size.width / 2, y: size.height * 0.46)
         addChild(preview)
 
         let float = SKAction.sequence([

@@ -5,6 +5,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let player = PlayerNode()
     let asteroidSpawner = ObstacleSpawner()
     let laserSpawner = LaserSpawner()
+    let coinSpawner = CoinSpawner()
     let difficultyManager = DifficultyManager()
 
     var isThrusting = false
@@ -13,12 +14,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     private var score: Int = 0
     private var rawScore: Double = 0
+    private var coinsThisRun: Int = 0
+    private var walletCoins: Int = 0
+    private var hasUsedContinue = false
 
     private var lastUpdateTime: TimeInterval = 0
     private var elapsedTime: TimeInterval = 0
 
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-    private var pauseButton: SKSpriteNode!
+    private let coinLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+    private let walletLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+    private var pauseButton: SKShapeNode!
 
     private var starField: StarField?
     private var worldNode: SKNode!
@@ -27,6 +33,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private weak var pauseOverlay: PauseOverlay?
 
     private static let spawnLoopKey = "spawnLoop"
+    private static let coinSpawnLoopKey = "coinSpawnLoop"
 
     override func didMove(to view: SKView) {
         backgroundColor = .black
@@ -44,6 +51,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         worldNode.addChild(player)
 
         setupHUD()
+        walletCoins = UserDefaults.standard.integer(forKey: StorageKeys.coinWallet)
+        updateCoinLabels()
         AudioManager.shared.startMusic()
         startGameplay()
     }
@@ -63,9 +72,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.zPosition = 100
         addChild(scoreLabel)
 
-        pauseButton = SKSpriteNode(color: SKColor(white: 0.2, alpha: 0.7), size: CGSize(width: 44, height: 44))
+        coinLabel.fontSize = 20
+        coinLabel.fontColor = SKColor(red: 1.0, green: 0.82, blue: 0.0, alpha: 1.0)
+        coinLabel.horizontalAlignmentMode = .right
+        coinLabel.position = CGPoint(x: size.width - 20, y: size.height - 78)
+        coinLabel.zPosition = 100
+        addChild(coinLabel)
+
+        walletLabel.fontSize = 18
+        walletLabel.fontColor = .lightGray
+        walletLabel.horizontalAlignmentMode = .right
+        walletLabel.position = CGPoint(x: size.width - 20, y: size.height - 103)
+        walletLabel.zPosition = 100
+        addChild(walletLabel)
+
+        let pauseSize = CGSize(width: 44, height: 44)
+        let rect = CGRect(x: -pauseSize.width / 2, y: -pauseSize.height / 2, width: pauseSize.width, height: pauseSize.height)
+        pauseButton = SKShapeNode(rect: rect, cornerRadius: pauseSize.height * 0.3)
         pauseButton.position = CGPoint(x: 30, y: size.height - 50)
         pauseButton.name = NodeNames.pauseButton
+        pauseButton.fillColor = SKColor(white: 0.2, alpha: 0.7)
+        pauseButton.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        pauseButton.lineWidth = 1.5
         pauseButton.zPosition = 100
 
         let pauseGlyph = SKLabelNode(fontNamed: "AvenirNext-Bold")
@@ -80,6 +108,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     private func startGameplay() {
         scheduleNextSpawn()
+        scheduleNextCoinSpawn()
     }
 
     private func scheduleNextSpawn() {
@@ -100,6 +129,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
 
         run(SKAction.sequence([wait, spawn]), withKey: GameScene.spawnLoopKey)
+    }
+
+    private func scheduleNextCoinSpawn() {
+        removeAction(forKey: GameScene.coinSpawnLoopKey)
+
+        let wait = SKAction.wait(forDuration: CoinConfig.spawnRate)
+        let spawn = SKAction.run { [weak self] in
+            guard let self = self, !self.isGameOver, !self.isManuallyPaused else { return }
+
+            self.coinSpawner.spawn(
+                in: self.worldNode,
+                moveDuration: self.difficultyManager.currentObstacleDuration(),
+                sceneSize: self.size
+            )
+            self.scheduleNextCoinSpawn()
+        }
+
+        run(SKAction.sequence([wait, spawn]), withKey: GameScene.coinSpawnLoopKey)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -148,6 +195,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.playSoundFileNamed("Sounds/button.wav", waitForCompletion: false))
 
         switch buttonName {
+        case NodeNames.continueButton: continueGame()
         case NodeNames.retryButton: restartGame()
         case NodeNames.menuButton: goToMenu()
         default: break
@@ -172,6 +220,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         isManuallyPaused = true
         removeAction(forKey: GameScene.spawnLoopKey)
+        removeAction(forKey: GameScene.coinSpawnLoopKey)
         worldNode.isPaused = true
         physicsWorld.speed = 0
         stopThrust()
@@ -227,15 +276,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard !isGameOver else { return }
 
         let combined = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        if combined == (PhysicsCategory.player | PhysicsCategory.obstacle) {
+        if combined == (PhysicsCategory.player | PhysicsCategory.coin) {
+            let coinBody = contact.bodyA.categoryBitMask == PhysicsCategory.coin ? contact.bodyA : contact.bodyB
+            collectCoin(coinBody.node)
+        } else if combined == (PhysicsCategory.player | PhysicsCategory.obstacle) {
             triggerGameOver()
         }
+    }
+
+    private func collectCoin(_ node: SKNode?) {
+        guard let coin = node, coin.parent != nil else { return }
+
+        coinsThisRun += 1
+        updateCoinLabels()
+        run(SKAction.playSoundFileNamed("Sounds/coin.wav", waitForCompletion: false))
+
+        coin.removeAllActions()
+        coin.physicsBody = nil
+        coin.run(SKAction.sequence([
+            SKAction.group([
+                SKAction.moveBy(x: 0, y: 20, duration: 0.2),
+                SKAction.fadeOut(withDuration: 0.2)
+            ]),
+            SKAction.removeFromParent()
+        ]))
     }
 
     private func triggerGameOver() {
         isGameOver = true
         stopThrust()
         removeAction(forKey: GameScene.spawnLoopKey)
+        removeAction(forKey: GameScene.coinSpawnLoopKey)
 
         player.physicsBody?.velocity = .zero
         player.physicsBody?.affectedByGravity = false
@@ -254,6 +325,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node.removeAllActions()
             node.run(fade)
         }
+        worldNode.enumerateChildNodes(withName: NodeNames.coin) { node, _ in
+            node.removeAllActions()
+            node.run(fade)
+        }
 
         let defaults = UserDefaults.standard
         let previousHigh = defaults.integer(forKey: StorageKeys.highScore)
@@ -261,12 +336,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if isNewRecord {
             defaults.set(score, forKey: StorageKeys.highScore)
         }
+        addRunCoinsToWallet()
 
         let overlay = GameOverOverlay(
             sceneSize: size,
             score: score,
             highScore: max(previousHigh, score),
-            isNewRecord: isNewRecord
+            isNewRecord: isNewRecord,
+            coinsThisRun: coinsThisRun,
+            walletCoins: walletCoins,
+            canContinue: canContinue()
         )
         overlay.alpha = 0
         addChild(overlay)
@@ -277,11 +356,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverOverlay = overlay
     }
 
+    private func canContinue() -> Bool {
+        return !hasUsedContinue && walletCoins >= CoinConfig.continueCost
+    }
+
+    private func continueGame() {
+        guard canContinue() else { return }
+
+        hasUsedContinue = true
+        walletCoins -= CoinConfig.continueCost
+        coinsThisRun = 0
+        UserDefaults.standard.set(walletCoins, forKey: StorageKeys.coinWallet)
+        updateCoinLabels()
+
+        gameOverOverlay?.removeFromParent()
+        gameOverOverlay = nil
+
+        worldNode.enumerateChildNodes(withName: NodeNames.obstacle) { node, _ in
+            node.removeFromParent()
+        }
+        worldNode.enumerateChildNodes(withName: NodeNames.coin) { node, _ in
+            node.removeFromParent()
+        }
+
+        player.alpha = 1.0
+        player.setScale(1.0)
+        player.position = CGPoint(x: size.width * 0.2, y: size.height / 2)
+        player.physicsBody?.velocity = .zero
+        player.physicsBody?.affectedByGravity = true
+
+        lastUpdateTime = 0
+        isGameOver = false
+        isThrusting = false
+        startGameplay()
+    }
+
     private func restartGame() {
         gameOverOverlay?.removeFromParent()
         gameOverOverlay = nil
 
         worldNode.enumerateChildNodes(withName: NodeNames.obstacle) { node, _ in
+            node.removeFromParent()
+        }
+        worldNode.enumerateChildNodes(withName: NodeNames.coin) { node, _ in
             node.removeFromParent()
         }
 
@@ -295,14 +412,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         score = 0
         rawScore = 0
+        coinsThisRun = 0
+        hasUsedContinue = false
         elapsedTime = 0
         lastUpdateTime = 0
         scoreLabel.text = "0 m"
+        updateCoinLabels()
         isGameOver = false
         isThrusting = false
 
         difficultyManager.reset()
         startGameplay()
+    }
+
+    private func addRunCoinsToWallet() {
+        guard coinsThisRun > 0 else { return }
+        walletCoins += coinsThisRun
+        UserDefaults.standard.set(walletCoins, forKey: StorageKeys.coinWallet)
+        updateCoinLabels()
+    }
+
+    private func updateCoinLabels() {
+        coinLabel.text = "Moedas: \(coinsThisRun)"
+        walletLabel.text = "Carteira: \(walletCoins)"
     }
 
     private func goToMenu() {

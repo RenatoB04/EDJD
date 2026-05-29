@@ -4,6 +4,7 @@ struct PhysicsCategory {
     static let none: UInt32     = 0
     static let player: UInt32   = 0b0001
     static let obstacle: UInt32 = 0b0010
+    static let coin: UInt32     = 0b0100
 }
 
 struct GameConfig {
@@ -16,6 +17,7 @@ struct GameConfig {
 
 struct StorageKeys {
     static let highScore = "astroDrift.highScore"
+    static let coinWallet = "astroDrift.coinWallet"
 }
 
 struct NodeNames {
@@ -27,6 +29,8 @@ struct NodeNames {
     static let playButton = "playButton"
     static let pauseButton = "pauseButton"
     static let resumeButton = "resumeButton"
+    static let continueButton = "continueButton"
+    static let coin = "coin"
 
     static let gameOverOverlay = "gameOverOverlay"
     static let pauseOverlay = "pauseOverlay"
@@ -62,4 +66,10 @@ struct SpawnConfig {
     static let minSpawnRate: TimeInterval = 0.45
     static let minObstacleDuration: TimeInterval = 1.4
     static let laserChance: CGFloat = 0.25
+}
+
+struct CoinConfig {
+    static let radius: CGFloat = 10.0
+    static let spawnRate: TimeInterval = 2.0
+    static let continueCost: Int = 20
 }

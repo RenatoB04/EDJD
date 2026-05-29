@@ -24,6 +24,7 @@ Endless horizontal runner in space. Tap to fly up, release to fall. Dodge astero
 - **Physics:** `SKPhysicsBody` for gravity and contact detection
 - **Obstacles:** `SKAction.sequence` for spawn -> move -> remove
 - **Scoring:** Distance counter in `update()`, saved with `UserDefaults`
+- **Coins:** Simple collectible circles saved to a coin wallet
 - **Art:** Static PNG assets in `Assets.xcassets`
 - **Scenes:** `MenuScene`, `GameScene`, `GameOverOverlay`
 
@@ -34,6 +35,8 @@ GameViewController.swift   - loads the first scene
 MenuScene.swift            - title, play button, high score
 GameScene.swift            - gameplay loop
 PlayerNode.swift           - player sprite and physics body
+CoinNode.swift             - coin node and physics body
+CoinSpawner.swift          - coin spawning logic
 ObstacleSpawner.swift      - asteroid spawning logic
 LaserSpawner.swift         - second obstacle type
 Constants.swift            - physics categories and config values
@@ -58,6 +61,7 @@ Assets.xcassets            - app icon and game sprites
 ## Extra Polish
 
 - Sound effect on death
+- Coins and one paid continue per run
 - Screen shake
 - Asteroid rotation animation
 - Jetpack flame

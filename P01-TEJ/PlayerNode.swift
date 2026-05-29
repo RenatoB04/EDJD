@@ -21,7 +21,7 @@ class PlayerNode: SKSpriteNode {
         let bodySize = CGSize(width: size.width * 0.7, height: size.height * 0.6)
         physicsBody = SKPhysicsBody(rectangleOf: bodySize)
         physicsBody?.categoryBitMask = PhysicsCategory.player
-        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle
+        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.coin
         physicsBody?.collisionBitMask = PhysicsCategory.none
         physicsBody?.affectedByGravity = true
         physicsBody?.allowsRotation = false
