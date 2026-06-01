@@ -1,5 +1,7 @@
 import SpriteKit
 
+// Overlay mostrado quando o jogo está em pausa.
+// É um SKNode por cima da GameScene, não uma cena separada.
 class PauseOverlay: SKNode {
 
     private let sceneSize: CGSize
@@ -11,6 +13,7 @@ class PauseOverlay: SKNode {
         self.name = NodeNames.pauseOverlay
         self.zPosition = 950
 
+        // Fundo escuro semi-transparente para destacar o menu de pausa.
         let bg = SKSpriteNode(color: .black, size: sceneSize)
         bg.alpha = 0.6
         bg.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height / 2)
@@ -38,6 +41,7 @@ class PauseOverlay: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // Cria botões arredondados reutilizados no overlay.
     private func makeButton(text: String, position: CGPoint, color: SKColor, name: String) -> SKShapeNode {
         let buttonSize = CGSize(width: 180, height: 50)
         let cornerRadius = buttonSize.height * 0.3
@@ -61,6 +65,7 @@ class PauseOverlay: SKNode {
         return button
     }
 
+    // Devolve o nome do botão tocado, para a GameScene decidir o que fazer.
     func buttonName(at location: CGPoint) -> String? {
         for node in nodes(at: location) {
             if node.name == NodeNames.resumeButton || node.name == NodeNames.menuButton {

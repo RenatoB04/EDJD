@@ -1,7 +1,10 @@
 import SpriteKit
 
+// Cena inicial do jogo.
+// Mostra o título, o recorde e o botão para começar uma nova run.
 class MenuScene: SKScene {
 
+    // Usado quando voltamos do jogo para mostrar a última pontuação.
     var lastScore: Int? = nil
 
     override func didMove(to view: SKView) {
@@ -17,6 +20,7 @@ class MenuScene: SKScene {
 
         let highScore = UserDefaults.standard.integer(forKey: StorageKeys.highScore)
 
+        // O recorde fica guardado no UserDefaults entre sessões.
         let highLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
         highLabel.text = "Recorde: \(highScore) m"
         highLabel.fontSize = 22
@@ -33,6 +37,7 @@ class MenuScene: SKScene {
             addChild(lastLabel)
         }
 
+        // Pequena pré-visualização do foguete para dar vida ao menu.
         let preview = SKSpriteNode(texture: SKTexture(imageNamed: AssetNames.player))
         preview.size = CGSize(width: 70, height: 70)
         preview.position = CGPoint(x: size.width / 2, y: size.height * 0.50)
@@ -51,6 +56,7 @@ class MenuScene: SKScene {
                             name: NodeNames.playButton))
     }
 
+    // Função auxiliar para criar botões com o mesmo estilo visual.
     private func makeButton(text: String, color: SKColor, position: CGPoint, size: CGSize, name: String) -> SKShapeNode {
         let cornerRadius = size.height * 0.3
         let rect = CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
@@ -74,6 +80,7 @@ class MenuScene: SKScene {
         return button
     }
 
+    // Detecta se o jogador tocou no botão Jogar.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -84,6 +91,7 @@ class MenuScene: SKScene {
         }
     }
 
+    // Cria e apresenta a cena principal do jogo.
     private func startGame() {
         run(SKAction.playSoundFileNamed("Sounds/button.wav", waitForCompletion: false))
 

@@ -1,42 +1,56 @@
 import SpriteKit
 
+// Cena principal do jogo.
+// Controla input, física, score, spawn de obstáculos/moedas, pausa e game over.
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
+    // Nós e classes auxiliares usados durante a run.
     let player = PlayerNode()
     let asteroidSpawner = ObstacleSpawner()
     let laserSpawner = LaserSpawner()
     let coinSpawner = CoinSpawner()
     let difficultyManager = DifficultyManager()
 
+    // Estados simples para saber se o jogador está a subir, se perdeu ou se pausou.
     var isThrusting = false
     var isGameOver = false
     private var isManuallyPaused = false
 
+    // Score e moedas pertencem apenas à run actual.
     private var score: Int = 0
     private var rawScore: Double = 0
     private var coinsThisRun: Int = 0
+    // O continue começa em 10 moedas e duplica sempre que é usado na mesma run.
     private var currentContinueCost = CoinConfig.continueCost
 
+    // Guardam o tempo entre frames para calcular movimento e score de forma estável.
     private var lastUpdateTime: TimeInterval = 0
     private var elapsedTime: TimeInterval = 0
 
+    // Elementos fixos da interface durante o jogo.
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let coinLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private var pauseButton: SKShapeNode!
 
+    // O worldNode contém os objectos do jogo. O HUD fica fora dele.
+    // Assim podemos aplicar screen shake só ao mundo, sem abanar os textos.
     private var starField: StarField?
     private var worldNode: SKNode!
 
+    // Referências fracas aos overlays para os poder remover quando já não são necessários.
     private weak var gameOverOverlay: GameOverOverlay?
     private weak var pauseOverlay: PauseOverlay?
 
+    // Chaves para identificar acções SpriteKit e evitar duplicar loops de spawn.
     private static let spawnLoopKey = "spawnLoop"
     private static let coinSpawnLoopKey = "coinSpawnLoop"
 
+    // Chamado quando a cena aparece no SKView.
     override func didMove(to view: SKView) {
         backgroundColor = .black
         size = view.bounds.size
 
+        // Gravidade negativa: o jogador cai quando não está a tocar no ecrã.
         physicsWorld.gravity = CGVector(dx: 0, dy: GameConfig.gravity)
         physicsWorld.contactDelegate = self
 
@@ -54,12 +68,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startGameplay()
     }
 
+    // Cria o fundo de estrelas dentro do mundo do jogo.
     private func setupStarField() {
         let field = StarField(sceneSize: size)
         worldNode.addChild(field)
         starField = field
     }
 
+    // Cria score, moedas e botão de pausa.
     private func setupHUD() {
         scoreLabel.text = "0 m"
         scoreLabel.fontSize = 28
@@ -96,11 +112,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(pauseButton)
     }
 
+    // Começa os loops de spawn da run.
     private func startGameplay() {
         scheduleNextSpawn()
         scheduleNextCoinSpawn()
     }
 
+    // Agenda o próximo obstáculo. No fim chama-se a si própria para continuar o ciclo.
     private func scheduleNextSpawn() {
         removeAction(forKey: GameScene.spawnLoopKey)
 
@@ -109,6 +127,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             guard let self = self, !self.isGameOver, !self.isManuallyPaused else { return }
 
             let duration = self.difficultyManager.currentObstacleDuration()
+            // Há uma pequena probabilidade de sair laser em vez de asteroide.
             if CGFloat.random(in: 0...1) < SpawnConfig.laserChance {
                 self.laserSpawner.spawn(in: self.worldNode, moveDuration: duration, sceneSize: self.size)
             } else {
@@ -121,6 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.sequence([wait, spawn]), withKey: GameScene.spawnLoopKey)
     }
 
+    // Agenda moedas de forma parecida aos obstáculos.
     private func scheduleNextCoinSpawn() {
         removeAction(forKey: GameScene.coinSpawnLoopKey)
 
@@ -139,6 +159,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.sequence([wait, spawn]), withKey: GameScene.coinSpawnLoopKey)
     }
 
+    // Primeiro tratamos toques em overlays/botões. Se não houver botão, o toque activa o impulso.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -164,6 +185,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         AudioManager.shared.startThrust()
     }
 
+    // Quando o jogador larga o ecrã, o foguete deixa de subir.
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         stopThrust()
     }
@@ -172,12 +194,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         stopThrust()
     }
 
+    // Centraliza tudo o que acontece ao parar o impulso.
     private func stopThrust() {
         isThrusting = false
         player.setThrusting(false)
         AudioManager.shared.stopThrust()
     }
 
+    // Trata os botões disponíveis no fim de jogo.
     private func handleGameOverTouch(at location: CGPoint) {
         guard let overlay = gameOverOverlay,
               let buttonName = overlay.buttonName(at: location) else { return }
@@ -192,6 +216,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    // Trata os botões do menu de pausa.
     private func handlePauseTouch(at location: CGPoint) {
         guard let overlay = pauseOverlay,
               let buttonName = overlay.buttonName(at: location) else { return }
@@ -205,6 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    // Pausar significa parar física, spawns, mundo e som de impulso.
     private func pauseGame() {
         guard !isManuallyPaused, !isGameOver else { return }
 
@@ -221,6 +247,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseOverlay = overlay
     }
 
+    // Ao retomar, reiniciamos o tempo para evitar um salto grande no update.
     private func resumeGame() {
         isManuallyPaused = false
         worldNode.isPaused = false
@@ -234,6 +261,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseOverlay = nil
     }
 
+    // Loop chamado pelo SpriteKit a cada frame.
     override func update(_ currentTime: TimeInterval) {
         guard !isGameOver, !isManuallyPaused else { return }
 
@@ -245,10 +273,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         difficultyManager.update(elapsedTime: elapsedTime)
         starField?.update(deltaTime: dt, speedMultiplier: difficultyManager.currentParallaxMultiplier())
 
+        // O score aumenta com o tempo, simulando distância percorrida.
         rawScore += dt * Double(GameConfig.scoreMultiplier)
         score = Int(rawScore)
         scoreLabel.text = "\(score) m"
 
+        // Enquanto o toque está activo, aplicamos força para cima.
         if isThrusting {
             player.physicsBody?.applyForce(CGVector(dx: 0, dy: GameConfig.thrustForce))
             if let vy = player.physicsBody?.velocity.dy, vy > GameConfig.maxVelocity {
@@ -256,16 +286,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
+        // Sair completamente por cima ou por baixo também conta como morte.
         let margin = player.size.height / 2
         if player.position.y > size.height + margin || player.position.y < -margin {
             triggerGameOver()
         }
     }
 
+    // Chamado automaticamente pelo SpriteKit quando dois corpos com contacto se tocam.
     func didBegin(_ contact: SKPhysicsContact) {
         guard !isGameOver else { return }
 
         let combined = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        // Usamos a combinação das categorias para saber que tipo de colisão aconteceu.
         if combined == (PhysicsCategory.player | PhysicsCategory.coin) {
             let coinBody = contact.bodyA.categoryBitMask == PhysicsCategory.coin ? contact.bodyA : contact.bodyB
             collectCoin(coinBody.node)
@@ -274,6 +307,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    // Recolhe a moeda, aumenta o contador da run e faz uma pequena animação de saída.
     private func collectCoin(_ node: SKNode?) {
         guard let coin = node, coin.parent != nil else { return }
 
@@ -292,6 +326,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ]))
     }
 
+    // Estado de morte: para spawns, actualiza recorde e mostra o overlay.
     private func triggerGameOver() {
         isGameOver = true
         stopThrust()
@@ -345,10 +380,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverOverlay = overlay
     }
 
+    // Só é possível continuar se houver moedas suficientes para o custo actual.
     private func canContinue() -> Bool {
         return coinsThisRun >= currentContinueCost
     }
 
+    // Continua a mesma run: mantém score e dificuldade, mas limpa perigos próximos.
     private func continueGame() {
         guard canContinue() else { return }
 
@@ -378,6 +415,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startGameplay()
     }
 
+    // Reinicia tudo o que pertence à run.
     private func restartGame() {
         gameOverOverlay?.removeFromParent()
         gameOverOverlay = nil
@@ -412,10 +450,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startGameplay()
     }
 
+    // Actualiza a label das moedas apanhadas na run actual.
     private func updateCoinLabel() {
         coinLabel.text = "Moedas: \(coinsThisRun)"
     }
 
+    // Volta ao menu e passa a última pontuação para ser mostrada lá.
     private func goToMenu() {
         AudioManager.shared.stopThrust()
 

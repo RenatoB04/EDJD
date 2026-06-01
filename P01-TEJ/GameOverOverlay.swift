@@ -1,11 +1,14 @@
 import SpriteKit
 
+// Overlay apresentado quando o jogador perde.
+// Mostra score, recorde, moedas e os botões de continuar, repetir ou voltar ao menu.
 class GameOverOverlay: SKNode {
 
     private let sceneSize: CGSize
     private let canContinue: Bool
     private let continueCost: Int
 
+    // Recebe os valores calculados pela GameScene para apenas tratar da apresentação.
     init(sceneSize: CGSize, score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int, canContinue: Bool, continueCost: Int) {
         self.sceneSize = sceneSize
         self.canContinue = canContinue
@@ -25,12 +28,14 @@ class GameOverOverlay: SKNode {
     }
 
     private func setupBackground() {
+        // Fundo escuro para separar visualmente o fim de jogo da acção.
         let background = SKSpriteNode(color: .black, size: sceneSize)
         background.alpha = 0.65
         background.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height / 2)
         addChild(background)
     }
 
+    // Cria todos os textos informativos do fim de jogo.
     private func setupLabels(score: Int, highScore: Int, isNewRecord: Bool, coinsThisRun: Int) {
         let title = SKLabelNode(fontNamed: "AvenirNext-Bold")
         title.text = "Fim de Jogo"
@@ -65,6 +70,7 @@ class GameOverOverlay: SKNode {
         addChild(coinsLabel)
     }
 
+    // O botão Continuar só aparece quando o jogador tem moedas suficientes.
     private func setupButtons() {
         var buttonY = sceneSize.height * 0.39
 
@@ -99,6 +105,7 @@ class GameOverOverlay: SKNode {
         addChild(menuButton)
     }
 
+    // Mantém o estilo dos botões consistente com o resto do jogo.
     private func makeButton(text: String, size: CGSize, color: SKColor, name: String) -> SKShapeNode {
         let rect = CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
         let button = SKShapeNode(rect: rect, cornerRadius: size.height * 0.3)
@@ -120,6 +127,7 @@ class GameOverOverlay: SKNode {
         return button
     }
 
+    // A GameScene chama esta função para saber que botão foi tocado.
     func buttonName(at location: CGPoint) -> String? {
         for node in nodes(at: location) {
             if node.name == NodeNames.continueButton || node.name == NodeNames.retryButton || node.name == NodeNames.menuButton {
