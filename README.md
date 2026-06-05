@@ -50,8 +50,12 @@ Example:
 - **IA**: Inteligência Artificial Aplicada a Jogos *(Artificial Intelligence Applied to Games, C#, Unity)*  
 - **PA**: Projeto Aplicado *(Applied Project, C#, Unity)*  
 - **PVR**: Programação para Vídeojogos em Rede *(Networked Video Game Programming, C#, Unity)*  
-- **TEV**: Técnicas de Computação Gráfica para Efeitos Visuais *(Graphic Computing Techniques for Visual Effects, C#, Unity)*  
+- **TEV**: Técnicas de Computação Gráfica para Efeitos Visuais *(Graphic Computing Techniques for Visual Effects, C#, Unity)*
 
+### **3rd Year - 2nd Semester**
+- **TEJ**: Tecnologias Emergentes em Vídeojogos *(Emerging Technologies in Video Games, Swift)*
+- **TA3D**: Técnicas Avançadas de Programação 3D *(Advanced 3D Programming Techniques, C#, HLSL, Unity)*
+  
 ---
 
 ## How to Navigate This Repository
