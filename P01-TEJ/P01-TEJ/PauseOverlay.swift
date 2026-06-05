@@ -1,0 +1,77 @@
+import SpriteKit
+
+// Overlay mostrado quando o jogo está em pausa.
+// É um SKNode por cima da GameScene, não uma cena separada.
+class PauseOverlay: SKNode {
+
+    private let sceneSize: CGSize
+
+    init(sceneSize: CGSize) {
+        self.sceneSize = sceneSize
+        super.init()
+
+        self.name = NodeNames.pauseOverlay
+        self.zPosition = 950
+
+        // Fundo escuro semi-transparente para destacar o menu de pausa.
+        let bg = SKSpriteNode(color: .black, size: sceneSize)
+        bg.alpha = 0.6
+        bg.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height / 2)
+        addChild(bg)
+
+        let title = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        title.text = "Em Pausa"
+        title.fontSize = 40
+        title.fontColor = .white
+        title.position = CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.66)
+        addChild(title)
+
+        addChild(makeButton(text: "Continuar",
+                            position: CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.48),
+                            color: .systemGreen,
+                            name: NodeNames.resumeButton))
+
+        addChild(makeButton(text: "Menu",
+                            position: CGPoint(x: sceneSize.width / 2, y: sceneSize.height * 0.34),
+                            color: .systemGray,
+                            name: NodeNames.menuButton))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // Cria botões arredondados reutilizados no overlay.
+    private func makeButton(text: String, position: CGPoint, color: SKColor, name: String) -> SKShapeNode {
+        let buttonSize = CGSize(width: 180, height: 50)
+        let cornerRadius = buttonSize.height * 0.3
+        let rect = CGRect(x: -buttonSize.width / 2, y: -buttonSize.height / 2, width: buttonSize.width, height: buttonSize.height)
+        
+        let button = SKShapeNode(rect: rect, cornerRadius: cornerRadius)
+        button.position = position
+        button.name = name
+        button.fillColor = color
+        button.strokeColor = SKColor.white.withAlphaComponent(0.25)
+        button.lineWidth = 1.5
+
+        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        label.text = text
+        label.fontSize = 18
+        label.fontColor = .white
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.name = name
+        button.addChild(label)
+        return button
+    }
+
+    // Devolve o nome do botão tocado, para a GameScene decidir o que fazer.
+    func buttonName(at location: CGPoint) -> String? {
+        for node in nodes(at: location) {
+            if node.name == NodeNames.resumeButton || node.name == NodeNames.menuButton {
+                return node.name
+            }
+        }
+        return nil
+    }
+}
